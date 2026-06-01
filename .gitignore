@@ -1,0 +1,86 @@
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+
+# =============================================================================
+# Virtual environments
+# =============================================================================
+venv/
+env/
+.venv/
+.env
+virtualenvirement/
+
+# =============================================================================
+# Generated artefacts — these get rebuilt by the pipeline
+# =============================================================================
+output/
+input/
+results/
+*.log
+inference_*.log
+pipeline.log
+
+# Pipeline intermediate files
+**/cleaned/
+**/raw_bloodhound/
+**/prepared/
+*_certipy_list.txt
+
+# Pre-built tensors (rebuild from forest_graph.json)
+*.pt
+!models/*.pt        # keep pre-trained model checkpoints
+
+# Big graph dumps (regenerate from raw scans)
+**/forest_graph.json
+**/heterodata.pt
+**/training_examples.json
+
+# Allow example small data
+!examples/**
+
+# =============================================================================
+# IDE / editor
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# =============================================================================
+# Jupyter
+# =============================================================================
+.ipynb_checkpoints/
+
+# =============================================================================
+# Sensitive / personal
+# =============================================================================
+# never commit real AD scans, credentials, or actual environment data
+*.zip
+*_users.json
+*_computers.json
+*_groups.json
+*_domains.json
+*_gpos.json
+*_ous.json
+*_containers.json
+*Certipy*.json
+
+# allow example sanitised data
+!examples/**/*_users.json
+!examples/**/*_computers.json
+!examples/**/*_groups.json
+!examples/**/*_domains.json
+!examples/**/*_gpos.json
+!examples/**/*_ous.json
+!examples/**/*_containers.json
+!examples/**/*Certipy*.json

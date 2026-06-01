@@ -1,0 +1,209 @@
+Loading: ./examples/output/raw_bloodhound/20260516211205_computers.json
+Loading: ./examples/output/raw_bloodhound/20260516191339_containers.json
+Loading: ./examples/output/raw_bloodhound/20260516211205_users.json
+Loading: ./examples/output/raw_bloodhound/20260514135656_gpos.json
+Loading: ./examples/output/raw_bloodhound/20260516211205_groups.json
+Loading: ./examples/output/raw_bloodhound/20260516191339_groups.json
+Loading: ./examples/output/raw_bloodhound/20260514135656_domains.json
+Loading: ./examples/output/raw_bloodhound/20260516191339_computers.json
+Loading: ./examples/output/raw_bloodhound/20260514135656_groups.json
+Loading: ./examples/output/raw_bloodhound/20260514135656_containers.json
+Loading: ./examples/output/raw_bloodhound/20260516191339_users.json
+Loading: ./examples/output/raw_bloodhound/20260516211205_ous.json
+Loading: ./examples/output/raw_bloodhound/20260516211205_gpos.json
+Loading: ./examples/output/raw_bloodhound/20260516191339_ous.json
+Loading: ./examples/output/raw_bloodhound/20260514135656_computers.json
+Loading: ./examples/output/raw_bloodhound/20260516191339_domains.json
+Loading: ./examples/output/raw_bloodhound/20260516191339_gpos.json
+Loading: ./examples/output/raw_bloodhound/20260516211205_containers.json
+Loading: ./examples/output/raw_bloodhound/20260514135656_users.json
+Loading: ./examples/output/raw_bloodhound/20260514135656_ous.json
+Loading: ./examples/output/raw_bloodhound/20260516211205_domains.json
+
+==================================================
+Loaded types: ['computers', 'containers', 'users', 'gpos', 'groups', 'domains', 'ous']
+Building edge index...
+
+==================================================
+Saving cleaned files...
+  Saved: ./examples/output/cleaned/cleaned_20260514135656_computers.json
+  Saved: ./examples/output/cleaned/cleaned_20260516211205_containers.json
+  Saved: ./examples/output/cleaned/cleaned_20260514135656_users.json
+  Saved: ./examples/output/cleaned/cleaned_20260516191339_gpos.json
+  Saved: ./examples/output/cleaned/cleaned_20260514135656_groups.json
+  Saved: ./examples/output/cleaned/cleaned_20260516211205_domains.json
+  Saved: ./examples/output/cleaned/cleaned_20260514135656_ous.json
+
+==================================================
+Type              Before    After  Dropped
+---------------------------------------------
+computers            564      564        0
+users               2952     2952        0
+groups               183      182        1
+domains                1        1        0
+gpos                   2        2        0
+ous                   61       61        0
+containers            21       21        0
+---------------------------------------------
+TOTAL               3784     3783        1
+
+Edge index covers 2995 unique SIDs
+Unique edge type pairs: 15504
+============================================================
+merger.py
+============================================================
+Inputs : 1
+  [folder]  examples/output/cleaned
+Output : examples/output/forest_graph.json
+
+Loading cleaned...
+  [folder] 3784 nodes
+
+Merging...
+
+Merged forest:
+  users          : 2952
+  computers      : 564
+  groups         : 183
+  domains        : 1
+  gpos           : 2
+  ous            : 61
+  containers     : 21
+  TOTAL          : 3784
+
+Trusts inventory:
+  freightlogistics.local → INLANEFREIGHT.LOCAL  type=Forest direction=Bidirectional sid_filter=True
+  Total trust relationships: 1
+
+Edge inventory (17 types, 65777 total references, 3926 dangling = 6.0%):
+  members                            : 15503
+  genericall                         : 11138
+  genericwrite                       : 7609
+  writedacl                          : 6974
+  addkeycredentiallink               : 6966
+  writeowner                         : 3890
+  owns                               : 3776
+  childobjects                       : 3680
+  allextendedrights                  : 3033
+  forcechangepassword                : 2942
+  addmember                          : 185
+  writeaccountrestrictions           : 60
+  links                              : 12
+  getchanges                         : 3
+  addself                            : 2
+  ... and 2 more
+
+Written examples/output/forest_graph.json  (16945 KB)
+
+Next: build_dataset.py — converts forest_graph.json into PyG HeteroData
+============================================================
+============================================================
+build_dataset.py
+============================================================
+Graph : examples/output/forest_graph.json
+Out   : examples/output
+
+[1] Loading graph...
+  Nodes      : 3784
+  Feature dim: 14
+
+[2] Building edges (principal→target convention)...
+  Edge types : 13
+    memberof                 : 15501
+    genericall               : 11108
+    addkeycredentiallink     : 6966
+    writedacl                : 6934
+    genericwrite             : 3896
+    writeowner               : 3850
+    owns                     : 3753
+    contains                 : 3645
+    allextendedrights        : 3020
+    forcechangepassword      : 2942
+    addmember                : 185
+    writeaccountrestrictions : 49
+    addself                  : 2
+
+  Trust edges captured: 0
+
+[4] Assembling HeteroData...
+  data['node'].x       : torch.Size([3785, 14])
+  data['node'].num_nodes: 3785
+  edge_types           : 13
+
+[5] Saving...
+  heterodata.pt          → examples/output/heterodata.pt
+
+============================================================
+Summary:
+  Nodes      : 3784
+  Edge types : 13
+  Trust edges: 0
+
+Next: train.py (if examples present) or inference notebook
+============================================================
+============================================================
+validate_dataset.py
+============================================================
+Loading: examples/output/heterodata.pt
+Loading: examples/output/forest_graph.json
+
+[ Node features ]
+  ✓ OK    Node count = 3785
+  ✓ OK    Feature dim = 14
+  ✓ OK    No NaN values in feature matrix
+  ✓ OK    No Inf values in feature matrix
+          Feature value range: [0.000, 1.000]
+  ✓ OK    Feature values within reasonable range
+          Non-zero density   : 18.8%
+  ✓ OK    At least 5% of feature matrix is non-zero
+
+[ Edges ]
+  ✓ OK    At least one edge type present
+          Edge types         : 13
+          Total edge entries : 61851
+          Self-loops         : 15
+  ✓ OK    Edge total (61851) appears non-trivial
+  ⚠ WARN  No self-loops (got 15)
+  ⚠ WARN  Trust edges present (or graph too small to require them)
+          Top edge type      : memberof (15501 = 25.1%)
+  ✓ OK    No single edge type dominates (top is 25.1%)
+
+[ Connectivity ]
+          Connected components: 22
+          Largest component  : 3760 nodes (99.3%)
+          Isolated nodes     : 20
+  ✓ OK    Largest component covers >50% of nodes
+  ✓ OK    Isolated nodes < 20% of total (got 20)
+          Avg degree         : 23.4
+          Max degree         : 3757
+          Highest-degree nodes:
+            [groups] enterprise admins@inlanefreight.local: 3757
+            [groups] domain admins@inlanefreight.local: 3755
+            [groups] administrators@inlanefreight.local: 3755
+            [groups] account operators@inlanefreight.local: 3651
+            [groups] enterprise key admins@inlanefreight.local: 3486
+
+[ Domain coverage ]
+          Domains detected   : 567
+            inlanefreight.local                      3196 nodes
+            freightlogistics.local                   22 nodes
+            logistics.inlanefreight.local            2 nodes
+            academy-ea-lptp-0203.inlanefreight.local 1 nodes
+            academy-ea-lptp-0205.inlanefreight.local 1 nodes
+            academy-ea-lptp-0207.inlanefreight.local 1 nodes
+            academy-ea-lptp-0210.inlanefreight.local 1 nodes
+            academy-ea-lptp-0202.inlanefreight.local 1 nodes
+            academy-ea-lptp-0209.inlanefreight.local 1 nodes
+            academy-ea-lptp-0204.inlanefreight.local 1 nodes
+
+[ Cross-domain coverage ]
+  (no trust edges detected)
+
+============================================================
+VERDICT
+============================================================
+  ⚠ 2 warning(s) — review before training:
+    - No self-loops (got 15)
+    - Trust edges present (or graph too small to require them)
+
+  Warnings are informational. Training can proceed.
