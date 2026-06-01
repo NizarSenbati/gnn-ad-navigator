@@ -82,11 +82,11 @@ flowchart LR
     cp[Certipy JSON] --> stitch[stitching.py]
     filter --> merge[merger.py]
     stitch --> merge
-    merge --> graph[forest_graph.json]
-    graph --> build[build_dataset.py]
-    build --> data[heterodata.pt]
-    data --> validate[validate_dataset.py]
-    data --> infer[run_inference.py]
+    merge --> forest[forest_graph.json]
+    forest --> build[build_dataset.py]
+    build --> tensors[heterodata.pt]
+    tensors --> validate[validate_dataset.py]
+    tensors --> infer[run_inference.py]
     infer --> out[Attack Paths + Audit]
 ```
 
