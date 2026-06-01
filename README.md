@@ -70,7 +70,7 @@ test with existing data in the examples folder:
 - **Multi-domain forest support** — merges arbitrary numbers of domains
 - **ADCS-aware** — stitches Certipy output into the graph
 - **Trust traversal** — extracts and uses cross-domain trust edges
-- **Output audit** — flags unreliable model output (high-score false positives)
+- - **Output audit (experimental)** — heuristic flagging of obviously degenerate paths; not a substitute for operator review
 - **Operator advisories** — explains terminal states and next-step commands
 - **Two architectures** — GCN baseline + HGT (heterogeneous graph transformer)
 
@@ -78,19 +78,30 @@ test with existing data in the examples folder:
 
 ```mermaid
 flowchart LR
-    A[BloodHound JSON] --> B[minimal_filter.py]
-    A2[Certipy JSON] --> C[stitching.py]
-    B --> D[merger.py]
-    C --> D
-    D --> E[forest_graph.json]
-    E --> F[build_dataset.py]
-    F --> G[heterodata.pt]
-    G --> H[validate_dataset.py]
-    G --> I[run_inference.py]
-    I --> J[Attack Paths + Audit]
+    bh[BloodHound JSON] --> filter[minimal_filter.py]
+    cp[Certipy JSON] --> stitch[stitching.py]
+    filter --> merge[merger.py]
+    stitch --> merge
+    merge --> graph[forest_graph.json]
+    graph --> build[build_dataset.py]
+    build --> data[heterodata.pt]
+    data --> validate[validate_dataset.py]
+    data --> infer[run_inference.py]
+    infer --> out[Attack Paths + Audit]
 ```
 
 Stages are individually runnable; `pipeline.sh` orchestrates them.
+
+## A note on the AUDIT block
+
+The AUDIT block beneath each path is a first attempt at automated reliability
+flagging — it catches obvious failure modes (degenerate single-step paths,
+missing DCSync at terminal, target-domain mismatch) but it isn't a substitute
+for operator judgement. Treat it as a coarse signal that something might be
+off, not as a verdict on path validity. In particular, it can flag a valid
+path as suspicious if the model's preferred terminal happens to be one step
+short of textbook DCSync. Future versions will refine the heuristics; for
+now, read the path itself and decide.
 
 ## Installation
 
