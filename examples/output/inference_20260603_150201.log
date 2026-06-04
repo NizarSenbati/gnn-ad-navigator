@@ -1,0 +1,118 @@
+============================================================
+GNN-AD-Navigator inference
+============================================================
+Graph  : gnn-ad-navigator/examples/output/forest_graph.json
+Hetero : gnn-ad-navigator/examples/output/heterodata.pt
+Model  : /home/senbati/Workspace/PFE/gnn-ad-navigator/models/HGT.pt  (HGT)
+Device : cpu
+
+Start  : wley@inlanefreight.local (users)
+Target : domain admins@inlanefreight.local (groups)
+
+============================================================
+RESULTS — top 3 path(s)
+============================================================
+
+Path 1:
+  Score: 0.0972  Steps: 5
+    [1] wley@inlanefreight.local
+        → damundsen@inlanefreight.local
+        edge   : forcechangepassword
+        attack : Password reset
+        action : Force-change target's password
+    [2] damundsen@inlanefreight.local
+        → help desk level 1@inlanefreight.local
+        edge   : genericwrite
+        attack : ACL abuse — targeted write
+        action : Modify SPN, msDS-AllowedToActOnBehalfOfOtherIdentity
+    [3] help desk level 1@inlanefreight.local
+        → information technology@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [4] information technology@inlanefreight.local
+        → adunn@inlanefreight.local
+        edge   : genericall
+        attack : ACL abuse — full control
+        action : Reset password, add SPN, modify object
+    [5] adunn@inlanefreight.local
+        → printer access@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+
+  AUDIT:
+    ✗ Path terminates at 'printer access@inlanefreight.local' which has no DCSync rights and is not the target. The model could not find a working attack chain.
+    ⚠ Path ends with a 'memberof' edge — this is structural, not exploitative. Likely noise from beam search continuation.
+
+Path 2:
+  Score: 0.0972  Steps: 5
+    [1] wley@inlanefreight.local
+        → damundsen@inlanefreight.local
+        edge   : forcechangepassword
+        attack : Password reset
+        action : Force-change target's password
+    [2] damundsen@inlanefreight.local
+        → help desk level 1@inlanefreight.local
+        edge   : genericwrite
+        attack : ACL abuse — targeted write
+        action : Modify SPN, msDS-AllowedToActOnBehalfOfOtherIdentity
+    [3] help desk level 1@inlanefreight.local
+        → information technology@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [4] information technology@inlanefreight.local
+        → adunn@inlanefreight.local
+        edge   : genericall
+        attack : ACL abuse — full control
+        action : Reset password, add SPN, modify object
+    [5] adunn@inlanefreight.local
+        → file share h drive@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+
+  AUDIT:
+    ✗ Path terminates at 'file share h drive@inlanefreight.local' which has no DCSync rights and is not the target. The model could not find a working attack chain.
+    ⚠ Path ends with a 'memberof' edge — this is structural, not exploitative. Likely noise from beam search continuation.
+
+Path 3:
+  Score: 0.0972  Steps: 5
+    [1] wley@inlanefreight.local
+        → damundsen@inlanefreight.local
+        edge   : forcechangepassword
+        attack : Password reset
+        action : Force-change target's password
+    [2] damundsen@inlanefreight.local
+        → help desk level 1@inlanefreight.local
+        edge   : genericwrite
+        attack : ACL abuse — targeted write
+        action : Modify SPN, msDS-AllowedToActOnBehalfOfOtherIdentity
+    [3] help desk level 1@inlanefreight.local
+        → information technology@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [4] information technology@inlanefreight.local
+        → adunn@inlanefreight.local
+        edge   : genericall
+        attack : ACL abuse — full control
+        action : Reset password, add SPN, modify object
+    [5] adunn@inlanefreight.local
+        → file share g drive@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+
+  AUDIT:
+    ✗ Path terminates at 'file share g drive@inlanefreight.local' which has no DCSync rights and is not the target. The model could not find a working attack chain.
+    ⚠ Path ends with a 'memberof' edge — this is structural, not exploitative. Likely noise from beam search continuation.
+
+============================================================
+Verdict: ALL paths failed quality audit.
+Possible causes:
+  - Target unreachable from start in the graph
+  - Collection may be incomplete (missing trust edges, foreign memberships)
+  - Start node has no exploitable outgoing rights
+============================================================

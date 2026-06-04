@@ -1,193 +1,216 @@
-Loading: ./examples/output/raw_bloodhound/20260516211205_computers.json
-Loading: ./examples/output/raw_bloodhound/20260516191339_containers.json
-Loading: ./examples/output/raw_bloodhound/20260516211205_users.json
-Loading: ./examples/output/raw_bloodhound/20260514135656_gpos.json
-Loading: ./examples/output/raw_bloodhound/20260516211205_groups.json
-Loading: ./examples/output/raw_bloodhound/20260516191339_groups.json
-Loading: ./examples/output/raw_bloodhound/20260514135656_domains.json
-Loading: ./examples/output/raw_bloodhound/20260516191339_computers.json
-Loading: ./examples/output/raw_bloodhound/20260514135656_groups.json
-Loading: ./examples/output/raw_bloodhound/20260514135656_containers.json
-Loading: ./examples/output/raw_bloodhound/20260516191339_users.json
-Loading: ./examples/output/raw_bloodhound/20260516211205_ous.json
-Loading: ./examples/output/raw_bloodhound/20260516211205_gpos.json
-Loading: ./examples/output/raw_bloodhound/20260516191339_ous.json
-Loading: ./examples/output/raw_bloodhound/20260514135656_computers.json
-Loading: ./examples/output/raw_bloodhound/20260516191339_domains.json
-Loading: ./examples/output/raw_bloodhound/20260516191339_gpos.json
-Loading: ./examples/output/raw_bloodhound/20260516211205_containers.json
-Loading: ./examples/output/raw_bloodhound/20260514135656_users.json
-Loading: ./examples/output/raw_bloodhound/20260514135656_ous.json
-Loading: ./examples/output/raw_bloodhound/20260516211205_domains.json
+Scanning input tree: gnn-ad-navigator/examples/output/raw_bloodhound
+============================================================
+  Loaded 20260514135656_computers.json: 564 computers
+  Loaded 20260514135656_containers.json: 23 containers
+  Loaded 20260514135656_domains.json: 1 domains
+  Loaded 20260514135656_gpos.json: 15 gpos
+  Loaded 20260514135656_groups.json: 183 groups
+  Loaded 20260514135656_ous.json: 61 ous
+  Loaded 20260514135656_users.json: 2952 users
+  Loaded 20260516191339_computers.json: 0 computers
+  Loaded 20260516191339_containers.json: 22 containers
+  Loaded 20260516191339_domains.json: 1 domains
+  Loaded 20260516191339_gpos.json: 2 gpos
+  Loaded 20260516191339_groups.json: 47 groups
+  Loaded 20260516191339_ous.json: 1 ous
+  Loaded 20260516191339_users.json: 6 users
+  Loaded 20260516211205_computers.json: 5 computers
+  Loaded 20260516211205_containers.json: 21 containers
+  Loaded 20260516211205_domains.json: 1 domains
+  Loaded 20260516211205_gpos.json: 2 gpos
+  Loaded 20260516211205_groups.json: 52 groups
+  Loaded 20260516211205_ous.json: 1 ous
+  Loaded 20260516211205_users.json: 10 users
 
-==================================================
-Loaded types: ['computers', 'containers', 'users', 'gpos', 'groups', 'domains', 'ous']
+============================================================
+Accumulated raw records:
+  computers   : 569 records from 3 file(s)
+  users       : 2968 records from 3 file(s)
+  groups      : 282 records from 3 file(s)
+  domains     : 3 records from 3 file(s)
+  gpos        : 19 records from 3 file(s)
+  ous         : 63 records from 3 file(s)
+  containers  : 66 records from 3 file(s)
+
+Deduplicating by ObjectIdentifier...
+  groups: 282 → 281 (removed 1 duplicates)
+
 Building edge index...
+  Edge index covers 3046 unique SIDs
 
-==================================================
+============================================================
 Saving cleaned files...
-  Saved: ./examples/output/cleaned/cleaned_20260514135656_computers.json
-  Saved: ./examples/output/cleaned/cleaned_20260516211205_containers.json
-  Saved: ./examples/output/cleaned/cleaned_20260514135656_users.json
-  Saved: ./examples/output/cleaned/cleaned_20260516191339_gpos.json
-  Saved: ./examples/output/cleaned/cleaned_20260514135656_groups.json
-  Saved: ./examples/output/cleaned/cleaned_20260516211205_domains.json
-  Saved: ./examples/output/cleaned/cleaned_20260514135656_ous.json
+  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_computers.json
+  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_users.json
+  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_groups.json
+  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_domains.json
+  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_gpos.json
+  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_ous.json
+  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_containers.json
 
-==================================================
+============================================================
 Type              Before    After  Dropped
 ---------------------------------------------
-computers            564      564        0
-users               2952     2952        0
-groups               183      182        1
-domains                1        1        0
-gpos                   2        2        0
-ous                   61       61        0
-containers            21       21        0
+computers            569      569        0
+users               2968     2968        0
+groups               281      278        3
+domains                3        3        0
+gpos                  19       19        0
+ous                   63       63        0
+containers            66       66        0
 ---------------------------------------------
-TOTAL               3784     3783        1
+TOTAL               3969     3966        3
 
-Edge index covers 2995 unique SIDs
-Unique edge type pairs: 15504
+Edge index covers 3046 unique SIDs
 ============================================================
 merger.py
 ============================================================
 Inputs : 1
-  [folder]  examples/output/cleaned
-Output : examples/output/forest_graph.json
+  [folder]  gnn-ad-navigator/examples/output/cleaned
+Output : gnn-ad-navigator/examples/output/forest_graph.json
 
 Loading cleaned...
-  [folder] 3784 nodes
+  [folder] 7750 nodes
 
 Merging...
 
 Merged forest:
-  users          : 2952
-  computers      : 564
-  groups         : 183
-  domains        : 1
-  gpos           : 2
-  ous            : 61
-  containers     : 21
-  TOTAL          : 3784
+  users          : 2968
+  computers      : 569
+  groups         : 279
+  domains        : 3
+  gpos           : 19
+  ous            : 63
+  containers     : 66
+  TOTAL          : 3967
 
 Trusts inventory:
   freightlogistics.local → INLANEFREIGHT.LOCAL  type=Forest direction=Bidirectional sid_filter=True
-  Total trust relationships: 1
+  inlanefreight.local → FREIGHTLOGISTICS.LOCAL  type=Forest direction=Bidirectional sid_filter=True
+  inlanefreight.local → LOGISTICS.INLANEFREIGHT.LOCAL  type=ParentChild direction=Bidirectional sid_filter=False
+  logistics.inlanefreight.local → INLANEFREIGHT.LOCAL  type=ParentChild direction=Bidirectional sid_filter=False
+  Total trust relationships: 4
 
-Edge inventory (17 types, 65777 total references, 3926 dangling = 6.0%):
-  members                            : 15503
-  genericall                         : 11138
-  genericwrite                       : 7609
-  writedacl                          : 6974
-  addkeycredentiallink               : 6966
-  writeowner                         : 3890
-  owns                               : 3776
-  childobjects                       : 3680
-  allextendedrights                  : 3033
+Edge inventory (17 types, 67349 total references, 3770 dangling = 5.6%):
+  members                            : 15555
+  genericall                         : 11453
+  genericwrite                       : 7835
+  writedacl                          : 7275
+  addkeycredentiallink               : 6988
+  writeowner                         : 4189
+  owns                               : 3946
+  childobjects                       : 3803
+  allextendedrights                  : 3071
   forcechangepassword                : 2942
   addmember                          : 185
-  writeaccountrestrictions           : 60
-  links                              : 12
-  getchanges                         : 3
-  addself                            : 2
+  writeaccountrestrictions           : 64
+  links                              : 17
+  getchanges                         : 10
+  getchangesall                      : 7
   ... and 2 more
 
-Written examples/output/forest_graph.json  (16945 KB)
+Written gnn-ad-navigator/examples/output/forest_graph.json  (17386 KB)
 
 Next: build_dataset.py — converts forest_graph.json into PyG HeteroData
 ============================================================
 ============================================================
 build_dataset.py
 ============================================================
-Graph : examples/output/forest_graph.json
-Out   : examples/output
+Graph : gnn-ad-navigator/examples/output/forest_graph.json
+Out   : gnn-ad-navigator/examples/output
 
 [1] Loading graph...
-  Nodes      : 3784
+  Nodes      : 3967
   Feature dim: 14
 
 [2] Building edges (principal→target convention)...
-  Edge types : 13
-    memberof                 : 15501
-    genericall               : 11108
-    addkeycredentiallink     : 6966
-    writedacl                : 6934
-    genericwrite             : 3896
-    writeowner               : 3850
-    owns                     : 3753
-    contains                 : 3645
-    allextendedrights        : 3020
+  Edge types : 20
+    memberof                 : 15550
+    genericall               : 11452
+    writedacl                : 7274
+    addkeycredentiallink     : 6988
+    writeowner               : 4188
+    genericwrite             : 4126
+    owns                     : 3946
+    contains                 : 3797
+    allextendedrights        : 3057
     forcechangepassword      : 2942
     addmember                : 185
-    writeaccountrestrictions : 49
+    writeaccountrestrictions : 50
+    gplink                   : 17
+    getchanges               : 9
+    getchangesall            : 7
+    getchangesinfilteredset  : 6
+    crossforesttrust         : 4
+    sameforesttrust          : 4
+    allowedtodelegate        : 3
     addself                  : 2
 
-  Trust edges captured: 0
+  Trust edges captured: 8
 
 [4] Assembling HeteroData...
-  data['node'].x       : torch.Size([3785, 14])
-  data['node'].num_nodes: 3785
-  edge_types           : 13
+  data['node'].x       : torch.Size([3968, 14])
+  data['node'].num_nodes: 3968
+  edge_types           : 20
 
 [5] Saving...
-  heterodata.pt          → examples/output/heterodata.pt
+  heterodata.pt          → gnn-ad-navigator/examples/output/heterodata.pt
 
 ============================================================
 Summary:
-  Nodes      : 3784
-  Edge types : 13
-  Trust edges: 0
+  Nodes      : 3967
+  Edge types : 20
+  Trust edges: 8
 
 Next: train.py (if examples present) or inference notebook
 ============================================================
 ============================================================
 validate_dataset.py
 ============================================================
-Loading: examples/output/heterodata.pt
-Loading: examples/output/forest_graph.json
+Loading: gnn-ad-navigator/examples/output/heterodata.pt
+Loading: gnn-ad-navigator/examples/output/forest_graph.json
 
 [ Node features ]
-  ✓ OK    Node count = 3785
+  ✓ OK    Node count = 3968
   ✓ OK    Feature dim = 14
   ✓ OK    No NaN values in feature matrix
   ✓ OK    No Inf values in feature matrix
           Feature value range: [0.000, 1.000]
   ✓ OK    Feature values within reasonable range
-          Non-zero density   : 18.8%
+          Non-zero density   : 18.1%
   ✓ OK    At least 5% of feature matrix is non-zero
 
 [ Edges ]
   ✓ OK    At least one edge type present
-          Edge types         : 13
-          Total edge entries : 61851
-          Self-loops         : 15
-  ✓ OK    Edge total (61851) appears non-trivial
-  ⚠ WARN  No self-loops (got 15)
-  ⚠ WARN  Trust edges present (or graph too small to require them)
-          Top edge type      : memberof (15501 = 25.1%)
-  ✓ OK    No single edge type dominates (top is 25.1%)
+          Edge types         : 20
+          Total edge entries : 63607
+          Self-loops         : 32
+  ✓ OK    Edge total (63607) appears non-trivial
+  ⚠ WARN  No self-loops (got 32)
+  ✓ OK    Trust edges present (or graph too small to require them)
+          Top edge type      : memberof (15550 = 24.4%)
+  ✓ OK    No single edge type dominates (top is 24.4%)
 
 [ Connectivity ]
-          Connected components: 22
-          Largest component  : 3760 nodes (99.3%)
-          Isolated nodes     : 20
+          Connected components: 6
+          Largest component  : 3963 nodes (99.9%)
+          Isolated nodes     : 5
   ✓ OK    Largest component covers >50% of nodes
-  ✓ OK    Isolated nodes < 20% of total (got 20)
-          Avg degree         : 23.4
-          Max degree         : 3757
+  ✓ OK    Isolated nodes < 20% of total (got 5)
+          Avg degree         : 22.8
+          Max degree         : 3868
           Highest-degree nodes:
-            [groups] enterprise admins@inlanefreight.local: 3757
-            [groups] domain admins@inlanefreight.local: 3755
-            [groups] administrators@inlanefreight.local: 3755
+            [groups] enterprise admins@inlanefreight.local: 3868
+            [groups] domain admins@inlanefreight.local: 3794
+            [groups] administrators@inlanefreight.local: 3773
             [groups] account operators@inlanefreight.local: 3651
-            [groups] enterprise key admins@inlanefreight.local: 3486
+            [groups] enterprise key admins@inlanefreight.local: 3491
 
 [ Domain coverage ]
-          Domains detected   : 567
-            inlanefreight.local                      3196 nodes
-            freightlogistics.local                   22 nodes
-            logistics.inlanefreight.local            2 nodes
+          Domains detected   : 572
+            inlanefreight.local                      3235 nodes
+            freightlogistics.local                   86 nodes
+            logistics.inlanefreight.local            77 nodes
             academy-ea-lptp-0203.inlanefreight.local 1 nodes
             academy-ea-lptp-0205.inlanefreight.local 1 nodes
             academy-ea-lptp-0207.inlanefreight.local 1 nodes
@@ -197,13 +220,13 @@ Loading: examples/output/forest_graph.json
             academy-ea-lptp-0204.inlanefreight.local 1 nodes
 
 [ Cross-domain coverage ]
-  (no trust edges detected)
+  ✓ freightlogistics.local ↔ inlanefreight.local: 1 supporting cross-domain edges
+  ✓ inlanefreight.local ↔ logistics.inlanefreight.local: 113 supporting cross-domain edges
 
 ============================================================
 VERDICT
 ============================================================
-  ⚠ 2 warning(s) — review before training:
-    - No self-loops (got 15)
-    - Trust edges present (or graph too small to require them)
+  ⚠ 1 warning(s) — review before training:
+    - No self-loops (got 32)
 
   Warnings are informational. Training can proceed.

@@ -1,0 +1,136 @@
+============================================================
+GNN-AD-Navigator inference
+============================================================
+Graph  : gnn-ad-navigator/examples/output/forest_graph.json
+Hetero : gnn-ad-navigator/examples/output/heterodata.pt
+Model  : /home/senbati/Workspace/PFE/gnn-ad-navigator/models/HGT.pt  (HGT)
+Device : cpu
+
+Start  : htb-student_adm@logistics.inlanefreight.local (users)
+Target : domain admins@inlanefreight.local (groups)
+
+============================================================
+RESULTS — top 3 path(s)
+============================================================
+
+Path 1:
+  Score: 0.2349  Steps: 6
+    [1] htb-student_adm@logistics.inlanefreight.local
+        → domain admins@logistics.inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [2] domain admins@logistics.inlanefreight.local
+        → logistics.inlanefreight.local
+        edge   : writedacl
+        attack : ACL abuse — DACL modification
+        action : Grant yourself GenericAll on target
+    [3] logistics.inlanefreight.local
+        → inlanefreight.local
+        edge   : sameforesttrust
+        attack : Same-forest trust traversal
+        action : Cross domain via SID History
+    [4] inlanefreight.local
+        → freightlogistics.local
+        edge   : crossforesttrust
+        attack : Cross-forest trust traversal
+        action : Inter-forest pivot
+    [5] freightlogistics.local
+        → domain controllers@freightlogistics.local
+        edge   : contains
+        attack : Container hierarchy
+        action : Object lives inside OU/container
+    [6] domain controllers@freightlogistics.local
+        → academy-ea-dc03.freightlogistics.local
+        edge   : contains
+        attack : Container hierarchy
+        action : Object lives inside OU/container
+
+  AUDIT:
+    ✗ Path terminates at 'academy-ea-dc03.freightlogistics.local' which has no DCSync rights and is not the target. The model could not find a working attack chain.
+    ⚠ Final node is in domain 'academy-ea-dc03.freightlogistics.local' but target is in 'inlanefreight.local'. Cross-domain attack may need additional steps.
+    ⚠ Path ends with a 'contains' edge — this is structural, not exploitative. Likely noise from beam search continuation.
+
+Path 2:
+  Score: 0.2007  Steps: 6
+    [1] htb-student_adm@logistics.inlanefreight.local
+        → domain admins@logistics.inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [2] domain admins@logistics.inlanefreight.local
+        → logistics.inlanefreight.local
+        edge   : writedacl
+        attack : ACL abuse — DACL modification
+        action : Grant yourself GenericAll on target
+    [3] logistics.inlanefreight.local
+        → inlanefreight.local
+        edge   : sameforesttrust
+        attack : Same-forest trust traversal
+        action : Cross domain via SID History
+    [4] inlanefreight.local
+        → freightlogistics.local
+        edge   : crossforesttrust
+        attack : Cross-forest trust traversal
+        action : Inter-forest pivot
+    [5] freightlogistics.local
+        → computers@freightlogistics.local
+        edge   : contains
+        attack : Container hierarchy
+        action : Object lives inside OU/container
+    [6] computers@freightlogistics.local
+        → win-wgzco3jepbm.freightlogistics.local
+        edge   : contains
+        attack : Container hierarchy
+        action : Object lives inside OU/container
+
+  AUDIT:
+    ✗ Path terminates at 'win-wgzco3jepbm.freightlogistics.local' which has no DCSync rights and is not the target. The model could not find a working attack chain.
+    ⚠ Final node is in domain 'win-wgzco3jepbm.freightlogistics.local' but target is in 'inlanefreight.local'. Cross-domain attack may need additional steps.
+    ⚠ Path ends with a 'contains' edge — this is structural, not exploitative. Likely noise from beam search continuation.
+
+Path 3:
+  Score: 0.0018  Steps: 6
+    [1] htb-student_adm@logistics.inlanefreight.local
+        → domain admins@logistics.inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [2] domain admins@logistics.inlanefreight.local
+        → logistics.inlanefreight.local
+        edge   : writedacl
+        attack : ACL abuse — DACL modification
+        action : Grant yourself GenericAll on target
+    [3] logistics.inlanefreight.local
+        → inlanefreight.local
+        edge   : sameforesttrust
+        attack : Same-forest trust traversal
+        action : Cross domain via SID History
+    [4] inlanefreight.local
+        → freightlogistics.local
+        edge   : crossforesttrust
+        attack : Cross-forest trust traversal
+        action : Inter-forest pivot
+    [5] freightlogistics.local
+        → computers@freightlogistics.local
+        edge   : contains
+        attack : Container hierarchy
+        action : Object lives inside OU/container
+    [6] computers@freightlogistics.local
+        → win-uithsfm6vda.freightlogistics.local
+        edge   : contains
+        attack : Container hierarchy
+        action : Object lives inside OU/container
+
+  AUDIT:
+    ✗ Path terminates at 'win-uithsfm6vda.freightlogistics.local' which has no DCSync rights and is not the target. The model could not find a working attack chain.
+    ⚠ Final node is in domain 'win-uithsfm6vda.freightlogistics.local' but target is in 'inlanefreight.local'. Cross-domain attack may need additional steps.
+    ⚠ Path ends with a 'contains' edge — this is structural, not exploitative. Likely noise from beam search continuation.
+
+============================================================
+Verdict: ALL paths failed quality audit.
+Possible causes:
+  - Target unreachable from start in the graph
+  - Collection may be incomplete (missing trust edges, foreign memberships)
+  - Start node has no exploitable outgoing rights
+============================================================

@@ -1,0 +1,8 @@
+============================================================
+GNN-AD-Navigator inference
+============================================================
+Graph  : gnn-ad-navigator/examples/output/forest_graph.json
+Hetero : gnn-ad-navigator/examples/output/heterodata.pt
+Model  : /home/senbati/Workspace/PFE/gnn-ad-navigator/models/HGT.pt  (HGT)
+Device : cpu
+ERROR: could not resolve start 'htb-student_adm@logistics.inlanefreight.local'

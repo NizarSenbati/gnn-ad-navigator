@@ -1,0 +1,22 @@
+[theme]
+# Light theme, no dark surprises
+base = "light"
+
+# Primary accent: muted navy (used for buttons, focus rings)
+primaryColor = "#1f4e79"
+
+# Backgrounds — clean office whites and greys
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#fafbfc"
+
+# Text — dark navy, not pure black (less harsh)
+textColor = "#2c3e50"
+
+# Sans-serif for readability
+font = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false

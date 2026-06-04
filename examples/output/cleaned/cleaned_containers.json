@@ -1,0 +1,4050 @@
+{
+  "data": [
+    {
+      "ObjectIdentifier": "0508B16A-5DD1-49E3-A69D-C25972F43430",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "MONITORING MAILBOXES@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MONITORING MAILBOXES,CN=MICROSOFT EXCHANGE SYSTEM OBJECTS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635453852,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": [
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5202",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5619",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5628",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5624",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5621",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5620",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5626",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5212",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5211",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5629",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5625",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5210",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5622",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5207",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5203",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5209",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5623",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5627",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5208",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5204",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5206",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5205",
+          "ObjectType": "User"
+        }
+      ]
+    },
+    {
+      "ObjectIdentifier": "94D14AE6-75C7-401A-A2D1-C1DC6A883AF7",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "MICROSOFTDNS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MICROSOFTDNS,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347713,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-1103",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-1103",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "F8787976-FB5A-4A95-BA64-DF82CBAD9222",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "WMIGPO@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=WMIGPO,CN=WMIPOLICY,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "7302E3D1-5598-4CD2-A733-E3E30748CA2A",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "POLICYTYPE@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=POLICYTYPE,CN=WMIPOLICY,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "5758D294-C33F-40EA-B5FE-39DB0E898E6C",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "SOM@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=SOM,CN=WMIPOLICY,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "989E9A65-8E68-43D2-87B7-02CCC92BEAE0",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "POLICYTEMPLATE@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=POLICYTEMPLATE,CN=WMIPOLICY,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "B5F828CE-B5FC-499E-A948-45191447FE5F",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "WMIPOLICY@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=WMIPOLICY,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "F6BAE18C-A6BE-4301-9789-32D1D15AAAA2",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "COMPARTITIONSETS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=COMPARTITIONSETS,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "AD1960F3-78E0-47EC-8A1B-AFE6DBAFB1DD",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "COMPARTITIONS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=COMPARTITIONS,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "746994C2-168A-49D0-AB9D-09DE641FA327",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "ADMINSDHOLDER@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=ADMINSDHOLDER,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "6E9DC470-2D74-45D7-9EBD-48341E8909C2",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "IP SECURITY@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=IP SECURITY,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "772532F4-E72C-4F2A-AA3E-15596D58B718",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "RAS AND IAS SERVERS ACCESS CHECK@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=RAS AND IAS SERVERS ACCESS CHECK,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-553",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-553",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "40E92C01-712F-4A86-A51D-01E701148749",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "POLICIES@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=POLICIES,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "993A87BD-D0C3-47F2-BA9A-56D4959F36B1",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "MEETINGS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MEETINGS,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "0F282005-9DAE-4963-8BA3-1F76E3913E45",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "WINSOCKSERVICES@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=WINSOCKSERVICES,CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "B96D10E7-78B9-4F77-91BC-46BE1CD893FC",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "KEYS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=KEYS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "Default container for key objects",
+        "whencreated": 1635347605,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-516",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-526",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-527",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "67A9CCC3-0BAC-455C-B92F-945791B73785",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "MANAGED SERVICE ACCOUNTS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MANAGED SERVICE ACCOUNTS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "Default container for managed service accounts",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "604224DC-1FEE-4C4D-8C25-D0E49AD5FF29",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "MICROSOFT@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MICROSOFT,CN=PROGRAM DATA,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "Default location for storage of Microsoft application data.",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "81F18744-7FC4-4F65-8486-59860E6FCAE5",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "PROGRAM DATA@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=PROGRAM DATA,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "Default location for storage of application data.",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "7585C390-A5C4-45BC-9819-ADC337062F1A",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "FOREIGNSECURITYPRINCIPALS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=FOREIGNSECURITYPRINCIPALS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "Default container for security identifiers (SIDs) associated with objects from external, trusted domains",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "16ECF633-C4D8-42F5-B808-13D948830330",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "SYSTEM@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=SYSTEM,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "Builtin system settings",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "A21675D0-27A5-47D9-A662-F838AD13C295",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "COMPUTERS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=COMPUTERS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "Default container for upgraded computer accounts",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": [
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5230",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-6604",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5229",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5233",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5237",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5232",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5238",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-6606",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5231",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5630",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5235",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5240",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-6605",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-6607",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5236",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5234",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5224",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5225",
+          "ObjectType": "Computer"
+        }
+      ]
+    },
+    {
+      "ObjectIdentifier": "99ABF98D-79ED-4134-BE24-1C3613B0C2A0",
+      "Properties": {
+        "domain": "INLANEFREIGHT.LOCAL",
+        "name": "USERS@INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=USERS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-3842939050-3880317879-2865463114",
+        "highvalue": false,
+        "description": "Default container for upgraded user accounts",
+        "whencreated": 1635347605,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": [
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5605",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5604",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-6603",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-518",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-7104",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-521",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-553",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-525",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5213",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5226",
+          "ObjectType": "trustaccount"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-1001",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-502",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-526",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5198",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5199",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5193",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5200",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5191",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5195",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5194",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5192",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5196",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5197",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-1111",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-501",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-520",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5227",
+          "ObjectType": "trustaccount"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-498",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-527",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-513",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-514",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-516",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-515",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-1104",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-1103",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5245",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-572",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-522",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-5633",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-517",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-571",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-3842939050-3880317879-2865463114-500",
+          "ObjectType": "User"
+        }
+      ]
+    },
+    {
+      "ObjectIdentifier": "D2F9AA02-85F8-43E0-8181-72AEF27A0299",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "KEYS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=KEYS,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "Default container for key objects",
+        "whencreated": 1635790820,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-516",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-526",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-527",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "EDD8234D-B7F0-488A-B723-203A6C0B7FCA",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "MANAGED SERVICE ACCOUNTS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MANAGED SERVICE ACCOUNTS,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "Default container for managed service accounts",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "15D75ADF-196C-4F8D-BC08-8E422B72D132",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "MICROSOFT@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MICROSOFT,CN=PROGRAM DATA,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "Default location for storage of Microsoft application data.",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "33611091-3F61-410F-9690-E5B978627ED1",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "PROGRAM DATA@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=PROGRAM DATA,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "Default location for storage of application data.",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "356299A7-E2DE-4BA5-B47F-C137CEA6444F",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "FOREIGNSECURITYPRINCIPALS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=FOREIGNSECURITYPRINCIPALS,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "Default container for security identifiers (SIDs) associated with objects from external, trusted domains",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "48D98221-C976-4513-8803-50F2C030039C",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "MICROSOFTDNS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MICROSOFTDNS,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790938,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-1103",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-1103",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "BDCAEED7-CEE4-4018-B95D-BF1324675509",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "WMIGPO@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=WMIGPO,CN=WMIPOLICY,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "AD658772-6946-4CED-995E-67CF38865444",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "POLICYTYPE@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=POLICYTYPE,CN=WMIPOLICY,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "A75F7737-7A65-4ABA-B75F-784E2A973FE2",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "SOM@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=SOM,CN=WMIPOLICY,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "8E2EA41D-039F-446D-9EFA-367984BF5DAD",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "POLICYTEMPLATE@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=POLICYTEMPLATE,CN=WMIPOLICY,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "203ACDD7-1CA8-4888-ACF1-047697BA09BB",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "WMIPOLICY@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=WMIPOLICY,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "24D6C2BC-5D24-40AA-B0E2-755B14FC6FC4",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "COMPARTITIONSETS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=COMPARTITIONSETS,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "476B9601-A060-4CE6-8545-4681BA92E07D",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "COMPARTITIONS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=COMPARTITIONS,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "BAA01671-DC8C-4331-A8AD-D5D4530C6BCC",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "ADMINSDHOLDER@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=ADMINSDHOLDER,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "B81E033A-3BB2-4708-9E7B-09CBDB14EBD4",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "IP SECURITY@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=IP SECURITY,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "568ACAF4-B2DA-486C-89A1-730EC910693F",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "RAS AND IAS SERVERS ACCESS CHECK@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=RAS AND IAS SERVERS ACCESS CHECK,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-553",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-553",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "F02E5268-3255-43AF-9F31-CBD1A6124A8D",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "POLICIES@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=POLICIES,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "BCBBC248-9C0C-4F8A-A9A8-3D493A9199F4",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "MEETINGS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=MEETINGS,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "A2BFF799-71CE-49AB-9566-5A08284138B8",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "WINSOCKSERVICES@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=WINSOCKSERVICES,CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "16AF4F0E-D605-4436-9902-C11471D01404",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "SYSTEM@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=SYSTEM,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "Builtin system settings",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "EC0E9BA5-18FC-4B2E-B2B3-EAC1ADBE9D0C",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "COMPUTERS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=COMPUTERS,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "Default container for upgraded computer accounts",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "B9E29961-B29A-44FC-8C21-9FC33F61313F",
+      "Properties": {
+        "domain": "LOGISTICS.INLANEFREIGHT.LOCAL",
+        "name": "USERS@LOGISTICS.INLANEFREIGHT.LOCAL",
+        "distinguishedname": "CN=USERS,DC=LOGISTICS,DC=INLANEFREIGHT,DC=LOCAL",
+        "domainsid": "S-1-5-21-2806153819-209893948-922872689",
+        "highvalue": false,
+        "description": "Default container for upgraded user accounts",
+        "whencreated": 1635790820,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2806153819-209893948-922872689-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "LOGISTICS.INLANEFREIGHT.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": [
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-521",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-553",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-525",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-1001",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-502",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-526",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-1105",
+          "ObjectType": "trustaccount"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-1106",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-501",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-520",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-513",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-514",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-516",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-515",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-512",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-1104",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-1103",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-572",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-522",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-517",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-571",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2806153819-209893948-922872689-500",
+          "ObjectType": "User"
+        }
+      ]
+    },
+    {
+      "ObjectIdentifier": "82EB83FA-6876-4DD5-887E-F83B4624BA4D",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "MICROSOFTDNS@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=MICROSOFTDNS,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791324,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-1103",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-1103",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-9",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-9",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "44E761AA-8520-46EC-8205-9682735C9641",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "WMIGPO@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=WMIGPO,CN=WMIPOLICY,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "E88163B4-B23A-4E76-8B9B-AB4ADD461F9B",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "POLICYTYPE@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=POLICYTYPE,CN=WMIPOLICY,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "7F14516A-B92F-4841-A899-06711FFD02B4",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "SOM@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=SOM,CN=WMIPOLICY,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "D6E5FB45-A44B-4871-992B-3B503ADD0244",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "POLICYTEMPLATE@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=POLICYTEMPLATE,CN=WMIPOLICY,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "8F441D83-D8D1-45EE-898E-3F2310C2D393",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "WMIPOLICY@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=WMIPOLICY,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "84939115-3C29-4A01-8D99-D7C4B5F71B43",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "COMPARTITIONSETS@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=COMPARTITIONSETS,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "F658C480-4ED7-4F1E-A4A5-AE095BA64909",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "COMPARTITIONS@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=COMPARTITIONS,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "66269A2D-7E2D-4680-9A97-807C68B7496A",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "ADMINSDHOLDER@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=ADMINSDHOLDER,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": true
+      },
+      "IsDeleted": false,
+      "IsACLProtected": true,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "C9D7DD6C-511B-46CE-9109-DE8B4DCC9DA0",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "IP SECURITY@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=IP SECURITY,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "486E7920-095D-4DF4-A6DC-7E84302C18CE",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "RAS AND IAS SERVERS ACCESS CHECK@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=RAS AND IAS SERVERS ACCESS CHECK,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-553",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-553",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "FF6E5254-F1A7-4F4F-9A52-BA44FE5620E9",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "POLICIES@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=POLICIES,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "BB7BDE1C-4CB0-4ED2-807E-BB9C9DF79F9E",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "MEETINGS@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=MEETINGS,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "D71C39EE-0029-44F3-AD7B-E4BFEADC5242",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "WINSOCKSERVICES@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=WINSOCKSERVICES,CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "05C0C474-D9F4-444F-902B-45AA3AC447E3",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "MANAGED SERVICE ACCOUNTS@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=MANAGED SERVICE ACCOUNTS,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "Default container for managed service accounts",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "231081DE-AAD9-43F6-A767-FCD46735D092",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "MICROSOFT@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=MICROSOFT,CN=PROGRAM DATA,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "Default location for storage of Microsoft application data.",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "EB1FD01D-FF09-4A47-A79D-20A3130E1D66",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "PROGRAM DATA@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=PROGRAM DATA,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "Default location for storage of application data.",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "8058B809-CCF5-4EC4-8BED-35A904E42395",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "FOREIGNSECURITYPRINCIPALS@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=FOREIGNSECURITYPRINCIPALS,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "Default container for security identifiers (SIDs) associated with objects from external, trusted domains",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "2D8ECEC4-9059-488F-A4DD-A3047281ADF7",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "SYSTEM@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=SYSTEM,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "Builtin system settings",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": []
+    },
+    {
+      "ObjectIdentifier": "BCDF8704-7D07-4857-866C-5926C88B8280",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "COMPUTERS@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=COMPUTERS,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "Default container for upgraded computer accounts",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": [
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1112",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1115",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1113",
+          "ObjectType": "Computer"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1110",
+          "ObjectType": "Computer"
+        }
+      ]
+    },
+    {
+      "ObjectIdentifier": "38BA9F94-EB17-44F3-9163-2B541B47088F",
+      "Properties": {
+        "domain": "FREIGHTLOGISTICS.LOCAL",
+        "name": "USERS@FREIGHTLOGISTICS.LOCAL",
+        "distinguishedname": "CN=USERS,DC=FREIGHTLOGISTICS,DC=LOCAL",
+        "domainsid": "S-1-5-21-2103857153-3563876796-2017925254",
+        "highvalue": false,
+        "description": "Default container for upgraded user accounts",
+        "whencreated": 1635791222,
+        "isaclprotected": false
+      },
+      "IsDeleted": false,
+      "IsACLProtected": false,
+      "ContainedBy": null,
+      "Aces": [
+        {
+          "RightName": "Owns",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": false,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "GenericAll",
+          "IsInherited": true,
+          "PrincipalSID": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteOwner",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        },
+        {
+          "RightName": "WriteDacl",
+          "IsInherited": true,
+          "PrincipalSID": "FREIGHTLOGISTICS.LOCAL-S-1-5-32-544",
+          "PrincipalType": "Group"
+        }
+      ],
+      "ChildObjects": [
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-518",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-2103",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-521",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-553",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-525",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1118",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1001",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-502",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-526",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1108",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1105",
+          "ObjectType": "trustaccount"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-501",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-520",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1114",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1107",
+          "ObjectType": "User"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-498",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-527",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-519",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-513",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-514",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-516",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-515",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-512",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1104",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-1103",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-572",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-522",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-517",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-571",
+          "ObjectType": "Group"
+        },
+        {
+          "ObjectIdentifier": "S-1-5-21-2103857153-3563876796-2017925254-500",
+          "ObjectType": "User"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "methods": 0,
+    "type": "containers",
+    "count": 66,
+    "version": 6
+  }
+}

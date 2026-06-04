@@ -1,0 +1,88 @@
+============================================================
+GNN-AD-Navigator inference
+============================================================
+Graph  : gnn-ad-navigator/examples/output/forest_graph.json
+Hetero : gnn-ad-navigator/examples/output/heterodata.pt
+Model  : /home/senbati/Workspace/PFE/gnn-ad-navigator/models/HGT.pt  (HGT)
+Device : cpu
+
+Start  : wley@inlanefreight.local (users)
+Target : domain admins@inlanefreight.local (groups)
+
+============================================================
+RESULTS — top 2 path(s)
+============================================================
+
+Path 1:
+  Score: 0.5620  Steps: 4
+    [1] wley@inlanefreight.local
+        → damundsen@inlanefreight.local
+        edge   : forcechangepassword
+        attack : Password reset
+        action : Force-change target's password
+    [2] damundsen@inlanefreight.local
+        → help desk level 1@inlanefreight.local
+        edge   : genericwrite
+        attack : ACL abuse — targeted write
+        action : Modify SPN, msDS-AllowedToActOnBehalfOfOtherIdentity
+    [3] help desk level 1@inlanefreight.local
+        → information technology@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [4] information technology@inlanefreight.local
+        → adunn@inlanefreight.local
+        edge   : genericall
+        attack : ACL abuse — full control
+        action : Reset password, add SPN, modify object
+
+  AUDIT:
+    ✓ Path terminates at a node with DCSync on the target domain 'inlanefreight.local'. This is operational success.
+
+  ┌─ TERMINAL STATE REACHED ────────────────────────────────
+  │  'adunn@inlanefreight.local'
+  │  holds DCSync on: ['inlanefreight.local']
+  │
+  │  Direct DA in target domain 'inlanefreight.local'.
+  │  Next: secretsdump.py -just-dc <user>:<pw>@<DC>
+  │        → recover any user's hash, including target group members
+  └──────────────────────────────────────────────────────────
+
+Path 2:
+  Score: 0.5620  Steps: 4
+    [1] wley@inlanefreight.local
+        → damundsen@inlanefreight.local
+        edge   : forcechangepassword
+        attack : Password reset
+        action : Force-change target's password
+    [2] damundsen@inlanefreight.local
+        → help desk level 1@inlanefreight.local
+        edge   : genericwrite
+        attack : ACL abuse — targeted write
+        action : Modify SPN, msDS-AllowedToActOnBehalfOfOtherIdentity
+    [3] help desk level 1@inlanefreight.local
+        → information technology@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [4] information technology@inlanefreight.local
+        → adunn@inlanefreight.local
+        edge   : genericall
+        attack : ACL abuse — full control
+        action : Reset password, add SPN, modify object
+
+  AUDIT:
+    ✓ Path terminates at a node with DCSync on the target domain 'inlanefreight.local'. This is operational success.
+
+  ┌─ TERMINAL STATE REACHED ────────────────────────────────
+  │  'adunn@inlanefreight.local'
+  │  holds DCSync on: ['inlanefreight.local']
+  │
+  │  Direct DA in target domain 'inlanefreight.local'.
+  │  Next: secretsdump.py -just-dc <user>:<pw>@<DC>
+  │        → recover any user's hash, including target group members
+  └──────────────────────────────────────────────────────────
+
+============================================================
+Verdict: at least one path is operationally valid.
+============================================================

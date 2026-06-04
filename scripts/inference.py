@@ -181,7 +181,8 @@ EDGE_TO_TECHNIQUE = {k.lower(): v for k, v in {
 # inference helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
-DCSYNC_RIGHTS = {"getchanges", "getchangesall"}
+DCSYNC_RIGHTS = {"getchanges", "getchangesall", "getchangesinfilteredset"}
+
 
 def get_node_domain(node_idx, idx_to_name):
     name = idx_to_name.get(node_idx, "")
@@ -220,48 +221,157 @@ def has_dcsync_on(node_idx, target_domain_name, edge_tensors, idx_to_name):
         mask = (src == node_idx)
         for d in dst[mask].tolist():
             held_on.add((rel, idx_to_name.get(d, "")))
-    domains_with_both = set()
-    has_getchanges     = {d for r, d in held_on if r == "getchanges"}
-    has_getchangesall  = {d for r, d in held_on if r == "getchangesall"}
-    domains_with_both  = has_getchanges & has_getchangesall
-    if target_domain_name in domains_with_both:
-        return True, list(domains_with_both)
-    return False, list(domains_with_both)
+
+    has_getchanges    = {d for r, d in held_on if r == "getchanges"}
+    has_getchangesall = {d for r, d in held_on if r == "getchangesall"}
+    has_filtered      = {d for r, d in held_on if r == "getchangesinfilteredset"}
+
+    # Valid DCSync: GetChanges AND (GetChangesAll OR GetChangesInFilteredSet)
+    domains_with_both = has_getchanges & (has_getchangesall | has_filtered)
+
+    # Check if we have DCSync on the target domain OR its parent forest root
+    # e.g., target is "kingslanding.sevenkingdoms.local", d is "sevenkingdoms.local"
+    won = False
+    for d in domains_with_both:
+        if target_domain_name == d or target_domain_name.endswith("." + d):
+            won = True
+            break
+
+    return won, list(domains_with_both)
 
 
-def beam_search(model, embeddings, edge_tensors, start_idx, target_idx,
-                idx_to_name, beam_width=3, max_depth=8):
+#def beam_search(model, embeddings, edge_tensors, start_idx, target_idx,
+#                idx_to_name, beam_width=3, max_depth=8):
+#    target_domain = get_node_domain(target_idx, idx_to_name) or ""
+#    beam = [(0.0, [start_idx])]
+#    completed = []
+#    for _ in range(max_depth):
+#        candidates = []
+#        for log_score, path in beam:
+#            cur = path[-1]
+#            won, _ = has_dcsync_on(cur, target_domain, edge_tensors, idx_to_name)
+#            if cur == target_idx or won:
+#                completed.append((log_score, path))
+#                continue
+#            nbrs = get_neighbors(cur, edge_tensors)
+#            nbrs = [n for n in nbrs if n not in path]
+#            if not nbrs: continue
+#            with torch.no_grad():
+#                scores = model.score(embeddings, cur, nbrs)
+#                probs  = F.softmax(scores, dim=0)
+#            for i, nb in enumerate(nbrs):
+#                ns = log_score + math.log(probs[i].item() + 1e-9)
+#                new_path = path + [nb]
+#                candidates.append((ns, new_path))
+#                won_nb, _ = has_dcsync_on(nb, target_domain, edge_tensors, idx_to_name)
+#                if nb == target_idx or won_nb:
+#                    completed.append((ns, new_path))
+#        if not candidates: break
+#        candidates.sort(key=lambda x: x[0], reverse=True)
+#        beam = candidates[:beam_width]
+#        if len(completed) >= beam_width: break
+#    
+#    result = completed if completed else beam
+#    result.sort(key=lambda x: x[0], reverse=True)
+#    
+#    # NEW — trim each path at the earliest DCSync-capable node
+#    trimmed = []
+#    for score, path in result[:beam_width]:
+#        cut_at = len(path)
+#        for i, node in enumerate(path):
+#            won, _ = has_dcsync_on(node, target_domain, edge_tensors, idx_to_name)
+#            if node == target_idx or won:
+#                cut_at = i + 1
+#                break
+#        trimmed.append((score, path[:cut_at]))
+#    
+#    return trimmed
+
+def beam_search(model, embeddings, edge_tensors, start_idx, target_idx, idx_to_name, beam_width=3, max_depth=8):
     target_domain = get_node_domain(target_idx, idx_to_name) or ""
     beam = [(0.0, [start_idx])]
     completed = []
+    
     for _ in range(max_depth):
         candidates = []
         for log_score, path in beam:
             cur = path[-1]
             won, _ = has_dcsync_on(cur, target_domain, edge_tensors, idx_to_name)
+            
             if cur == target_idx or won:
                 completed.append((log_score, path))
                 continue
+                
             nbrs = get_neighbors(cur, edge_tensors)
             nbrs = [n for n in nbrs if n not in path]
             if not nbrs: continue
+            
             with torch.no_grad():
                 scores = model.score(embeddings, cur, nbrs)
                 probs  = F.softmax(scores, dim=0)
+                
             for i, nb in enumerate(nbrs):
                 ns = log_score + math.log(probs[i].item() + 1e-9)
                 new_path = path + [nb]
                 candidates.append((ns, new_path))
+                
                 won_nb, _ = has_dcsync_on(nb, target_domain, edge_tensors, idx_to_name)
                 if nb == target_idx or won_nb:
                     completed.append((ns, new_path))
+                    
         if not candidates: break
         candidates.sort(key=lambda x: x[0], reverse=True)
         beam = candidates[:beam_width]
         if len(completed) >= beam_width: break
+        
     result = completed if completed else beam
     result.sort(key=lambda x: x[0], reverse=True)
-    return result[:beam_width]
+    
+    # POST-PROCESSING TRIM: Force cut the path at the earliest terminal state
+    trimmed = []
+    for score, path in result[:beam_width]:
+        cut_at = len(path)
+        for i, node in enumerate(path):
+            won, _ = has_dcsync_on(node, target_domain, edge_tensors, idx_to_name)
+            if node == target_idx or won:
+                cut_at = i + 1  # Keep the winning node, discard trailing noise
+                break
+        trimmed.append((score, path[:cut_at]))
+        
+    return trimmed
+
+# def beam_search(model, embeddings, edge_tensors, start_idx, target_idx, idx_to_name, beam_width=3, max_depth=8):
+#     target_domain = get_node_domain(target_idx, idx_to_name) or ""
+#     beam = [(0.0, [start_idx])]
+#     completed = []
+#     for _ in range(max_depth):
+#         candidates = []
+#         for log_score, path in beam:
+#             cur = path[-1]
+#             won, _ = has_dcsync_on(cur, target_domain, edge_tensors, idx_to_name)
+#             if cur == target_idx or won:
+#                 completed.append((log_score, path))
+#                 continue
+#             nbrs = get_neighbors(cur, edge_tensors)
+#             nbrs = [n for n in nbrs if n not in path]
+#             if not nbrs: continue
+#             with torch.no_grad():
+#                 scores = model.score(embeddings, cur, nbrs)
+#                 probs  = F.softmax(scores, dim=0)
+#             for i, nb in enumerate(nbrs):
+#                 ns = log_score + math.log(probs[i].item() + 1e-9)
+#                 new_path = path + [nb]
+#                 candidates.append((ns, new_path))
+#                 won_nb, _ = has_dcsync_on(nb, target_domain, edge_tensors, idx_to_name)
+#                 if nb == target_idx or won_nb:
+#                     completed.append((ns, new_path))
+#         if not candidates: break
+#         candidates.sort(key=lambda x: x[0], reverse=True)
+#         beam = candidates[:beam_width]
+#         if len(completed) >= beam_width: break
+#     result = completed if completed else beam
+#     result.sort(key=lambda x: x[0], reverse=True)
+#     return result[:beam_width]
 
 
 # ─────────────────────────────────────────────────────────────────────────────

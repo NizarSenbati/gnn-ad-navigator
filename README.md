@@ -48,7 +48,18 @@ Tested on Ubuntu 24.04
 # 1. clone + install
 git clone https://github.com/NizarSenbati/gnn-ad-navigator.git
 cd gnn-ad-navigator
+
+either use the normal setup script with direct pip commands or the docker file
 ./setup.sh
+
+# build
+docker build -t gnn-ad-navigator .
+
+# run
+docker run -v $(pwd)/input:/app/input \
+           -v $(pwd)/output:/app/output \
+           -it gnn-ad-navigator \
+           ./pipeline.sh ./input ./output --start "wley" --target "DA"
 
 # 2. drop your BloodHound scan into ./input/
 #    (any *.json files from bloodhound-python, plus optional Certipy output)

@@ -199,12 +199,56 @@ def build_edges(forest: dict, id_to_idx: dict) -> dict:
                 if c_sid in known:
                     edges["contains"].append((target_idx, id_to_idx[c_sid]))
 
-            # ── Links (GPO links to OUs/domains): GPO → linked object ──
+            # ── Links (GPLink): GPO → linked OU/domain ──
+            # The Links field lives on the OU/domain (current `obj`). Each
+            # entry names a GPO via its GUID. BloodHound's GPLink edge
+            # convention is GPO → container (the GPO acts on the container).
             for link in obj.get("Links", []) or []:
-                l_sid = (link if isinstance(link, str)
-                         else link.get("ObjectIdentifier", "")).upper()
+                if isinstance(link, str):
+                    l_sid = link.upper()
+                else:
+                    # bloodhound-python uses "GUID"; some collectors emit
+                    # "ObjectIdentifier" — accept either
+                    l_sid = (link.get("GUID")
+                             or link.get("ObjectIdentifier") or "").upper()
                 if l_sid in known:
-                    edges["gplink"].append((target_idx, id_to_idx[l_sid]))
+                    edges["gplink"].append((id_to_idx[l_sid], target_idx))
+
+            # ── AllowedToDelegate: source → delegation target ──
+            # Field lives on the principal (current `obj`). Each entry is a
+            # target the principal can authenticate-as via Kerberos
+            # constrained delegation. Edge: principal → target.
+            for d in obj.get("AllowedToDelegate", []) or []:
+                d_sid = (d if isinstance(d, str)
+                         else d.get("ObjectIdentifier", "")).upper()
+                if d_sid in known:
+                    edges["allowedtodelegate"].append(
+                        (target_idx, id_to_idx[d_sid])
+                    )
+
+            # ── AllowedToAct (RBCD): allowed principal → target ──
+            # Field lives on the TARGET (current `obj`). Each entry is a
+            # principal that can act on the target's behalf via Resource-
+            # Based Constrained Delegation. Edge follows the escalation:
+            # principal → target.
+            for a in obj.get("AllowedToAct", []) or []:
+                a_sid = (a if isinstance(a, str)
+                         else a.get("ObjectIdentifier", "")).upper()
+                if a_sid in known:
+                    edges["allowedtoact"].append(
+                        (id_to_idx[a_sid], target_idx)
+                    )
+
+            # ── HasSIDHistory: user → historical SID ──
+            # The current user inherits the rights of a historical
+            # principal — common in cross-forest migrations.
+            for h in obj.get("HasSIDHistory", []) or []:
+                h_sid = (h if isinstance(h, str)
+                         else h.get("ObjectIdentifier", "")).upper()
+                if h_sid in known:
+                    edges["hassidhistory"].append(
+                        (target_idx, id_to_idx[h_sid])
+                    )
 
             # ── Trust edges from domain objects: source → target ──
             if nt == "domains":
@@ -354,10 +398,8 @@ def main():
     print("\n[2] Building edges (principal→target convention)...")
     edge_tensors = build_edges(forest, id_to_idx)
     print(f"  Edge types : {len(edge_tensors)}")
-    for rel, t in sorted(edge_tensors.items(), key=lambda x: -x[1].shape[1])[:15]:
+    for rel, t in sorted(edge_tensors.items(), key=lambda x: -x[1].shape[1]):
         print(f"    {rel:<25}: {t.shape[1]}")
-    if len(edge_tensors) > 15:
-        print(f"    ... and {len(edge_tensors) - 15} more")
 
     # ─ trust edges report ─
     trust_edges = sum(
