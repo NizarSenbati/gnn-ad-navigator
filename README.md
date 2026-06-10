@@ -1,91 +1,131 @@
 # GNN-AD-Navigator
 
-> Graph Neural Network for Active Directory attack path discovery.
-> Train on one environment, deploy on any unseen Active Directory graph.
+> Graph Neural Network for Active Directory Attack Path discovery.
+> Trained on One Environment, Deploy on any unseen Active Directory graph.
+
 
 ```
+
 ╔═══════════════════════════════════════════════════════════════════════════════════════╗
-║   ███▄    █  ▄▄▄     ██▒   █▓ ██▓  ▄████   ▄▄▄     ▄▄▄█████▒ ▒█████   ██▀███          ║
-║   ██ ▀█   █ ▒████▄  ▓██░   █▒▓██▒ ██▒ ▀█▒▒████▄   ▓  ██▒ ▓▒ ▒██▒  ██▒▓██ ▒ ██▒        ║
-║   ██  ▀█ ██▒▒██  ▀█▄ ▓██  █▒░▒██▒▒██░▄▄▄░▒██  ▀█▄ ▒ ▓██░ ▒░ ▒██░  ██▒▓██ ░▄█ ▒        ║
-║   ██▒  ▐▌██▒░██▄▄▄▄██ ▒██ █░░░██░░▓█  ██▓░██▄▄▄▄██░ ▓██▓ ░  ▒██   ██░▒██▀▀█▄          ║
-║   ██░   ▓██░ ▓█   ▓██▒ ▒▀█░  ░██░░▒▓███▀▒ ▓█   ▓██▒ ▒██▒ ░  ░ ████▓▒░░██▓ ▒██▒        ║
-║   ░     ▒░   ▒▒   ▓▒█░  ░ ░   ░░   ░▒   ▒ ▒▒   ▓▒█░ ▒ ░       ▒░▒░▒░ ░ ▒▓ ░▒▓░        ║
-║                                                                                       ║
-║                                GNN-AD-NAVIGATOR v1.0                                  ║
-║                       Active Directory Attack Path Discovery                          ║
+
+║ ███▄ █ ▄▄▄ ██▒ █▓ ██▓ ▄████ ▄▄▄ ▄▄▄█████▒ ▒█████ ██▀███ ║
+
+║ ██ ▀█ █ ▒████▄ ▓██░ █▒▓██▒ ██▒ ▀█▒▒████▄ ▓ ██▒ ▓▒ ▒██▒ ██▒▓██ ▒ ██▒ ║
+
+║ ██ ▀█ ██▒▒██ ▀█▄ ▓██ █▒░▒██▒▒██░▄▄▄░▒██ ▀█▄ ▒ ▓██░ ▒░ ▒██░ ██▒▓██ ░▄█ ▒ ║
+
+║ ██▒ ▐▌██▒░██▄▄▄▄██ ▒██ █░░░██░░▓█ ██▓░██▄▄▄▄██░ ▓██▓ ░ ▒██ ██░▒██▀▀█▄ ║
+
+║ ██░ ▓██░ ▓█ ▓██▒ ▒▀█░ ░██░░▒▓███▀▒ ▓█ ▓██▒ ▒██▒ ░ ░ ████▓▒░░██▓ ▒██▒ ║
+
+║ ░ ▒░ ▒▒ ▓▒█░ ░ ░ ░░ ░▒ ▒ ▒▒ ▓▒█░ ▒ ░ ▒░▒░▒░ ░ ▒▓ ░▒▓░ ║
+
+║ ║
+
+║ GNN-AD-NAVIGATOR v1.0 ║
+
+║ Active Directory Attack Path Discovery ║
+
 ╚═══════════════════════════════════════════════════════════════════════════════════════╝
+
 ```
 
-## What it does
+## 2. Project Overview & Core Concept
 
-Given BloodHound output from any Active Directory environment, the
-trained policy network discovers attack paths between specified nodes
-using learned structural patterns of privilege escalation — without
-hand-crafted rules or per-environment retraining.
+Given a bloodhound.py scan of any active directory environment the trained policy head allows for attack path discovery, important for time sensible engagements reducing graph analysis time while recommending a stealthy, damage aware and best (not necessarily the shortest!) attack path without hand-crafted rules or per-environment retraining.
 
-Unlike traditional BloodHound queries that rely on operator expertise
-to formulate Cypher, this tool **suggests** likely paths and annotates
-each step with the exploitation technique. It then tries to **audits**
-its own output to flag unreliable suggestions.
+The trained policy head discovers attack paths between two specified nodes, the suggested path is biased towards the prefrable least impactfull node edges during an engagement thanks to the feature engineering phase.
 
-Trained on a single synthetic lab (GOAD, 351 nodes), the model
-generalises to a 4000-node enterprise (INLANEFREIGHT) and rediscovers
-the documented attack paths.
+Unlike the traditional bloodhound neo4j queries that depend heavily on user expertise to formulate the cypher, this tool suggests likely paths and annotates each step with the exploitation technique. It then tries to audits its own output to flag unreliable suggestions.
 
-## Befor install
+Trained on a single lab (GOAD with 351 node), the model generalises to a entreprise network (INLANEFREIGHT's 4000 nodes) identifying the documented attack path.
 
-note 
-Python 3.10+
-1 GB disk (CPU install) or 3 GB (CUDA install) -pytorch is heavy on disk space
-Inference runs comfortably on 8 GB RAM
-Tested on Ubuntu 24.04
+## 3. Architecture
+    
+- **input :** specify the input directory with raw bloodhound & Certipy scans.
+- **Multi-Domain & Identity Aware:** Supports multi-domain forest merging, cross-domain trust traversal, and Active Directory Certificate Services ADCS ingestion via Certipy.
+- **Architectural Flexibility:** Gives the option between a simple GCN model, and the better fit HGT model
+- **Auditing:** A static rule based logic to notify the end user if his attention is needed.
+- **Actions:** For the discovered path, each edge corresponds to an attack vector, the tool can actively suggest the exploitation technique and tool for the job.
+
+## 4. System Requirements
+
+- **OS:** Tested and optimized on Ubuntu 24.04.
+- **Python:** Version 3.10+. 
+- **Hardware:** 1 GB disk space for CPU execution, 3 GB for CUDA setups (due to PyTorch overhead if retraining). Runs comfortably on 8 GB RAM (inference mode).
+
+## 5. Installation & Setup
+
+both script environmental install and docker setup are available, tho the recommended is the later.
 
 
-## Quick start
-
-```bash
-# 1. clone + install
+```Bash
+# Clone the repository
 git clone https://github.com/NizarSenbati/gnn-ad-navigator.git
 cd gnn-ad-navigator
 
-either use the normal setup script with direct pip commands or the docker file
-./setup.sh
-
-# build
+# Option A: Quick Docker Setup
 docker build -t gnn-ad-navigator .
 
-# run
+# Option B: Local Manual Setup
+./setup.sh # auto-detect CPU/CUDA
+./setup.sh --cpu # force CPU-only install
+
+```
+
+## 6. Quick Start & Basic Usage
+
+both a CLI and a GUI are offred
+
+```bash
+# 1. Run the verification test with demo data
+./launch.sh ./examples/input ./examples/output --start "wley" --target "domain admins@inlanefreight.local" --model-type hgt
+
+# 2. Run an end-to-end pipeline execution using Docker
 docker run -v $(pwd)/input:/app/input \
            -v $(pwd)/output:/app/output \
            -it gnn-ad-navigator \
            ./pipeline.sh ./input ./output --start "wley" --target "DA"
 
-# 2. drop your BloodHound scan into ./input/
-#    (any *.json files from bloodhound-python, plus optional Certipy output)
-
-# 3. run pipeline + inference in one command
+# 3. Standard local execution (Raw BloodHound JSONs dropped in ./input)
 ./pipeline.sh ./input ./output \
-    --start  "wley" \
+    --start "wley" \
     --target "domain admins@inlanefreight.local"
 
+# For manual install:
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+chmod +x pipeline.sh
 
-test with existing data in the examples folder:
-`./launch.sh ./examples/input ./examples/output --start "wley" --target "domain admins@inlanefreight.local" --model-type hgt`
-
+# NOTE: when querying the same domain, the injestion is only needed for the first execution, therefore for the latter executions use the --skip-prep flag
 ```
 
-## Features
+## 7. Advanced CLI Usage
 
-- **End-to-end pipeline** — raw BloodHound JSON → tensors → attack paths
-- **Multi-domain forest support** — merges arbitrary numbers of domains
-- **ADCS-aware** — stitches Certipy output into the graph
-- **Trust traversal** — extracts and uses cross-domain trust edges
-- - **Output audit (experimental)** — heuristic flagging of obviously degenerate paths; not a substitute for operator review
-- **Operator advisories** — explains terminal states and next-step commands
-- **Two architectures** — GCN baseline + HGT (heterogeneous graph transformer)
+```bash
+./pipeline.sh <input_dir> <output_dir>  [--start NODE --target NODE]
+										[--model PATH]                   #optional if you altered the models
+										[--model-type gcn|hgt]           #defaults to HGT
+										[--beam N] [--depth N]           #defaults to 3/6
+										[--skip-prep]
+# Produces `output/forest_graph.json` and `output/heterodata.pt`.
+```
 
-## Pipeline
+when querying the same domain, the injestion is only needed for the first execution, therefore for the latter executions use the --skip-prep flag
+
+
+```bash
+# Run inference only (Skips the parsing/tensor generation stage)
+./pipeline.sh ./input ./output --start "wley" --target "domain admins" --skip-prep
+
+# Force model selection (Defaults to GCN)
+./pipeline.sh ./input ./output --start "X" --target "Y" --model-type gcn
+./pipeline.sh ./input ./output --start "X" --target "Y" --model-type hgt
+```
+
+
+## 8. Data Pipeline Architecture
 
 ```mermaid
 flowchart LR
@@ -101,84 +141,14 @@ flowchart LR
     infer --> out[Attack Paths + Audit]
 ```
 
-Stages are individually runnable; `pipeline.sh` orchestrates them.
+Note: Stages are individually runnable; `pipeline.sh` orchestrates them.
 
-## A note on the AUDIT block
 
-The AUDIT block beneath each path is a first attempt at automated reliability
-flagging — it catches obvious failure modes (degenerate single-step paths,
-missing DCSync at terminal, target-domain mismatch) but it isn't a substitute
-for operator judgement. Treat it as a coarse signal that something might be
-off, not as a verdict on path validity. In particular, it can flag a valid
-path as suspicious if the model's preferred terminal happens to be one step
-short of textbook DCSync. Future versions will refine the heuristics; for
-now, read the path itself and decide.
+## 9. Output & Audit
 
-## Installation
-
-Requires Python 3.10+ and ~500MB of disk.
-
-```bash
-./setup.sh
-```
-
-This creates a virtualenv at `./venv`, installs all dependencies,
-and makes the pipeline scripts executable. Activate with:
-
-```bash
-source venv/bin/activate
-```
-
-For manual install:
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-chmod +x pipeline.sh
-```
-
-## Usage
-
-### Data preparation only
-
-```bash
-./pipeline.sh ./input ./output
-```
-
-Produces `output/forest_graph.json` and `output/heterodata.pt`.
-
-### Inference query
-
-```bash
-./pipeline.sh ./input ./output \
-    --start  "wley" \
-    --target "domain admins@inlanefreight.local"
-```
-
-Outputs the top-K attack paths with annotated techniques, audit flags,
-and operator advisories.
-
-### Inference only (data already prepared)
-
-```bash
-./pipeline.sh ./input ./output \
-    --start  "wley" \
-    --target "domain admins" \
-    --skip-prep
-```
-
-### Model selection
-
-```bash
-# default: GCN (fast, robust)
-./pipeline.sh ./input ./output --start X --target Y
-
-# HGT (heterogeneous attention, higher expressivity)
-./pipeline.sh ./input ./output --start X --target Y --model-type hgt
-```
-
-## Example output
+The AUDIT block beneath each suggested path is an attempt at reliability flaggin, catching obvious failures (not reaching the destination, target domain mismatch ...). it is to be treated a signal that the paths are to be checked.
+    
+exepected output when runing on sample data
 
 ```
 Path 1:
@@ -211,88 +181,47 @@ Path 1:
   └──────────────────────────────────────────────────────────
 ```
 
-## Repository structure
 
-```
-gnn-ad-navigator/
-├── README.md                    this file
-├── LICENSE                      MIT
-├── requirements.txt             Python dependencies
-├── setup.sh                     install script
-├── pipeline.sh                  pipeline launcher
-│
-├── scripts/                     pipeline components
-│   ├── minimal_filter.py        drops dead AD objects
-│   ├── stitching.py             injects ADCS data from Certipy
-│   ├── merger.py                combines per-domain scans
-│   ├── build_dataset.py         forest_graph → PyG tensors
-│   ├── validate_dataset.py      pre-training audit
-│   ├── prepare_training_examples.py    expert traces → labels
-│   └── run_inference.py         beam-search + path audit
-│
-├── models/                      pre-trained checkpoints
-│   ├── GCN.pt
-│   └── HGT.pt
-│
-├── examples/                    minimal demo data
-│   └── README.md
-│
-└── notebooks/                   Kaggle training notebooks
-    ├── train_gcn.ipynb
-    └── train_hgt.ipynb
-```
+## 10. Model Retraining Workflow
 
-## Limitations and known issues
+- **Retraining:** users can have the models train on their own datasets, tho in a typical AD environments full attack paths are scares, when one is enough to compromise a domain, it is hard to come by a domain with multiple, each with learnable transitions, so relaying on syntheticly vulnerable labs like GOAD or having a script like badblood configure one for you are the best option. Training on multiple domains each with its own paths is doable yet requires writing new logic.
+- The pipeline supports logic from back during the training phase that can be reused through:
+    1. Parse the environment graph, runing the script on your data generates the forest_graph.json and heterodata.pt files needed for retraining: `./pipeline.sh ./your_scan ./your_output_folder`
+    2. Define expert paths in `zoom.csv`
+    3. Generate graph labels: `python scripts/prepare_training_examples.py`
+    4. Upload `heterodata.pt` and `training_examples.json` to Kaggle
+    5. Execute `notebooks/train_gcn.ipynb` or `train_hgt.ipynb` and save the exported weights to the `models/` directory.
 
-This is research code. Known limitations:
+## 11. Project Limitations & Scope
 
-- **Collection completeness affects results.** bloodhound-python does not
-  reliably capture foreign group memberships across forests. SharpHound C#
-  is recommended for cross-forest scenarios.
-- **Confidence scores are relative, not absolute.** The audit module
-  provides honest reliability assessment; raw scores can be misleading
-  for short or degenerate paths.
-- **Training set is small** (33 labelled transitions). The model handles
-  structural ACL patterns well; less common edge types (HasSession,
-  AllowedToDelegate variants) generalise less reliably.
+- **Source Data:** for now all the work has been done based on the python injestor for bloodhound, which is significantly lacking compared to the C# sharphound injestor. 
+- **ADCS :** the python injestor being blind to ADCS templates had me scaning with older versions of certipy for that compatible bloodhound output, a merger scripts takes care of the rest.
+- **vision :** retraining using new forests sharphound scanned might result in a model capable of operating on the C# injested data, but for now the model is limited to bloodhound.py scans as well as needing certipy scans < 5.0
+- **Testing:** due to lack of funding, and the project being self funded, i struggled with resources, and the model still needs actual testing on ctfs/labs.
 
-See `docs/limitations.md` for the full discussion.
 
-## Retraining on your own environment
-
-Training is GPU-bound. Use the provided Kaggle notebooks:
-
-1. Prepare your training graph with `pipeline.sh ./your_scan ./your_output`
-2. Create `zoom.csv` with expert traces (see `examples/zoom_template.csv`)
-3. Run `prepare_training_examples.py` to produce labels
-4. Upload heterodata.pt + training_examples.json to Kaggle
-5. Run `notebooks/train_gcn.ipynb` and `notebooks/train_hgt.ipynb`
-6. Download the resulting checkpoints to `models/`
-
-## Citation
+## 12. Citation & Acknowledgements
 
 This tool is the artefact of a Master's thesis:
 
 ```bibtex
 @mastersthesis{senbati2026gnnavigator,
-  author = {Senbati, [Your Full Name]},
-  title  = {Learning Offensive Navigation Policies on Heterogeneous
-            Attack Graphs: A Graph Neural Network Approach to
-            Sequential Privilege Escalation in Active Directory},
-  school = {[Your University]},
-  year   = {2026},
+author = {Senbati, Nizar},
+title = {Learning Offensive Navigation Policies on Heterogeneous
+		 Attack Graphs: A Graph Neural Network Approach to
+		 Sequential Privilege Escalation in Active Directory},
+school = {Abdelmalek Essaid University -- FST Tangier},
+supervisor = {Abderahim GHADI}
+year = {2026},
 }
 ```
 
-## License
+**Acknowledgements:**
+This project couldnt have been made if not for:
+- GOAD Orange Cyberdefense
+- BloodHound SpecterOps
+- HTBacademy for student access to their INLANEFREIGHT domain
+- Certipy tool
+- PyTorch Geometric lib
 
-MIT — see [LICENSE](LICENSE) for details.
-
-## Acknowledgements
-
-- [GOAD](https://github.com/Orange-Cyberdefense/GOAD) — training environment
-- [BloodHound](https://github.com/SpecterOps/BloodHound) — graph format
-- [Certipy](https://github.com/ly4k/Certipy) — ADCS enumeration
-- [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/) — GNN backbone
-
-Built as part of an M2 internship at [Your Institution]. Defended [Date].
+This tool was developed as part of a Master's thesis internship at NearSecure and under the supervision of JAWAD ZAABOUL.

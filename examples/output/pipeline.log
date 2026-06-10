@@ -1,4 +1,4 @@
-Scanning input tree: gnn-ad-navigator/examples/output/raw_bloodhound
+Scanning input tree: ./examples/output/raw_bloodhound
 ============================================================
   Loaded 20260514135656_computers.json: 564 computers
   Loaded 20260514135656_containers.json: 23 containers
@@ -40,13 +40,13 @@ Building edge index...
 
 ============================================================
 Saving cleaned files...
-  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_computers.json
-  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_users.json
-  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_groups.json
-  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_domains.json
-  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_gpos.json
-  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_ous.json
-  Saved: gnn-ad-navigator/examples/output/cleaned/cleaned_containers.json
+  Saved: ./examples/output/cleaned/cleaned_computers.json
+  Saved: ./examples/output/cleaned/cleaned_users.json
+  Saved: ./examples/output/cleaned/cleaned_groups.json
+  Saved: ./examples/output/cleaned/cleaned_domains.json
+  Saved: ./examples/output/cleaned/cleaned_gpos.json
+  Saved: ./examples/output/cleaned/cleaned_ous.json
+  Saved: ./examples/output/cleaned/cleaned_containers.json
 
 ============================================================
 Type              Before    After  Dropped
@@ -66,8 +66,8 @@ Edge index covers 3046 unique SIDs
 merger.py
 ============================================================
 Inputs : 1
-  [folder]  gnn-ad-navigator/examples/output/cleaned
-Output : gnn-ad-navigator/examples/output/forest_graph.json
+  [folder]  examples/output/cleaned
+Output : examples/output/forest_graph.json
 
 Loading cleaned...
   [folder] 7750 nodes
@@ -109,15 +109,15 @@ Edge inventory (17 types, 67349 total references, 3770 dangling = 5.6%):
   getchangesall                      : 7
   ... and 2 more
 
-Written gnn-ad-navigator/examples/output/forest_graph.json  (17386 KB)
+Written examples/output/forest_graph.json  (17386 KB)
 
 Next: build_dataset.py — converts forest_graph.json into PyG HeteroData
 ============================================================
 ============================================================
 build_dataset.py
 ============================================================
-Graph : gnn-ad-navigator/examples/output/forest_graph.json
-Out   : gnn-ad-navigator/examples/output
+Graph : examples/output/forest_graph.json
+Out   : examples/output
 
 [1] Loading graph...
   Nodes      : 3967
@@ -154,7 +154,7 @@ Out   : gnn-ad-navigator/examples/output
   edge_types           : 20
 
 [5] Saving...
-  heterodata.pt          → gnn-ad-navigator/examples/output/heterodata.pt
+  heterodata.pt          → examples/output/heterodata.pt
 
 ============================================================
 Summary:
@@ -167,8 +167,8 @@ Next: train.py (if examples present) or inference notebook
 ============================================================
 validate_dataset.py
 ============================================================
-Loading: gnn-ad-navigator/examples/output/heterodata.pt
-Loading: gnn-ad-navigator/examples/output/forest_graph.json
+Loading: examples/output/heterodata.pt
+Loading: examples/output/forest_graph.json
 
 [ Node features ]
   ✓ OK    Node count = 3968
@@ -220,8 +220,8 @@ Loading: gnn-ad-navigator/examples/output/forest_graph.json
             academy-ea-lptp-0204.inlanefreight.local 1 nodes
 
 [ Cross-domain coverage ]
-  ✓ freightlogistics.local ↔ inlanefreight.local: 1 supporting cross-domain edges
   ✓ inlanefreight.local ↔ logistics.inlanefreight.local: 113 supporting cross-domain edges
+  ✓ freightlogistics.local ↔ inlanefreight.local: 1 supporting cross-domain edges
 
 ============================================================
 VERDICT

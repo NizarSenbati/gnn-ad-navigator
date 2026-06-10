@@ -96,7 +96,7 @@ shift 2
 START=""
 TARGET=""
 MODEL=""
-MODEL_TYPE="gcn"
+MODEL_TYPE="hgt"
 BEAM_WIDTH=3
 MAX_DEPTH=6
 SKIP_PREP=0
@@ -116,10 +116,10 @@ done
 
 # auto-resolve model path from model-type if user didn't pass --model
 if [[ -z "$MODEL" ]]; then
-    if [[ "$MODEL_TYPE" == "hgt" ]]; then
-        MODEL="$PROJECT_DIR/models/HGT.pt"
-    else
+    if [[ "$MODEL_TYPE" == "gcn" ]]; then
         MODEL="$PROJECT_DIR/models/GCN.pt"
+    else
+        MODEL="$PROJECT_DIR/models/HGT.pt"
     fi
 fi
 
@@ -294,7 +294,7 @@ if [[ $DO_INFERENCE -eq 1 ]]; then
     fi
     if [[ ! -f "$MODEL" ]]; then
         echo "ERROR: model checkpoint not found: $MODEL"
-        echo "       supply --model <path> or place at models/gcn.pt"
+        echo "       supply --model <path> or place at models/$(basename "$MODEL")"
         exit 1
     fi
 
