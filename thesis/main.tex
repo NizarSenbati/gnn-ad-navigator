@@ -1,0 +1,932 @@
+%% ============================================================
+%%  GNN-AD-Navigator — Master's Thesis (PFE M2)
+%%  FST Tangier — Academic Year 2025/2026
+%%  Author : Nizar Senbati
+%%  Compile : pdflatex → bibtex → pdflatex × 2
+%% ============================================================
+
+\documentclass[12pt, a4paper, oneside]{report}
+
+%% ── Encoding & Language ──────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+%% ── Typography ───────────────────────────────────────────────
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+
+%% ── Page Geometry ────────────────────────────────────────────
+\usepackage[
+  top=2.5cm, bottom=2.5cm,
+  left=3cm,  right=2.5cm,
+  headheight=15pt
+]{geometry}
+
+%% ── Headers & Footers ────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\leftmark}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%% ── Colours ──────────────────────────────────────────────────
+\usepackage[dvipsnames, table]{xcolor}
+\definecolor{thesisblue}{RGB}{31, 78, 121}   % #1f4e79  (GUI navy)
+\definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{codegray}{RGB}{240, 240, 240}
+
+%% ── Graphics & Figures ───────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\graphicspath{{figures/}}   % put all images in ./figures/
+
+%% ── Tables ───────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{longtable}
+
+%% ── Maths ────────────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsthm}
+
+%% ── Code Listings ────────────────────────────────────────────
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codegray},
+  frame=single,
+  rulecolor=\color{gray!40},
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{thesisblue}\bfseries,
+  commentstyle=\color{OliveGreen},
+  stringstyle=\color{BrickRed},
+  showstringspaces=false,
+  captionpos=b,
+}
+\lstdefinelanguage{cypher}{
+  keywords={MATCH, WHERE, RETURN, WITH, AS, AND, OR, NOT, LIMIT},
+  sensitive=false,
+  morecomment=[l]{//},
+  morestring=[b]",
+}
+
+%% ── Algorithms ───────────────────────────────────────────────
+\usepackage[ruled, vlined, linesnumbered]{algorithm2e}
+
+%% ── TikZ / PGF (for pipeline diagrams) ──────────────────────
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds}
+
+%% ── Hyperlinks & PDF Metadata ────────────────────────────────
+\usepackage[
+  colorlinks=true,
+  linkcolor=thesisblue,
+  citecolor=thesisblue,
+  urlcolor=thesisblue,
+  pdftitle={Learning Offensive Navigation Policies on Heterogeneous Attack Graphs},
+  pdfauthor={Nizar Senbati},
+  pdfsubject={Master PFE Thesis},
+  pdfkeywords={GNN, Active Directory, Attack Graph, Privilege Escalation, HGT}
+]{hyperref}
+\usepackage{cleveref}   % \cref{} for smart cross-references
+
+%% ── Bibliography ─────────────────────────────────────────────
+\usepackage[
+  backend=bibtex,
+  style=ieee,
+  sorting=none,
+  maxbibnames=6
+]{biblatex}
+\addbibresource{references.bib}
+
+%% ── Acronyms ─────────────────────────────────────────────────
+\usepackage[acronym, toc]{glossaries}
+\makeglossaries
+\newacronym{ad}{AD}{Active Directory}
+\newacronym{gnn}{GNN}{Graph Neural Network}
+\newacronym{hgt}{HGT}{Heterogeneous Graph Transformer}
+\newacronym{gcn}{GCN}{Graph Convolutional Network}
+\newacronym{pyg}{PyG}{PyTorch Geometric}
+\newacronym{acl}{ACL}{Access Control List}
+\newacronym{adcs}{ADCS}{Active Directory Certificate Services}
+\newacronym{rbcd}{RBCD}{Resource-Based Constrained Delegation}
+\newacronym{sid}{SID}{Security Identifier}
+\newacronym{ou}{OU}{Organisational Unit}
+\newacronym{gpo}{GPO}{Group Policy Object}
+\newacronym{ntlm}{NTLM}{NT LAN Manager}
+\newacronym{da}{DA}{Domain Admin}
+\newacronym{poc}{PoC}{Proof of Concept}
+\newacronym{rl}{RL}{Reinforcement Learning}
+\newacronym{mlp}{MLP}{Multi-Layer Perceptron}
+\newacronym{goad}{GOAD}{Game of Active Directory}
+\newacronym{dc}{DC}{Domain Controller}
+
+%% ── Custom Commands ──────────────────────────────────────────
+\newcommand{\tool}[1]{\texttt{#1}}
+\newcommand{\edge}[1]{\textsc{\small #1}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+% \todo{} marks — remove all before submission
+
+%% ── Chapter Title Style ──────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{thesisblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{10pt}{30pt}
+
+%% ============================================================
+\begin{document}
+
+%% ── TITLE PAGE ───────────────────────────────────────────────
+\begin{titlepage}
+  \centering
+  \includegraphics[width=0.35\textwidth]{fst_logo.png}\\[1cm]
+  % Replace fst_logo with your actual logo filename (no extension needed if .png/.pdf)
+
+  {\large\bfseries Faculté des Sciences et Techniques de Tanger}\\[0.3cm]
+  {\large Université Abdelmalek Essaadi}\\[0.5cm]
+  \rule{\textwidth}{0.5pt}\\[0.5cm]
+
+  {\large Master's End-of-Study Project (PFE)}\\
+  {\large Master in \todo{your master programme name}}\\[1.5cm]
+
+  {\Huge\bfseries\color{thesisblue}
+    Learning Offensive Navigation Policies\\
+    on Heterogeneous Attack Graphs}\\[0.8cm]
+
+  {\Large A GNN Approach to Sequential Privilege Escalation\\
+    in Active Directory}\\[2cm]
+
+  \begin{minipage}[t]{0.45\textwidth}
+    \raggedright
+    \textbf{Author:}\\
+    Nizar Senbati
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.45\textwidth}
+    \raggedleft
+    \textbf{Supervisor:}\\
+    \todo{Supervisor name \& title}
+  \end{minipage}\\[2cm]
+
+  \rule{\textwidth}{0.5pt}\\[0.5cm]
+  {\large Academic Year 2025 -- 2026}
+\end{titlepage}
+
+%% ── FRONT MATTER ─────────────────────────────────────────────
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+%% ── Acknowledgements ─────────────────────────────────────────
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+
+% Write your acknowledgements here.
+% Typical structure: supervisor → lab/department → peers → family.
+% Keep it genuine and concise (half a page to one page).
+\todo{Write acknowledgements}
+
+%% ── Abstract (English) ───────────────────────────────────────
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+% ~150 words. Cover: problem (AD attack path analysis), approach (GNN policy on
+% heterogeneous graph), key result (cross-environment generalisation on INLANEFREIGHT),
+% contribution (learned policy vs. shortest path), and honest scope (PoC).
+AD pentest 
+
+\vspace{1.5cm}
+\noindent\textbf{Keywords:} Graph Neural Network, Heterogeneous Graph Transformer,
+Active Directory, Privilege Escalation, Attack Graph, Beam Search,
+Offensive Security, Cross-Environment Generalisation.
+
+%% ── Abstract (French) ────────────────────────────────────────
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+
+% ~150 words in French. Mirror the English abstract.
+\todo{Write French abstract (~150 words)}
+
+\vspace{1.5cm}
+\noindent\textbf{Mots-clés :} Réseau de neurones sur graphe, Transformateur de graphe hétérogène,
+Active Directory, Escalade de privilèges, Graphe d'attaque, Recherche en faisceau,
+Sécurité offensive, Généralisation inter-environnements.
+
+%% ── Tables of Contents / Figures / Tables ────────────────────
+\tableofcontents
+\listoffigures
+\listoftables
+
+%% ── Abbreviations (auto-generated from glossaries) ──────────
+\printglossary[type=\acronymtype, title=List of Abbreviations]
+
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+%% ============================================================
+%%  GENERAL INTRODUCTION
+%% ============================================================
+\chapter*{General Introduction}
+\addcontentsline{toc}{chapter}{General Introduction}
+\markboth{General Introduction}{}
+
+\section*{Context}
+% Set the scene: Active Directory is the identity backbone of ~90% of Fortune 500
+% enterprises. Credential-based and ACL-based attacks (pass-the-hash, DCSync,
+% Kerberoasting) are among the most impactful vectors in modern breaches.
+% Defenders and red teams alike rely on tools like BloodHound to map the attack
+% surface — but analysis remains manual and non-scalable.
+Active Directory is the identity backbone of major enterprises, tho hidden withing 
+the inside network of the company, once the outside defenses are breached 
+(web services, phishing, usb stick ...) the advarsary finds himself able to directly interacte and query
+the Active Directory Domain Controller itself through ldpa, smb, and other protocols presenting the entierty 
+of the company IT infrastructure data and services to the attacker. A vulnerable AD poses extreme levels 
+of risk making the hardening the AD network environment against an extreme priority.
+
+
+Credential-based and ACL-based attacks(pass-the-hash, DCSync, Kerberoasting) 
+are among the most impactful vectors in modern breaches. Read teams rely on tools like BloodHound 
+to map the attack surface and identify the vulnerable nodes during an engagement.
+
+
+\section*{Problem Statement}
+% BloodHound's built-in pathfinding is Dijkstra over the attack graph — it finds
+% the shortest path, not necessarily the most realistic or discreet one.
+% The question this thesis asks: can a model *learn* a navigation policy from
+% labelled attack traces, and generalise that policy to unseen enterprise environments?
+\todo{Write problem statement paragraph}
+
+\section*{Objectives}
+% Three concrete objectives:
+% 1. Build an end-to-end pipeline from raw BloodHound JSON to navigable PyG tensors.
+% 2. Train a GNN-based navigation policy and demonstrate cross-environment generalisation.
+% 3. Empirically show that the learned policy recovers paths more discreet than
+%    shortest-path baselines.
+\todo{Write objectives paragraph}
+
+\section*{Main Contributions}
+\begin{itemize}
+  \item A complete, modular heterogeneous graph pipeline from raw BloodHound/Certipy
+        JSON to navigable \gls{pyg} \texttt{HeteroData} tensors, covering
+        \gls{adcs}, \gls{rbcd}, GPLink, and \gls{sid} history edges.
+  \item A \gls{hgt}-based navigation policy trained on \gls{goad} traces and
+        evaluated on the entirely unseen INLANEFREIGHT enterprise environment,
+        demonstrating generalisation from a 351-node lab to a 4\,000-node network.
+  \item Empirical evidence that the learned policy recovers paths with lower
+        step-cost than BloodHound's shortest-path baseline on the same graph.
+\end{itemize}
+
+\section*{Report Outline}
+% One sentence per chapter describing what it covers.
+\todo{Write report outline (one sentence per chapter)}
+
+
+%% ============================================================
+%%  CHAPTER 1 — BACKGROUND AND RELATED WORK
+%% ============================================================
+\chapter{Background and Related Work}
+
+\section{Active Directory: Architecture and Security Model}
+
+\subsection{Core Objects and Structure}
+% Cover: users, computers, OUs, GPOs, domains, forests, trusts.
+% One diagram of the hierarchical AD structure (forest → domain → OU → objects)
+% is worth inserting here.
+\todo{Write AD structure overview}
+
+\subsection{Authentication Protocols}
+% Kerberos: TGT/TGS flow, delegation types (unconstrained, constrained, RBCD).
+% NTLM: challenge-response, relevance to lateral movement.
+% Keep it concise — this is background, not a Kerberos tutorial.
+\todo{Write authentication section}
+
+\subsection{Trust Relationships}
+% Intra-domain, cross-domain (SameForestTrust), cross-forest (TrustedBy).
+% Explain why trusts create transitive attack paths and why SharpHound version
+% differences (TrustedBy vs. SameForestTrust naming) matter for the pipeline.
+\todo{Write trust relationships section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Privilege Escalation in AD Environments}
+
+\subsection{Offensive ACL Abuse}
+% WriteDACL, GenericAll, GenericWrite, ForceChangePassword, AddMember.
+% Explain what each right enables in an attack chain.
+\todo{Write ACL abuse section}
+
+\subsection{DCSync Attack}
+% Required rights: GetChanges AND GetChangesAll on the domain object.
+% What DCSync enables (secret replication, credential extraction).
+% Why it is used as the terminal goal state in this work.
+\todo{Write DCSync section}
+
+\subsection{ADCS Attack Paths}
+% Certificate-based privilege escalation: ESC1, ESC8.
+% Why Certipy data is injected into the graph in the stitcher step.
+\todo{Write ADCS section}
+
+\subsection{SID History Abuse and RBCD}
+% HasSIDHistory: cross-domain privilege inheritance.
+% AllowedToAct (RBCD): resource-based constrained delegation as an attack primitive.
+\todo{Write SIDHistory and RBCD section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Existing Tools and Their Limitations}
+
+\subsection{BloodHound and SharpHound}
+% BloodHound: Neo4j-backed, Cypher query interface, built-in pathfinding (Dijkstra/BFS).
+% SharpHound C#: comprehensive collection, cross-forest MemberOf support.
+% Why Dijkstra is insufficient: no stealth scoring, no sequential decision model,
+% no ability to weight discreetness of individual edge types.
+\todo{Write BloodHound/SharpHound section}
+
+\subsection{bloodhound-python}
+% Python collector: easier deployment, no Windows dependency.
+% Key limitations: does not capture foreign user-level MemberOf across forests,
+% Trusts array requires explicit parsing to recover trust edges.
+% These limitations directly bound what the model can discover — documented
+% honestly as a data collection constraint, not a model flaw.
+\todo{Write bloodhound-python limitations}
+
+\subsection{Other Automated Attack Path Tools}
+% Brief survey: Planner-based tools (PRISM, MulVAL), RL-based pen-testing agents
+% (if any relevant prior work). Keep short — show the gap this work fills.
+\todo{Write related tools survey}
+
+% ─────────────────────────────────────────────────────────────
+\section{Graph Neural Networks}
+
+\subsection{Message Passing and Neighbourhood Aggregation}
+% Core GNN formulation: aggregate → combine → update.
+% Why the graph structure of AD (heterogeneous node/edge types) requires
+% more than a vanilla homogeneous GNN.
+\todo{Write GNN fundamentals}
+
+\subsection{Graph Convolutional Network (GCN)}
+% Kipf \& Welling formulation.
+% Role in this work: homogeneous baseline.
+% Why expressiveness on heterogeneous graphs is limited.
+\todo{Write GCN section}
+
+\subsection{Heterogeneous Graph Transformer (HGT)}
+% Hu et al. (2020): per-meta-relation attention, type-level linear projections.
+% Why this maps naturally to AD graphs: different relation types
+% (MemberOf, WriteDACL, AllowedToDelegate...) carry fundamentally different semantics.
+% Architecture choices made: 64D, 4 heads, 2 layers.
+\todo{Write HGT section}
+
+\subsection{PyTorch Geometric and HeteroData}
+% Brief: HeteroData format, edge\_index per (src\_type, edge\_type, dst\_type),
+% why this is the natural container for the AD graph.
+\todo{Write PyG section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Summary and Positioning}
+% Synthesise the gap: BloodHound finds paths, but cannot learn which paths are
+% preferable under a cost model. GNN navigation over heterogeneous AD graphs
+% has not been addressed in prior work. This thesis is a PoC establishing
+% feasibility and demonstrating cross-environment generalisation.
+\todo{Write summary and positioning}
+
+
+%% ============================================================
+%%  CHAPTER 2 — SYSTEM ARCHITECTURE AND DESIGN
+%% ============================================================
+\chapter{System Architecture and Design}
+
+\section{System Overview}
+% Present the full pipeline as a diagram (replicate or adapt the Mermaid diagram
+% from the README as a TikZ figure or imported PNG).
+% Describe the three operational modes:
+%   1. Data preparation only:   ./launch.sh ./input ./output
+%   2. Preparation + query:     ./launch.sh ./input ./output --start X --target Y
+%   3. Inference only:          ./launch.sh ... --skip-prep
+% State the principal design decision: BloodHound-standard principal→target
+% edge direction throughout.
+\todo{Write system overview and include pipeline diagram}
+
+% ─────────────────────────────────────────────────────────────
+\section{Data Collection and Preprocessing}
+
+\subsection{Input Sources}
+% BloodHound JSON (domains, users, computers, GPOs, ACLs, trusts).
+% Certipy JSON (ADCS templates and CA objects).
+\todo{Write input sources section}
+
+\subsection{\tool{clean\_bloodhound.py}: Filtering and Multi-Domain Accumulation}
+% Purpose: filter raw BloodHound exports, accumulate data across multiple files
+% and domains without overwriting.
+% Critical bug fixed: original code used assignment (\texttt{all\_data[key] = data["data"]})
+% which silently collapsed 3 domains into 1. Fixed to use \texttt{.extend()}.
+% Added recursive directory walk for nested scan directories.
+\todo{Write clean\_bloodhound.py section}
+
+\subsection{\tool{merger.py}: Normalisation and Merging}
+% Lowercases all edge type names to resolve casing inconsistencies
+% (e.g. WriteDACL vs. WriteDacl across SharpHound versions).
+% Merges multi-domain data into a unified structure.
+% Parses the Trusts array on domain objects — was previously ignored.
+\todo{Write merger.py section}
+
+\subsection{\tool{stitcher.py}: ADCS Injection and Domain Detection}
+% Injects Certipy-derived ADCS nodes and edges into the merged graph.
+% Auto-detects the target domain from the data rather than requiring manual input.
+\todo{Write stitcher.py section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Heterogeneous Graph Construction}
+
+\subsection{Node and Edge Type Schema}
+% List all node types (User, Computer, Group, Domain, GPO, OU, CertTemplate...).
+% List all edge types with directions:
+%   MemberOf, HasSession, GenericAll, WriteDACL, ForceChangePassword,
+%   AllowedToDelegate, AllowedToAct, HasSIDHistory,
+%   GPLink (GPO→container), TrustedBy/SameForestTrust, ADCS edges.
+% A table here is effective.
+\todo{Write node/edge schema — include a table}
+
+\subsection{Direction Convention}
+% Principal → Target (BloodHound standard).
+% Why this matters: navigation traverses outgoing edges from the current node.
+% Consequence: outgoing-only beam search; no "(reverse)" edge tags needed.
+\todo{Write direction convention section}
+
+\subsection{Edge Extraction Details}
+% GPLink bug fix: BloodHound stores the GUID key, not ObjectIdentifier.
+%   Direction was also reversed (was container→GPO, fixed to GPO→container).
+% AllowedToDelegate: extracted from the allowedtodelegate attribute array.
+% AllowedToAct: from the allowedtoact attribute (RBCD).
+% HasSIDHistory: from sidhistory array on user/computer objects.
+\todo{Write edge extraction details}
+
+\subsection{PyG HeteroData Encoding}
+% How node features are constructed (one-hot type encoding, or feature-less
+% with learned embeddings).
+% How edge\_index tensors are built per meta-relation tuple
+% (src\_type, edge\_type, dst\_type).
+\todo{Write PyG encoding section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Navigation Model}
+
+\subsection{HGT Encoder}
+% Architecture: 64-dimensional hidden size, 4 attention heads, 2 layers.
+% Role: produce node embeddings that encode heterogeneous neighbourhood context.
+% Why HGT over GCN here: per-meta-relation attention captures the semantic
+% difference between, e.g., a MemberOf edge and a WriteDACL edge.
+\todo{Write HGT encoder section}
+
+\subsection{Policy Head}
+% MLP on top of the HGT embeddings.
+% Input: current node embedding.
+% Output: softmax over candidate next-hop neighbours.
+\todo{Write policy head section}
+
+\subsection{Loss Function and Step Cost}
+% Weighted cross-entropy:
+%   eff\_weight = path\_weight × (1 − step\_cost)
+% path\_weight: importance of the training trace.
+% step\_cost: encodes the noisiness / detectability of an edge type.
+% Why this produces paths with lower cumulative cost than Dijkstra on the
+% same graph — the key claim supporting the stealth argument.
+\todo{Write loss function section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Beam Search Navigation}
+
+\subsection{Algorithm}
+% Describe the beam search loop: expand top-k candidates, score with policy head,
+% prune to beam width, repeat.
+\todo{Write beam search algorithm description — consider an Algorithm2e pseudocode block}
+
+\subsection{Terminal State: DCSync}
+% A node satisfies the terminal condition when it holds GetChanges AND
+% GetChangesAll on the target domain object.
+% Beam search freezes that hypothesis and stops expanding it.
+% Design rationale: DCSync as an absorbing goal state, not a post-hoc trim.
+\todo{Write terminal state section}
+
+\subsection{Cross-Environment Inference}
+% The HGT checkpoint is patched with training\_metadata
+% (list of node types, list of edge type tuples seen during training).
+% At inference time, the HGT is rebuilt from this metadata.
+% Edge types present in the new environment but absent from training receive
+% empty (zero) tensors — the model still traverses them via the beam search
+% topology without dedicated learned parameters.
+\todo{Write cross-environment inference section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Audit Module}
+% Three-level output: \textbf{ok} / \textbf{warn} / \textbf{fail}.
+% Checks performed:
+%   (1) Path reaches declared target OR a mid-path DCSync node is found.
+%   (2) Final node domain matches target domain.
+%   (3) No trailing structural noise edges (MemberOf/Contains at path end).
+%   (4) Single-step degenerate path detection.
+% Honest scope: static heuristic flagging, not a substitute for operator judgement.
+\todo{Write audit module section}
+
+
+%% ============================================================
+%%  CHAPTER 3 — IMPLEMENTATION
+%% ============================================================
+\chapter{Implementation}
+
+\section{Technical Stack}
+% Python 3.x, PyTorch Geometric, Streamlit, pyvis, networkx.
+% Training: Kaggle notebooks, GPU T4 ×2 (note P100 sm\_60 incompatibility
+% with newer PyTorch — reason for T4).
+% Version-pin key dependencies in a small table (torch, torch-geometric,
+% streamlit, pyvis).
+\todo{Write technical stack section — include a versions table}
+
+\section{Repository Structure}
+% Reproduce the directory tree from the README.
+% Brief one-line description per top-level file/folder.
+% Note .gitignore paranoia: no real AD scans ever committed.
+\todo{Write repository structure section — include the directory tree as a listing}
+
+% ─────────────────────────────────────────────────────────────
+\section{Data Pipeline}
+
+\subsection{Script Responsibilities and Data Flow}
+% A table mapping each script → input → output → key logic is effective here.
+\todo{Write pipeline data flow section — include input/output table}
+
+\subsection{SharpHound Version Normalisation}
+% TrustedBy vs. SameForestTrust: aliased in build\_dataset.py.
+% WriteDACL vs. WriteDacl: resolved by lowercase normalisation in merger.py.
+% These are documented as known fragilities, not bugs.
+\todo{Write SharpHound normalisation section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Training}
+
+\subsection{Training Data: GOAD}
+% GOAD (Game of Active Directory): multi-domain lab environment.
+% 33 annotated attack traces (zoom.csv).
+% What the traces teach: ACL chains, group inheritance paths, DCSync terminal.
+% What they do NOT teach: GPLink chains, RBCD, Kerberoasting, shadow credentials.
+% This bound is explicitly acknowledged and becomes the coverage ceiling.
+\todo{Write GOAD training data section}
+
+\subsection{Kaggle Training Notebook}
+% Structure of the training notebook.
+% Cell 5.5: checkpoint patch — saves training\_metadata alongside model weights
+%   so the HGT can be reconstructed faithfully in a different environment.
+\todo{Write Kaggle notebook section}
+
+\subsection{Model Checkpoints}
+% GCN.pt, HGT.pt (with metadata), HGT-no-metadata.pt (backup).
+% Why the metadata patch was necessary: without it, inference in a new environment
+% with different node/edge type sets caused silent architectural mismatch.
+\todo{Write model checkpoints section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Inference Pipeline}
+% inference.py flow: load checkpoint → rebuild HGT from metadata →
+%   load HeteroData → run beam search → run audit → write log.
+% launch.sh orchestration: how the three modes are dispatched.
+\todo{Write inference pipeline section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Graphical Interface}
+
+\subsection{Design and Theme}
+% Streamlit application with professional office-app theme.
+% Colour palette: navy \#1f4e79, slate and maroon accents — no neon.
+% Rationale: tool intended for professional red-team context.
+\todo{Write GUI design section}
+
+\subsection{Workflow Integration}
+% Folder picker (tkinter native popup, text fallback).
+% launch.sh wrapped as subprocess; stdout streamed live to the UI.
+% Auto-skip prep if forest\_graph.json + heterodata.pt already exist.
+% @st.cache\_resource for model and graph loading.
+\todo{Write GUI workflow section}
+
+\subsection{Visualisation}
+% pyvis graph: hierarchical left-to-right layout, height 520 px.
+% Muted colour palette (no neon) — each node type distinct colour.
+% Step-by-step table in collapsible expander below the graph.
+% Inference logs persisted to output/inference\_<timestamp>.log.
+\todo{Write GUI visualisation section}
+
+
+%% ============================================================
+%%  CHAPTER 4 — EXPERIMENTS AND RESULTS
+%% ============================================================
+\chapter{Experiments and Results}
+
+\section{Experimental Setup}
+
+\subsection{Training Environment: GOAD}
+% Game of Active Directory: ~3 domains, deliberately vulnerable AD lab.
+% Used exclusively for training — never queried as a test environment.
+% 33 traces define the coverage ceiling of the model.
+\todo{Write GOAD setup section}
+
+\subsection{Test Environment: INLANEFREIGHT}
+% HTB Academy enterprise AD lab: ~4\,000 nodes, multiple domains, cross-domain trusts.
+% Never seen during training — all results on this environment are
+% genuine zero-shot generalisation.
+% Data acquired via bloodhound-python; ADCS via Certipy.
+\todo{Write INLANEFREIGHT setup section}
+
+\subsection{Test Environment: GOAD castelblack / kingslanding}
+% Used specifically to test constrained delegation edge (AllowedToDelegate).
+% Edge type extracted after pipeline patch — model not retrained.
+\todo{Write castelblack/kingslanding setup}
+
+\subsection{Coverage Metric}
+% To avoid the cherry-picking reading: report N queries attempted,
+% M valid paths recovered, audit pass rate.
+% Honest framing: failures on jon.snow, samwell.tarly etc. are operating
+% correctly at the training-set coverage edge — not regressions.
+\todo{Write coverage metric section — include a summary table of all queries}
+
+% ─────────────────────────────────────────────────────────────
+\section{Result 1: wley $\rightarrow$ Domain Admin on INLANEFREIGHT}
+\label{sec:result1}
+
+% This is the headline result. Give it space.
+%
+% Subsections:
+%   - Query and context
+%   - Recovered path (list the nodes and edge types step by step)
+%   - Score: HGT 0.5620
+%   - Comparison with BloodHound shortest path on the same graph
+%   - KEY FIGURE: side-by-side path comparison with step-cost gap
+%   - Claim: intra-domain generalisation, 351-node lab → 4000-node enterprise
+\todo{Write Result 1 — include the key comparison figure}
+
+% Suggested figure structure:
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=\textwidth]{result1_path_comparison}
+%   \caption{Learned path vs.\ BloodHound shortest path for wley→Domain Admin
+%            on INLANEFREIGHT. The learned policy selects a longer but lower
+%            step-cost route, avoiding high-noise edges.}
+%   \label{fig:result1}
+% \end{figure}
+
+% ─────────────────────────────────────────────────────────────
+\section{Result 2: Cross-Domain Trust Traversal}
+\label{sec:result2}
+
+% Query: htb-student\_adm → INLANEFREIGHT domain
+% Score: 0.2349
+% Path: show the trust traversal steps
+% Analysis: structural demonstration that the model navigates trust edges.
+% Honest note: lower score reflects data collection limitations on trust edges
+%   (bloodhound-python Trusts array partially captured) — not model failure.
+\todo{Write Result 2}
+
+% ─────────────────────────────────────────────────────────────
+\section{Result 3: Constrained Delegation — castelblack $\rightarrow$ kingslanding}
+\label{sec:result3}
+
+% Query: castelblack → kingslanding
+% Path: castelblack → winterfell (AllowedToDelegate) →
+%        Enterprise DCs (MemberOf) → sevenkingdoms.local (DCSync)
+% Score: 0.1685
+%
+% Key insight to foreground:
+%   The AllowedToDelegate edge type was NOT present in training data.
+%   It was added to the graph by the build\_dataset.py pipeline patch.
+%   The model discovers the path WITHOUT retraining.
+%   Contribution: pipeline completeness drives discoverability — the model
+%   traverses the new edge via beam search topology even without dedicated
+%   learned parameters for that meta-relation.
+%
+% Known limitation: beam search continues past the DCSync hit at step 3
+%   for 3 additional noise steps. Identified as future reconception work
+%   (absorbing terminal state inside the beam loop).
+\todo{Write Result 3}
+
+% ─────────────────────────────────────────────────────────────
+\section{Result 4: Documented Limitation — Cross-Forest Foreign MemberOf}
+\label{sec:result4}
+
+% Query: administrator@inlanefreight → admins@freightlogistics
+% Outcome: fails — model produces a degenerate 1--2 step path.
+% Root cause: bloodhound-python does not capture foreign user-level MemberOf
+%   across forest boundaries. The edge simply does not exist in the graph,
+%   so the model cannot traverse it regardless of capability.
+% Framing: this is a DATA COLLECTION limitation, not a model regression.
+%   Requires SharpHound C# for cross-forest foreign group collection.
+\todo{Write Result 4}
+
+% ─────────────────────────────────────────────────────────────
+\section{Discussion}
+
+\subsection{Model Coverage and Training-Set Ceiling}
+% 33 traces teach ACL chains + group inheritance + DCSync.
+% The model never sees GPLink chains, RBCD, Kerberoasting in training.
+% Failure on out-of-distribution queries is expected and correct behaviour.
+% The model is NOT broken — it operates correctly at its coverage edge.
+\todo{Write coverage discussion}
+
+\subsection{Expressiveness vs.\ Transferability: HGT vs.\ GCN}
+% HGT > GCN on training distribution (GOAD).
+% GCN $\geq$ HGT on cross-environment transfer (INLANEFREIGHT).
+% Interpretation: HGT's per-relation expressiveness overfits slightly to
+%   training meta-relations; GCN's simplicity transfers more robustly.
+%   Both recover the correct path — the gap is in raw scores, not correctness.
+\todo{Write HGT vs. GCN discussion}
+
+\subsection{Pipeline Completeness as a First-Class Contribution}
+% Result 3 demonstrates that expanding what the pipeline extracts
+%   directly expands what the model can discover — without retraining.
+%   This decoupling of graph coverage from model capability is a design
+%   insight worth foregrounding in the thesis narrative.
+\todo{Write pipeline completeness discussion}
+
+
+%% ============================================================
+%%  CHAPTER 5 — LIMITATIONS AND FUTURE WORK
+%% ============================================================
+\chapter{Limitations and Future Work}
+
+\section{Data Collection Incompleteness}
+\label{sec:limit-data}
+
+% Open with the concrete case: the administrator@inlanefreight →
+% admins@freightlogistics query fails not because the model lacks capability
+% but because the edge is absent from the collected graph.
+%
+% bloodhound-python limitations to discuss:
+%   - Foreign user-level MemberOf across forest boundaries not captured
+%   - Trusts array requires explicit parsing (was initially ignored by merger)
+%   - No CoerceToTGT-style derived edges
+%
+% What SharpHound C# provides:
+%   - Full cross-forest object collection including foreign group membership
+%   - Richer ACL enumeration
+%   - More complete GPLink and delegation data
+%
+% Implication for future iterations: C# collection is not optional for
+% cross-forest attack path completeness.
+\todo{Write data collection limitations section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Expanding the Training Knowledge Base}
+\label{sec:limit-training}
+
+% Current training set: 33 traces from GOAD.
+% What those traces teach: ACL chains, group inheritance, DCSync terminal.
+% What they do NOT teach: RBCD (AllowedToAct), shadow credentials,
+%   Kerberoasting, GPLink-based chains, certificate abuse chains (ESC1/ESC8).
+%
+% Two expansion strategies:
+%
+% 1. Synthetic trace injection:
+%    Generate labelled attack traces for new primitives (RBCD, shadow credentials)
+%    in a controlled lab (GOAD extension or custom Vagrant environment).
+%    Even 5--10 new traces per primitive would give the model a training signal.
+%
+% 2. Corpus augmentation from public sources:
+%    HTB writeups, CRTE/CRTO course materials (if licensable), RedTeam notes.
+%    Requires careful anonymisation and edge-type normalisation.
+%
+% Note: retraining on current data with the new edge types (gplink=8,
+% allowedtodelegate=4) was evaluated and skipped — volume too low for a
+% meaningful training signal. This decision is documented here as a
+% deliberate choice, not an oversight.
+\todo{Write training knowledge base expansion section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Terminal State Learning via Offline Reinforcement Learning}
+\label{sec:limit-rl}
+
+% Current design: DCSync terminal is a hardcoded symbolic predicate
+%   (GetChanges + GetChangesAll on the target domain).
+% Problem: the beam search does not internalise the goal — it navigates
+%   greedily then trims at the first terminal hit. This produces the
+%   noise-tail issue observed in Result 3.
+%
+% Proposed future direction: offline RL over labelled rollouts.
+%   - Label DCSync nodes as terminal states in the training traces.
+%   - Train a value head (critic) that assigns high value to nodes with
+%     DCSync rights on the target domain.
+%   - The policy head learns to steer toward high-value nodes intrinsically,
+%     without a hardcoded predicate.
+%   - Algorithms: conservative Q-learning (CQL) or implicit Q-learning (IQL)
+%     are well-suited to offline (batch) settings where online interaction
+%     with a live AD environment is not feasible.
+%
+% Short-term interim: absorbing terminal state inside the beam loop
+%   (freeze hypothesis at first DCSync hit, stop expanding) —
+%   implementable without retraining, addresses the noise-tail immediately.
+\todo{Write offline RL future direction section}
+
+% ─────────────────────────────────────────────────────────────
+\section{Additional Future Directions}
+
+\subsection{Calibrated Confidence Scoring}
+% Current audit is a three-level heuristic (ok/warn/fail).
+% Future: calibrate the softmax output scores against empirical path success
+%   rates so that a score of 0.X corresponds to a meaningful probability
+%   of reaching the target in a real environment.
+\todo{Write calibrated confidence section}
+
+\subsection{SharpHound Edge Vocabulary Versioning}
+% SharpHound edge type names evolve across versions (TrustedBy vs.
+% SameForestTrust, WriteDACL vs. WriteDacl).
+% A versioned alias map in the pipeline would make normalisation explicit
+% and maintainable as BloodHound/SharpHound evolve.
+\todo{Write edge vocabulary versioning section}
+
+\subsection{Derived Attack Primitives}
+% CoerceToTGT-style edges (PetitPotam, PrinterBug) are not captured by
+%   any collector — they require protocol-level interaction.
+% Future pipeline could infer coercibility from machine exposure
+%   (e.g., spooler service running + no SMB signing) as a synthetic edge.
+\todo{Write derived primitives section}
+
+
+%% ============================================================
+%%  GENERAL CONCLUSION
+%% ============================================================
+\chapter*{General Conclusion}
+\addcontentsline{toc}{chapter}{General Conclusion}
+\markboth{General Conclusion}{}
+
+% Structure (roughly one paragraph each):
+%
+% 1. Restate what was built: an end-to-end pipeline + HGT-based navigation
+%    policy for AD privilege escalation, from raw BloodHound JSON to
+%    beam-search inference with audit output and a Streamlit GUI.
+%
+% 2. Three defensible contributions:
+%    (a) Cross-environment generalisation: wley→DA on a 4000-node enterprise
+%        never seen during training.
+%    (b) Trust-aware navigation: structural demonstration of cross-domain
+%        path discovery.
+%    (c) Pipeline completeness as a research lever: the AllowedToDelegate
+%        result was unlocked by a pipeline patch, not model retraining.
+%
+% 3. Honest scope: this is a PoC. 33 training traces define the coverage
+%    ceiling. The model operates correctly within those bounds and fails
+%    gracefully outside them.
+%
+% 4. Forward look: the identified limitations (data collection, training
+%    corpus size, hardcoded terminal heuristic) each have a clear
+%    research path forward, making this work a foundation rather than
+%    a dead end.
+\todo{Write general conclusion (~1 page)}
+
+
+%% ============================================================
+%%  BIBLIOGRAPHY
+%% ============================================================
+\printbibliography[heading=bibintoc, title={Bibliography}]
+
+
+%% ============================================================
+%%  APPENDICES
+%% ============================================================
+\appendix
+\chapter{Sanitised BloodHound JSON Example}
+\label{app:json}
+% Show a small anonymised excerpt of a BloodHound domain JSON
+% (users array, ACEs array) to give the reader concrete intuition
+% of the raw input format.
+\todo{Insert sanitised JSON excerpt as a lstlisting}
+
+\chapter{Heterogeneous Graph Schema}
+\label{app:schema}
+% Full table of node types and edge types with directions and
+% source scripts. Reference this from Chapter 2.
+\todo{Insert full graph schema table}
+
+\chapter{Key Code Excerpts}
+\label{app:code}
+
+\section*{Effective Weight Loss Function}
+\begin{lstlisting}[language=Python, caption={Effective weight computation in \tool{prepare\_training\_examples.py}}]
+# eff_weight combines path importance with step discretion cost
+eff_weight = path_weight * (1 - step_cost)
+\end{lstlisting}
+\todo{Add beam search loop and has\_dcsync\_on excerpts here}
+
+\chapter{GUI Screenshots}
+\label{app:gui}
+% Four screenshots:
+%   1. Main interface / folder picker
+%   2. wley→DA path visualisation (pyvis graph)
+%   3. Step-by-step table expander
+%   4. Audit output panel
+\todo{Insert GUI screenshots}
+
+\end{document}

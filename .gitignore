@@ -84,3 +84,27 @@ pipeline.log
 !examples/**/*_ous.json
 !examples/**/*_containers.json
 !examples/**/*Certipy*.json
+
+
+
+thesis/main.*
+!thesis/main.tex
+!thesis/main.pdf
+
+# (Optional but recommended) Standard LaTeX ignores just in case you add other files:
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.run.xml
+*.bcf
+*.glo
+*.ist
+*.lof
+*.lot
+*.acn
