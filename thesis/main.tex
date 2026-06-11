@@ -246,17 +246,19 @@ Sécurité offensive, Généralisation inter-environnements.
 % Kerberoasting) are among the most impactful vectors in modern breaches.
 % Defenders and red teams alike rely on tools like BloodHound to map the attack
 % surface — but analysis remains manual and non-scalable.
-Active Directory is the identity backbone of major enterprises, tho hidden withing 
-the inside network of the company, once the outside defenses are breached 
-(web services, phishing, usb stick ...) the advarsary finds himself able to directly interacte and query
-the Active Directory Domain Controller itself through ldpa, smb, and other protocols presenting the entierty 
-of the company IT infrastructure data and services to the attacker. A vulnerable AD poses extreme levels 
-of risk making the hardening the AD network environment against an extreme priority.
+Active Directory is the identity backbone of major enterprises. While typically isolated withing 
+the inside network, once the perimeter defenses are breached 
+(web services, phishing, usb stick ...) an advarsary gains the ability to directly interacte and query
+the Active Directory Domain Controller. Through protocols such as LDAP and SMB the entirety 
+of the organisation's IT infrastructure , data and services  is essencialy mapped out for the attacker.
+A vulnerable AD poses extreme levels of risk making hardening the AD network environment an extreme priority.
 
 
-Credential-based and ACL-based attacks(pass-the-hash, DCSync, Kerberoasting) 
-are among the most impactful vectors in modern breaches. Read teams rely on tools like BloodHound 
-to map the attack surface and identify the vulnerable nodes during an engagement.
+Once inside, attackers frequently leverage credential-based and ACL-based attacks such as 
+pass-the-hash, DCSync, Kerberoasting are among the most attack impactful vectors in modern breaches.
+Red teams and security auditor alike rely on tools like BloodHound 
+to map the attack surface and identify the vulnerable nodes during an engagement. However the analysis remains
+a highly manual process, time consuming, heavely dependant on human expertise and none scalable in large enterprise environments.
 
 
 \section*{Problem Statement}
@@ -264,7 +266,12 @@ to map the attack surface and identify the vulnerable nodes during an engagement
 % the shortest path, not necessarily the most realistic or discreet one.
 % The question this thesis asks: can a model *learn* a navigation policy from
 % labelled attack traces, and generalise that policy to unseen enterprise environments?
-\todo{Write problem statement paragraph}
+Bloodhound maps the entirety of the Active Diretory to a graph database, each node represents an object,
+and the relationships between these objects is represented by edges.
+When a user runs a path finding query, BloodHound simply runs Dijkstra over the attack graph,
+it finds the shortest path, not necessarily the most realistic or discreet one.
+The question this thesis tries to answer is : can a model learn a navigation policy and generalise
+that policy to unseen entreprise environment?
 
 \section*{Objectives}
 % Three concrete objectives:
