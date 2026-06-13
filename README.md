@@ -184,8 +184,8 @@ Path 1:
 
 - **Source Data:** for now all the work has been done based on the python injestor for bloodhound, which is significantly lacking compared to the C# sharphound injestor. 
 - **ADCS :** the python injestor being blind to ADCS templates had me scaning with older versions of certipy for that compatible bloodhound output, a merger scripts takes care of the rest.
-- **vision :** retraining using new forests sharphound scanned might result in a model capable of operating on the C# injested data, but for now the model is limited to bloodhound.py scans as well as needing certipy scans < 5.0 . A larger training dataset could allow for more comprehensif functions, a larger policy head, a creadential aware navigation, a user inventory of pawned accounts and more. with enough time and budgeting significant improvements can be maid.
-- **Testing:** due to lack of funding, and the project being self funded, i struggled with resources, and the model still needs actual testing on ctfs/labs.
+- **vision :** retraining using new forests sharphound scanned might result in a model capable of operating on the C# injested data, but for now the model is limited to bloodhound.py scans as well as needing certipy scans < 5.0 . A larger training dataset could allow for more comprehensif functions, a larger policy head, a creadential aware navigation, a user inventory of pawned accounts and more. with enough time and budgeting significant improvements can be made.
+- **Testing:** due to lack of time, and the project being self funded, i struggled with resources, and the model still needs actual testing on dedicated environements.
 
 
 ## 12. Citation & Acknowledgements
