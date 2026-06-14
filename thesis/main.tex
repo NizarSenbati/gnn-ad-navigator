@@ -85,6 +85,86 @@
 %% ── TikZ / PGF (for pipeline diagrams) ──────────────────────
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds}
+%% ── Thesis colour palette ────────────────────────────────────
+\definecolor{navyblue}{RGB}{31,78,121}
+\definecolor{navylight}{RGB}{52,114,168}
+\definecolor{slategray}{RGB}{100,120,140}
+\definecolor{boxbg}{RGB}{235,242,250}
+\definecolor{boxborder}{RGB}{180,210,240}
+\definecolor{arrowgray}{RGB}{80,100,120}
+\definecolor{labelgray}{RGB}{60,80,100}
+\definecolor{forestgreen}{RGB}{34,100,60}
+\definecolor{forestbg}{RGB}{230,245,235}
+\definecolor{domainbg}{RGB}{220,235,250}
+\definecolor{oubg}{RGB}{235,235,255}
+\definecolor{oucolor}{RGB}{70,70,180}
+\definecolor{objbg}{RGB}{250,250,250}
+
+%% ── Circled step number ──────────────────────────────────────
+\newcommand{\stepnum}[1]{%
+  \tikz[baseline=(n.base)]\node[circle,
+    draw=navyblue, fill=navyblue, text=white,
+    font=\scriptsize\bfseries,
+    inner sep=1.5pt, minimum size=0.5cm] (n) {#1};}
+
+%% ── Common styles ────────────────────────────────────────────
+\tikzset{
+  forestbox/.style={
+    draw=forestgreen, fill=forestbg, line width=1.2pt,
+    rounded corners=5pt, minimum width=3.2cm,
+    minimum height=0.85cm, align=center,
+    font=\small\bfseries\color{forestgreen}
+  },
+  domainbox/.style={
+    draw=navyblue, fill=domainbg, line width=1.0pt,
+    rounded corners=4pt, minimum width=2.8cm,
+    minimum height=0.8cm, align=center,
+    font=\small\bfseries\color{navyblue}
+  },
+  oubox/.style={
+    draw=oucolor, fill=oubg, line width=0.8pt,
+    rounded corners=3pt, minimum width=2.4cm,
+    minimum height=0.7cm, align=center,
+    font=\small\color{oucolor}
+  },
+  objbox/.style={
+    draw=slategray, fill=objbg, line width=0.6pt,
+    rounded corners=2pt, minimum width=1.9cm,
+    minimum height=0.65cm, align=center,
+    font=\scriptsize\color{labelgray}
+  },
+  entitybox/.style={
+    draw=navyblue, fill=domainbg, line width=1.2pt,
+    rounded corners=5pt, minimum width=2.4cm,
+    minimum height=1.1cm, align=center,
+    font=\small\bfseries\color{navyblue}
+  },
+  msgbox/.style={
+    draw=boxborder, fill=boxbg, line width=0.8pt,
+    rounded corners=3pt,
+    font=\scriptsize\color{labelgray},
+    inner sep=5pt, align=left
+  },
+  thesisarrow/.style={
+    -{Stealth[length=6pt,width=4pt]},
+    draw=arrowgray, line width=1.0pt
+  },
+  dasharrow/.style={
+    -{Stealth[length=5pt,width=3.5pt]},
+    draw=arrowgray, dashed, line width=0.9pt
+  },
+  bidiarrow/.style={
+    {Stealth[length=5pt,width=3.5pt]}-{Stealth[length=5pt,width=3.5pt]},
+    draw=arrowgray, line width=1.0pt
+  },
+  arrowlabel/.style={
+    font=\scriptsize\color{labelgray},
+    fill=white, inner sep=2pt
+  },
+  diagramtitle/.style={
+    font=\large\bfseries\color{navyblue}
+  },
+}
 
 %% ── Hyperlinks & PDF Metadata ────────────────────────────────
 \usepackage[
@@ -109,7 +189,7 @@
 \addbibresource{references.bib}
 
 %% ── Acronyms ─────────────────────────────────────────────────
-\usepackage[acronym, toc]{glossaries}
+\usepackage[acronym, toc, nomain]{glossaries}
 \makeglossaries
 \newacronym{ad}{AD}{Active Directory}
 \newacronym{gnn}{GNN}{Graph Neural Network}
@@ -129,6 +209,7 @@
 \newacronym{mlp}{MLP}{Multi-Layer Perceptron}
 \newacronym{goad}{GOAD}{Game of Active Directory}
 \newacronym{dc}{DC}{Domain Controller}
+\newacronym{dcsync}{DCSync}{Directory Replication Service synchronisation attack}
 
 %% ── Custom Commands ──────────────────────────────────────────
 \newcommand{\tool}[1]{\texttt{#1}}
@@ -190,10 +271,36 @@
 \chapter*{Acknowledgements}
 \addcontentsline{toc}{chapter}{Acknowledgements}
 
-% Write your acknowledgements here.
-% Typical structure: supervisor → lab/department → peers → family.
-% Keep it genuine and concise (half a page to one page).
-\todo{Write acknowledgements}
+First and foremost, I would like to express my deepest gratitude to my academic supervisor
+GHADI Abderahim, for his unwavering guidance, patience, and invaluable feedback
+throughout this academic year.
+\\
+I am equally grateful to my professional supervisor, ZAABOUL Jawad, and the 
+entire team at NearSecure. Thank you for providing an environment that fosters innovation, 
+for trusting me to pursue the intersection of offensive security and Deep Learning, 
+and for the technical mentorship that bridged the gap between academic theory and real-world application.
+\\
+A massive thank you is owed to the broader cybersecurity and open-source communities. 
+The development of the GNN-AD-Navigator would not have been possible without the tireless 
+work of the developers who build and maintain the tools we rely on. Specifically, I would like to acknowledge:
+\\
+SpecterOps, for creating and open-sourcing BloodHound, which provided the foundational graph 
+topology and data schema necessary for my model's ingestion pipeline.
+\\
+Oliver Lyak ly4k, for developing Certipy, an essential tool that allowed me to accurately 
+map complex Active Directory Certificate Services ADCS attack paths into my heterogeneous graph.
+\\
+Mayfly Orange Cyberdefense, for creating GOAD Game of Active Directory. The immense complexity 
+of this lab environment served as the perfect training ground for the neural network, allowing it 
+to learn and discover emergent tactical behaviors.
+\\
+I also want to thank Hack The Box Academy for their student program, which granted me 
+accessible access to the inlanefreight Active Directory environment. This provided the critical 
+cross-environment validation required to prove the model's efficacy outside of its training data.
+\\
+Finally, a personal thank you to my father and familly for the ongoing support, advice and guidance during 
+the long hours spent debugging and studying. 
+To everyone who supported me through this Master's journey: thank you.
 
 %% ── Abstract (English) ───────────────────────────────────────
 \chapter*{Abstract}
@@ -202,19 +309,49 @@
 % ~150 words. Cover: problem (AD attack path analysis), approach (GNN policy on
 % heterogeneous graph), key result (cross-environment generalisation on INLANEFREIGHT),
 % contribution (learned policy vs. shortest path), and honest scope (PoC).
-AD pentest 
+Active Directory is a directory service so deeply embedded in corporate 
+infrastructure that misconfigurations, no matter how small, can expose 
+entire organisations to privilege escalation attacks. Tools like BloodHound 
+are critical for both defenders and red teams: they map the environment as a 
+graph and let operators query attack paths between any two objects. 
+BloodHound's built-in pathfinding, however, runs plain Dijkstra --- it returns 
+the shortest path, not necessarily the most operationally sound one, and it 
+cannot learn from prior engagements.
+
+This thesis asks whether a Graph Neural Network can learn a navigation policy 
+from labelled attack traces and generalise it to entirely unseen enterprise 
+environments. A Heterogeneous Graph Transformer is trained on a multi-domain 
+lab environment and evaluated on a 4\,000-node enterprise network it has 
+never seen. The model recovers the expert-documented Domain Admin attack path 
+without retraining, establishing cross-environment generalisation as a proof 
+of concept. Identified architectural boundaries and a forward-looking 
+hypothesis for a second-generation tool are discussed.
 
 \vspace{1.5cm}
 \noindent\textbf{Keywords:} Graph Neural Network, Heterogeneous Graph Transformer,
 Active Directory, Privilege Escalation, Attack Graph, Beam Search,
-Offensive Security, Cross-Environment Generalisation.
+Offensive Security, Cross-Environment Generalisation, Active Directory Cerfication Services.
 
 %% ── Abstract (French) ────────────────────────────────────────
 \chapter*{Résumé}
 \addcontentsline{toc}{chapter}{Résumé}
 
-% ~150 words in French. Mirror the English abstract.
-\todo{Write French abstract (~150 words)}
+Active Directory est un service d'annuaire si profondément intégré dans l'infrastructure 
+des entreprises que la moindre erreur de configuration peut exposer une organisation entière 
+à des attaques de privilege escalation. Des outils comme BloodHound sont essentiels 
+à la fois pour les défenseurs et les red teams : ils cartographient l'environnement sous forme 
+de graphe et permettent aux opérateurs de rechercher des chemins d'attaque entre deux objets.
+Cependant, le moteur de recherche de BloodHound utilise le simple algorithme de Dijkstra 
+renvoie le chemin le plus court, et non le plus pertinent d'un point de vue opérationnel.
+
+Cette thèse cherche à savoir si un Graph Neural Network peut apprendre une politique de navigation
+à partir de traces d'attaques étiquetées, et la généraliser à des environnements d'entreprise 
+totalement inconnus. Un Heterogeneous Graph Transformer est entraîné sur un environnement de 
+laboratoire multi-domaines, puis évalué sur un réseau d'entreprise de 4 000 nœuds qu'il 
+n'a jamais vu auparavant. Le modèle parvient à retrouver le chemin d'attaque Domain Admin 
+documenté par des experts, et ce sans réentraînement, validant ainsi la généralisation 
+cross-environment comme un véritable Proof of Concept. Enfin, les limites architecturales 
+identifiées ainsi que des pistes d'évolution pour un outil de seconde génération sont discutées.
 
 \vspace{1.5cm}
 \noindent\textbf{Mots-clés :} Réseau de neurones sur graphe, Transformateur de graphe hétérogène,
@@ -241,45 +378,48 @@ Sécurité offensive, Généralisation inter-environnements.
 \markboth{General Introduction}{}
 
 \section*{Context}
-% Set the scene: Active Directory is the identity backbone of ~90% of Fortune 500
-% enterprises. Credential-based and ACL-based attacks (pass-the-hash, DCSync,
-% Kerberoasting) are among the most impactful vectors in modern breaches.
-% Defenders and red teams alike rely on tools like BloodHound to map the attack
-% surface — but analysis remains manual and non-scalable.
+
 Active Directory is the identity backbone of major enterprises. While typically isolated withing 
 the inside network, once the perimeter defenses are breached 
-(web services, phishing, usb stick ...) an advarsary gains the ability to directly interacte and query
-the Active Directory Domain Controller. Through protocols such as LDAP and SMB the entirety 
-of the organisation's IT infrastructure , data and services  is essencialy mapped out for the attacker.
+(e.g., via web service exploitation, phishing, or a compromised usb) an advarsary gains the 
+ability to directly interacte and query the Active Directory Domain Controller. Through protocols
+such as LDAP and SMB the entirety  of the organisation's IT infrastructure , data and services 
+is essencialy mapped out for the attacker.
 A vulnerable AD poses extreme levels of risk making hardening the AD network environment an extreme priority.
 
 
 Once inside, attackers frequently leverage credential-based and ACL-based attacks such as 
-pass-the-hash, DCSync, Kerberoasting are among the most attack impactful vectors in modern breaches.
+pass-the-hash, DCSync, Kerberoasting are among the most impactful attack vectors in modern breaches.
 Red teams and security auditor alike rely on tools like BloodHound 
 to map the attack surface and identify the vulnerable nodes during an engagement. However the analysis remains
-a highly manual process, time consuming, heavely dependant on human expertise and none scalable in large enterprise environments.
+a highly manual process, time consuming, heavely depandent on human expertise and none scalable 
+in large enterprise environments.
 
 
 \section*{Problem Statement}
-% BloodHound's built-in pathfinding is Dijkstra over the attack graph — it finds
-% the shortest path, not necessarily the most realistic or discreet one.
-% The question this thesis asks: can a model *learn* a navigation policy from
-% labelled attack traces, and generalise that policy to unseen enterprise environments?
-Bloodhound maps the entirety of the Active Diretory to a graph database, each node represents an object,
+
+Bloodhound maps the entirety of the Active Directory to a graph database, each node represents an object,
 and the relationships between these objects is represented by edges.
 When a user runs a path finding query, BloodHound simply runs Dijkstra over the attack graph,
 it finds the shortest path, not necessarily the most realistic or discreet one.
-The question this thesis tries to answer is : can a model learn a navigation policy and generalise
-that policy to unseen entreprise environment?
+\\The question this thesis asks : can a model learn a navigation policy and generalise
+that policy to an unseen entreprise environment?
 
 \section*{Objectives}
-% Three concrete objectives:
-% 1. Build an end-to-end pipeline from raw BloodHound JSON to navigable PyG tensors.
-% 2. Train a GNN-based navigation policy and demonstrate cross-environment generalisation.
-% 3. Empirically show that the learned policy recovers paths more discreet than
-%    shortest-path baselines.
-\todo{Write objectives paragraph}
+
+The objectif of this Thesis is to provide a proof of concept for learned attack path discovery 
+over heterogeneous Active Directory graphs.
+\\To that end this work aims to:
+
+\begin{itemize}
+  \item Build an end-to-end pipeline transforming raw BloodHound and Certipy JSON
+  to navigable \gls{pyg} \texttt{HeteroData} tensors.
+  \item Train a GNN-based navigation policy and demonstrate cross-environment generalisation 
+  to unseen entreprise level environments.
+  \item Identify and precisely describe the model's limitations and architectural boundaries 
+  through systematic evaluation, establishing future work and improvements.
+\end{itemize}
+
 
 \section*{Main Contributions}
 \begin{itemize}
@@ -289,13 +429,38 @@ that policy to unseen entreprise environment?
   \item A \gls{hgt}-based navigation policy trained on \gls{goad} traces and
         evaluated on the entirely unseen INLANEFREIGHT enterprise environment,
         demonstrating generalisation from a 351-node lab to a 4\,000-node network.
-  \item Empirical evidence that the learned policy recovers paths with lower
-        step-cost than BloodHound's shortest-path baseline on the same graph.
+  \item A diagnostic evaluation of the learned policy's architectural 
+        boundaries identifying how each design oversight \gls{dcsync} 
+        goal-state blindness, computer-node edge directionality, and 
+        training-distribution sparsity propagated into observable 
+        failure modes, and estimating the performance ceiling imitation 
+        learning could reach if these constraints were lifted.
+  \item A forward-looking system hypothesis describing a second-generation 
+        tool where identified oversights are addressed: a goal-conditioned 
+        policy with \gls{dcsync}-aware terminal learning, bidirectional 
+        computer-node traversal, and an expanded training corpus 
+        outlining what the approach is capable of reaching beyond the 
+        bounds of this proof of concept.
 \end{itemize}
 
 \section*{Report Outline}
-% One sentence per chapter describing what it covers.
-\todo{Write report outline (one sentence per chapter)}
+The remainder of this document is structured as follows. 
+Chapter 1 establishes the theoretical foundation, reviewing the architecture of Active Directory, 
+common privilege escalation techniques, the machine learning logic behind GNNs and the current 
+state of graph-based attack path analysis.
+Chapter 2 details the methodology and system architecture, introducing the heterogeneous graph 
+pipeline designed to transform raw BloodHound data into navigable tensors and present the core logic 
+of the navigation policy the loss function and the beam search method. 
+Chapter 3 presents the architecture and training paradigm of the Graph Neural Network (GNN) 
+navigation policy. 
+Chapter~4 provides an empirical evaluation of the learned policy across 
+multiple environments, documents both successful generalisations and precise 
+failure modes, and identifies the architectural oversights that bound the 
+current approach.
+Chapter~5 concludes the report by reviewing what this proof of concept 
+achieved and laying out its limitations honestly. It then builds a hypothesis
+where a second generation tool, one where the identified oversights are properly handled,
+could theoretically reach as well as pinpointing where future research might target.
 
 
 %% ============================================================
@@ -309,7 +474,112 @@ that policy to unseen entreprise environment?
 % Cover: users, computers, OUs, GPOs, domains, forests, trusts.
 % One diagram of the hierarchical AD structure (forest → domain → OU → objects)
 % is worth inserting here.
-\todo{Write AD structure overview}
+
+Active Directory (AD) a directory service for Windows network environments. It is a distributed, 
+hierarchical structure that allows for centralized management of an organization's resources, 
+including users, computers, groups, network devices, file shares, group policies, servers 
+and workstations, and trusts. AD provides authentication and authorization functions within 
+a Windows domain environment.\href{https://academy.hackthebox.com/module/74/section/1347}{1}
+\\
+\\
+\begin{figure}[H]
+  \centering
+  \textbf{\color{navyblue} Active Directory Object Hierarchy} \\[0.5em]
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[node distance=0.5cm and 0.5cm]
+
+  %\node[diagramtitle] (T) {Active Directory Object Hierarchy};
+
+  %% Forest
+  \node[forestbox, below=0.7cm] (forest)
+    {Forest\quad\texttt{corp.local}};
+
+  %% Domains
+  \node[domainbox, below left=1.0cm and 2.2cm of forest] (d1)
+    {Domain\\[1pt]\texttt{corp.local}};
+  \node[domainbox, below right=1.0cm and 2.2cm of forest] (d2)
+    {Child Domain\\[1pt]\texttt{eu.corp.local}};
+
+  \draw[thesisarrow] (forest.south) -- ++(0,-0.28) -| (d1.north);
+  \draw[thesisarrow] (forest.south) -- ++(0,-0.28) -| (d2.north);
+
+  %% OUs under d1
+  \node[oubox, below left=1.0cm and 0.8cm of d1] (ou1) {OU: IT Dept};
+  \node[oubox, below right=1.0cm and 0.8cm of d1] (ou2) {OU: Finance};
+
+  \draw[thesisarrow] (d1.south) -- ++(0,-0.22) -| (ou1.north);
+  \draw[thesisarrow] (d1.south) -- ++(0,-0.22) -| (ou2.north);
+
+  %% OU under d2
+  \node[oubox, below=1.0cm of d2] (ou3) {OU: Servers};
+  \draw[thesisarrow] (d2.south) -- (ou3.north);
+
+  %% Objects under ou1
+  \node[objbox, below left=0.9cm and 0.4cm of ou1] (u1)
+    {\textbf{User}\\[1pt]john.doe};
+  \node[objbox, below right=0.9cm and 0cm of ou1] (s1)
+    {\textbf{Svc Account}\\[1pt]svc-mssql};
+
+  \draw[thesisarrow] (ou1.south) -- ++(0,-0.2) -| (u1.north);
+  \draw[thesisarrow] (ou1.south) -- ++(0,-0.2) -| (s1.north);
+
+  %% Objects under ou2
+  \node[objbox, below left=0.9cm and 0cm of ou2] (g1)
+    {\textbf{Group}\\[1pt]Finance-Admins};
+  \node[objbox, below right=0.9cm and 0.4cm of ou2] (gpo)
+    {\textbf{GPO}\\[1pt]PW-Policy};
+
+  \draw[thesisarrow] (ou2.south) -- ++(0,-0.2) -| (g1.north);
+  \draw[thesisarrow] (ou2.south) -- ++(0,-0.2) -| (gpo.north);
+
+  %% Objects under ou3
+  \node[objbox, below=0.9cm of ou3] (c1)
+    {\textbf{Computer}\\[1pt]SRVSQL01};
+  \draw[thesisarrow] (ou3.south) -- (c1.north);
+
+  %% GPLink dashed
+  \draw[dasharrow, bend right=30] (gpo.west)
+    to node[arrowlabel, left=3pt] {GPLink} (ou2.south);
+
+  %% Legend
+  \begin{scope}[shift={(7.5,-3.5)}]
+    \node[font=\small\bfseries\color{labelgray}] (lt) {Legend};
+    \node[forestbox, minimum width=2.0cm, minimum height=0.5cm,
+          font=\scriptsize\bfseries\color{forestgreen},
+          below=0.15cm of lt] (ll1) {Forest};
+    \node[domainbox, minimum width=2.0cm, minimum height=0.5cm,
+          font=\scriptsize\bfseries\color{navyblue},
+          below=0.15cm of ll1] (ll2) {Domain};
+    \node[oubox, minimum width=2.0cm, minimum height=0.5cm,
+          font=\scriptsize\color{oucolor},
+          below=0.15cm of ll2] (ll3) {OU};
+    \node[objbox, minimum width=2.0cm, minimum height=0.5cm,
+          below=0.15cm of ll3] (ll4) {Object};
+  \end{scope}
+
+\end{tikzpicture}
+}
+  \caption{Active Directory object hierarchy.}
+  \label{fig:ad-hierarchy}
+\end{figure}
+
+A basic AD user account with no added privileges can be used to enumerate the majority of objects 
+contained within AD, including but not limited to
+% TODO: Finish literature review
+
+\begin{itemize}
+  \item Domain Computers
+  \item Domain Group Information
+  \item Default Domain Policy
+  \item Password Policy
+  \item Domain Trusts
+  \item Domain Users
+  \item Organizational Units (OUs)
+  \item Functional Domain Levels
+  \item Group Policy Objects (GPOs)
+  \item Access Control Lists (ACLs)
+\end{itemize}
+
 
 \subsection{Authentication Protocols}
 % Kerberos: TGT/TGS flow, delegation types (unconstrained, constrained, RBCD).
@@ -403,6 +673,14 @@ that policy to unseen entreprise environment?
 % preferable under a cost model. GNN navigation over heterogeneous AD graphs
 % has not been addressed in prior work. This thesis is a PoC establishing
 % feasibility and demonstrating cross-environment generalisation.
+While recent work has explored GNN-based modelling of attacker 
+behaviour in AD graphs from a \textit{defensive} perspective --- 
+approximating attacker decision-making to guide edge-blocking 
+strategies~\cite{goel2025coevolutionary} --- the complementary 
+offensive direction remains largely unexplored. This thesis 
+addresses that gap by learning an offensive navigation policy 
+directly from labelled attack traces, evaluated on real enterprise 
+environments rather than synthetic graphs.
 \todo{Write summary and positioning}
 
 
@@ -639,9 +917,41 @@ that policy to unseen entreprise environment?
 
 \subsection{Training Environment: GOAD}
 % Game of Active Directory: ~3 domains, deliberately vulnerable AD lab.
-% Used exclusively for training — never queried as a test environment.
+% Used exclusively for training.
 % 33 traces define the coverage ceiling of the model.
-\todo{Write GOAD setup section}
+Game of Active Directory, a deliberately vulnerable Active Directory lab, created for penetration 
+testers to practice common infrastructure attacks and privilege escalation techniques.
+GOAD consists of three domains --- 
+\texttt{sevenkingdoms.local}, \texttt{north.sevenkingdoms.local}, and 
+\texttt{essos.local} --- interconnected through domain trust relationships, 
+mimicking a realistic multi-domain enterprise architecture.
+The lab exposes various sorts of misconfigurations commonly found in enterprise environments,
+from unpatched system vulnerabilies to unprotected services and network misconfigurations.
+The attack paths goad provides are to be presented in a learnable and readable training format for the model.
+Each attack path is deconstructed into transitions, current\_node, next\_hope, credentials\_used, total 
+path\_weight, train\_on\_step, notes and the step\_cost.
+
+\subsection{Feature engineering}
+
+To a GNN model learning from a bloodhound scan, attack paths are of different importance, 
+some are totaly invisible while others are a gold mine for what the model needs to replicate.
+Paths that rely on unpatched vulnerabilities or outdated systems, for instance, leave no trace in the 
+BloodHound graph and are marked with a \texttt{path\_weight} of 0.
+Paths that are mostely visible with only two or less transitions that do not qualify have the latter marked
+through train\_on\_step set to zero.
+And at last, for an imitation learning model, given the choice between two valide transitions, the model
+choses based on training data, prefering the edge type it has seen most during training. To address this
+We are to more or less guide  the model to gravitate towards the edge attack with less impact on 
+the environment, the one with less noise and impact. To reach the desired effect each valid transition
+is scored. This score is reflected directly in the loss function through the \texttt{step\_cost} feature.
+
+In summary, the feature engineering phase introduced three mechanisms: 
+filters to eleminate CVE-dependent transitions. Weighted paths by a composite visibility score
+giving priority to transitions where the graph structure is the primairy escalation vector.
+Finally a step\_cost feature helping guide the model towards the stealthier less impactful 
+edge in case of a choice presenting itself.
+This constitutes a simplified reward shaping approach consistent with the imitation learning literature.
+
 
 \subsection{Test Environment: INLANEFREIGHT}
 % HTB Academy enterprise AD lab: ~4\,000 nodes, multiple domains, cross-domain trusts.
