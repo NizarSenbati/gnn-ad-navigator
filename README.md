@@ -199,7 +199,7 @@ title = {Learning Offensive Navigation Policies on Heterogeneous
 		 Attack Graphs: A Graph Neural Network Approach to
 		 Sequential Privilege Escalation in Active Directory},
 school = {Abdelmalek Essaid University -- FST Tangier},
-supervisor = {Abderahim GHADI}
+supervisor = {Abderrahim GHADI}
 year = {2026},
 }
 ```

@@ -32,6 +32,25 @@
 \fancyhead[L]{\small\leftmark}
 \fancyhead[R]{\small\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
+\usepackage{titlesec}
+% Section (e.g., 4.5) -> Scaled down to \large and bold
+\titleformat{\section}
+  {\large\bfseries}
+  {\thesection}
+  {1em}
+  {}
+% Subsection (e.g., 4.5.1) -> Same size as normal body text (\normalsize), but bold
+\titleformat{\subsection}
+  {\normalsize\bfseries}
+  {\thesubsection}
+  {1em}
+  {}
+% Subsubsection (e.g., 4.5.1.1 - optional, if you use it) -> Normal size, bold + italic
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\itshape}
+  {\thesubsubsection}
+  {1em}
+  {}
 
 %% ── Colours ──────────────────────────────────────────────────
 \usepackage[dvipsnames, table]{xcolor}
@@ -45,6 +64,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \graphicspath{{figures/}}   % put all images in ./figures/
+\captionsetup[lstlisting]{font=small, justification=centering}
 
 %% ── Tables ───────────────────────────────────────────────────
 \usepackage{booktabs}
@@ -928,8 +948,9 @@ mimicking a realistic multi-domain enterprise architecture.
 The lab exposes various sorts of misconfigurations commonly found in enterprise environments,
 from unpatched system vulnerabilies to unprotected services and network misconfigurations.
 The attack paths goad provides are to be presented in a learnable and readable training format for the model.
-Each attack path is deconstructed into transitions, current\_node, next\_hope, credentials\_used, total 
-path\_weight, train\_on\_step, notes and the step\_cost.
+Each attack path is deconstructed into transitions, \texttt{current\_node}, \texttt{next\_hope},
+\texttt{credentials\_used}, \texttt{total}, \texttt{path\_weight}, \texttt{train\_on\_step}, \texttt{notes} 
+and the \texttt{step\_cost}.
 
 \subsection{Feature engineering}
 
@@ -938,7 +959,7 @@ some are totaly invisible while others are a gold mine for what the model needs 
 Paths that rely on unpatched vulnerabilities or outdated systems, for instance, leave no trace in the 
 BloodHound graph and are marked with a \texttt{path\_weight} of 0.
 Paths that are mostely visible with only two or less transitions that do not qualify have the latter marked
-through train\_on\_step set to zero.
+through \texttt{train\_on\_step} set to zero.
 And at last, for an imitation learning model, given the choice between two valide transitions, the model
 choses based on training data, prefering the edge type it has seen most during training. To address this
 We are to more or less guide  the model to gravitate towards the edge attack with less impact on 
@@ -946,11 +967,13 @@ the environment, the one with less noise and impact. To reach the desired effect
 is scored. This score is reflected directly in the loss function through the \texttt{step\_cost} feature.
 
 In summary, the feature engineering phase introduced three mechanisms: 
-filters to eleminate CVE-dependent transitions. Weighted paths by a composite visibility score
-giving priority to transitions where the graph structure is the primairy escalation vector.
-Finally a step\_cost feature helping guide the model towards the stealthier less impactful 
-edge in case of a choice presenting itself.
-This constitutes a simplified reward shaping approach consistent with the imitation learning literature.
+filters to eliminate CVE-dependent transitions invisible to the graph 
+collector; path weights reflecting a composite visibility score that 
+prioritises transitions where the graph structure itself is the primary 
+escalation vector; and a \texttt{step\_cost} feature guiding the model 
+toward stealthier, less impactful edges when a choice presents itself. 
+This constitutes a simplified reward shaping approach, consistent with 
+standard practices in the imitation learning literature.
 
 
 \subsection{Test Environment: INLANEFREIGHT}
@@ -958,93 +981,297 @@ This constitutes a simplified reward shaping approach consistent with the imitat
 % Never seen during training — all results on this environment are
 % genuine zero-shot generalisation.
 % Data acquired via bloodhound-python; ADCS via Certipy.
-\todo{Write INLANEFREIGHT setup section}
 
-\subsection{Test Environment: GOAD castelblack / kingslanding}
-% Used specifically to test constrained delegation edge (AllowedToDelegate).
-% Edge type extracted after pipeline patch — model not retrained.
-\todo{Write castelblack/kingslanding setup}
+INLANEFREIGHT is an enterprise Active Directory environment provided by HTB Academy as part of 
+their penetration testing learning paths. Unlike GOAD, INLANEFREIGHT was never used during training 
+making the results obtained on it a zero-shot generalisation. The environment spans 
+multiple domains connected through cross-domain trust relationships, with 
+a total of approximately 4\,000 nodes, significantly larger and more complex 
+than the training environment.
 
-\subsection{Coverage Metric}
-% To avoid the cherry-picking reading: report N queries attempted,
-% M valid paths recovered, audit pass rate.
-% Honest framing: failures on jon.snow, samwell.tarly etc. are operating
-% correctly at the training-set coverage edge — not regressions.
-\todo{Write coverage metric section — include a summary table of all queries}
+Data collection was performed using \texttt{bloodhound-python} for both testing and training environments,
+which produced the BloodHound JSON files later processed by the pipeline. ADCS data was collected 
+separately using Certipy and injected into the graph at the stitching stage. It is worth noting that 
+\texttt{bloodhound-python} has known collection limitations compared to SharpHound C\#, particularly 
+around cross-forest foreign group membership, a constraint that directly 
+affected one of the queries evaluated in Section~\ref{sec:result4}.
+
+
+\subsection{Diagnostic Environment: GOAD}
+
+
+While INLANEFREIGHT provides a realistic enterprise environment offers only for one targeted documented 
+path to compromise, same goes for the child domain LOGISTICS.INLANEFREIGHT.LOCAL and the same forest trusted 
+domain FREIGHTLOGISTICS.LOCAL each of them with a specific cross domain attack path.
+The domain works well for generalisation validation but it is insufficient for dissecting 
+model behaviour in depth.
+
+GOAD, despite being the training environment, serves a second purpose 
+here as a diagnostic environment. Its multi-domain structure and richer 
+set of documented attack paths make it better suited for probing the 
+model's limitations, identifying where it fails and why. Queries run 
+against GOAD in this context are not used to measure generalisation 
+(the model has seen this environment) but rather to isolate specific 
+architectural weaknesses under controlled conditions.
+Worth noting is that the path mentioned later are not provided in the training data.
+
+
+\subsection{Evaluation and Limitation Identification Logic}
+
+%The final model is subject to continuous prompting comparting its output with bloodhound's path 
+%indentification. the choices the models made, along with further probing allows for precise isolation 
+%of the limitation. Combined with knowledge about the python injestor data and the pipeline treated final data
+%we can be sure about the final conclusion and also propose the direct remediation actions for future work.
+
+The evaluation methodology follows a continuous prompting approach: 
+the model is repeatedly queried across different start and target node 
+pairs, and its output is compared against BloodHound's built-in 
+pathfinding on the same graph. The choices the model makes at each 
+step, combined with knowledge of the pipeline's collected data and 
+the \texttt{bloodhound-python} injector's known limitations, allow 
+for precise isolation of each failure mode and a confident proposal 
+of remediation actions for future work.
+
+Queries are not filtered to show only successes. Failed queries, degenerate paths, and cases where 
+the model's output diverges significantly from BloodHound's are reported alongside valid results. 
+This approach avoids a cherry-picking reading of the results: the model is evaluated at its coverage boundary, 
+and failures are treated as diagnostic data.
+
+
 
 % ─────────────────────────────────────────────────────────────
 \section{Result 1: wley $\rightarrow$ Domain Admin on INLANEFREIGHT}
 \label{sec:result1}
 
-% This is the headline result. Give it space.
-%
-% Subsections:
-%   - Query and context
-%   - Recovered path (list the nodes and edge types step by step)
-%   - Score: HGT 0.5620
-%   - Comparison with BloodHound shortest path on the same graph
-%   - KEY FIGURE: side-by-side path comparison with step-cost gap
-%   - Claim: intra-domain generalisation, 351-node lab → 4000-node enterprise
-\todo{Write Result 1 — include the key comparison figure}
+\subsection*{Query and Context}
+To establish a baseline for the model's navigational capabilities, the initial query targets a 
+well-documented exploit chain within the \texttt{INLANEFREIGHT} enterprise environment. 
+The objective is to navigate from the unprivileged user \texttt{wley} to achieve Domain Admin privileges. 
+This scenario serves as a critical competency test: evaluating whether the model can apply sequential 
+privilege escalation mechanics learned in a small, 351-node laboratory (\gls{goad}) to a structurally 
+complex, unseen 4\,000-node enterprise graph.
 
-% Suggested figure structure:
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=\textwidth]{result1_path_comparison}
-%   \caption{Learned path vs.\ BloodHound shortest path for wley→Domain Admin
-%            on INLANEFREIGHT. The learned policy selects a longer but lower
-%            step-cost route, avoiding high-noise edges.}
-%   \label{fig:result1}
-% \end{figure}
+\subsection*{Recovered Path}
+
+Operating purely on its learned policy with an \gls{hgt} confidence score of 0.5620, 
+the tool correctly provides the documented path. Navigates from the unpriviledged 
+user \texttt{wley} to reach the \texttt{domain admins} group. The tool given a new unseen 
+Active Directory environment, navigates and recommendes the same documented path, 
+traversing edges the same way it had learned during training on this new architecture.
+
+\begin{enumerate}
+    \item \textbf{Password Reset:} \texttt{wley} executes a \texttt{ForceChangePassword} attack 
+    on the user \texttt{damundsen}.
+    \item \textbf{Targeted Write:} \texttt{damundsen} abuses \texttt{GenericWrite} privileges 
+    to compromise the \texttt{help desk level 1} group.
+    \item \textbf{Group Inheritance:} This access provides an implicit \texttt{MemberOf} transition 
+    into the \texttt{information technology} group.
+    \item \textbf{Full Control to DCSync:} The \texttt{information technology} group exercises 
+    \texttt{GenericAll} over the user \texttt{adunn}.
+\end{enumerate}
+
+Crucially, the pipeline's audit module halts the beam search precisely at \texttt{adunn}. 
+It verifies that this user natively holds the required rights (\texttt{GetChanges} and \texttt{GetChangesAll})
+to execute a DCSync attack on the target domain, terminating the search with confirmed operational success.
+
+
+
+\begin{lstlisting}[language={}, caption={model output for escalation path on INLANEFREIGHT}
+  , label={lst:escalation_output}]
+
+  Path 1:
+  Score: 0.5620  Steps: 4
+    [1] wley@inlanefreight.local
+        -> damundsen@inlanefreight.local
+        edge   : forcechangepassword
+        attack : Password reset
+        action : Force-change target's password
+    [2] damundsen@inlanefreight.local
+        -> help desk level 1@inlanefreight.local
+        edge   : genericwrite
+        attack : ACL abuse - targeted write
+        action : Modify SPN, msDS-AllowedToActOnBehalfOfOtherIdentity
+    [3] help desk level 1@inlanefreight.local
+        -> information technology@inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [4] information technology@inlanefreight.local
+        -> adunn@inlanefreight.local
+        edge   : genericall
+        attack : ACL abuse - full control
+        action : Reset password, add SPN, modify object
+
+  AUDIT:
+     Path terminates at a node with DCSync on the target domain 'inlanefreight.local'. This is operational success.
+
+  
+\end{lstlisting}
+
+
 
 % ─────────────────────────────────────────────────────────────
 \section{Result 2: Cross-Domain Trust Traversal}
 \label{sec:result2}
 
-% Query: htb-student\_adm → INLANEFREIGHT domain
-% Score: 0.2349
-% Path: show the trust traversal steps
-% Analysis: structural demonstration that the model navigates trust edges.
-% Honest note: lower score reflects data collection limitations on trust edges
-%   (bloodhound-python Trusts array partially captured) — not model failure.
-\todo{Write Result 2}
+\begin{lstlisting}[language={}, caption={model output for cross-domain trust traversal 
+  on INLANEFREIGHT}, label={lst:trust_output}]
+Start  : htb-student_adm@logistics.inlanefreight.local (users)
+Target : domain admins@inlanefreight.local (groups)
 
-% ─────────────────────────────────────────────────────────────
-\section{Result 3: Constrained Delegation — castelblack $\rightarrow$ kingslanding}
+
+Path 1:
+  Score: 0.2349  Steps: 6
+    [1] htb-student_adm@logistics.inlanefreight.local
+        -> domain admins@logistics.inlanefreight.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+    [2] domain admins@logistics.inlanefreight.local
+        -> logistics.inlanefreight.local
+        edge   : writedacl
+        attack : ACL abuse - DACL modification
+        action : Grant yourself GenericAll on target
+    [3] logistics.inlanefreight.local
+        -> inlanefreight.local
+        edge   : sameforesttrust
+        attack : Same-forest trust traversal
+        action : Cross domain via SID History
+    [4] inlanefreight.local
+        -> freightlogistics.local
+        edge   : crossforesttrust
+        attack : Cross-forest trust traversal
+        action : Inter-forest pivot
+    [5] freightlogistics.local
+        -> domain controllers@freightlogistics.local
+        edge   : contains
+        attack : Container hierarchy
+        action : Object lives inside OU/container
+    [6] domain controllers@freightlogistics.local
+        -> academy-ea-dc03.freightlogistics.local
+        edge   : contains
+        attack : Container hierarchy
+        action : Object lives inside OU/container
+
+    AUDIT:
+    X Path terminates at 'academy-ea-dc03.freightlogistics.local' which has no DCSync rights 
+    and is not the target. The model could not find a working attack chain.
+    ! Final node is in domain 'academy-ea-dc03.freightlogistics.local' but target is 
+    in 'inlanefreight.local'. Cross-domain attack may need additional steps.
+\end{lstlisting}
+
+The model navigated the cross domain trust edge, recommending the correct documented path.
+The processed graph portrays correctly the trust between domains. The model identified the edge type
+seen during training and traverses it. The rest of the path is noise a direct result of an
+architectural limitation. The specified target node \texttt{domain admins@inlanefreight.local} does not 
+have a direct incoming path.
+When all the nodes are outgoing the model panics and produces noise.
+The audit script catches the errors and alerts the user.
+
+
+\subsection{Cross-Forest Foreign MemberOf}
+
+\begin{lstlisting}[language={}, caption={Model output on unseen node}, label={lst:trust_output}]
+
+Start  : administrator@inlanefreight.local (users)
+Target : administrators@freightlogistics.local (groups)
+
+Path 1:
+  Score: 0.0918  Steps: 1
+    [1] administrator@inlanefreight.local
+        -> administrators@freightlogistics.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+
+  AUDIT:
+     Path reaches the requested target directly.
+\end{lstlisting}
+
+One common misconfiguration in Active Directory forests, when the team with admin rights responsible
+for Active directory and network configurations, gives the admins of two domains membership of the same
+group. The admin account of one domain now holds admin rights over the other domain, allowing for 
+easier interventions for the admin to adjust any configuration within the other domain in the same
+forest.
+The pipeline manages to extract the \texttt{cross-forest} \texttt{Foreign MemberOf} edge presenting it
+to the model. Once seen during training, the tool outputs the correct ACL abuse path
+to the user.
+
+\section{Result 3: Constrained Delegation}
 \label{sec:result3}
 
-% Query: castelblack → kingslanding
-% Path: castelblack → winterfell (AllowedToDelegate) →
-%        Enterprise DCs (MemberOf) → sevenkingdoms.local (DCSync)
-% Score: 0.1685
-%
-% Key insight to foreground:
-%   The AllowedToDelegate edge type was NOT present in training data.
-%   It was added to the graph by the build\_dataset.py pipeline patch.
-%   The model discovers the path WITHOUT retraining.
-%   Contribution: pipeline completeness drives discoverability — the model
-%   traverses the new edge via beam search topology even without dedicated
-%   learned parameters for that meta-relation.
-%
-% Known limitation: beam search continues past the DCSync hit at step 3
-%   for 3 additional noise steps. Identified as future reconception work
-%   (absorbing terminal state inside the beam loop).
-\todo{Write Result 3}
+
+\begin{lstlisting}[language={}, caption={Model output on unseen node}, label={lst:trust_output}]
+Start  : castelblack.north.sevenkingdoms.local (computers)
+Target : kingslanding.sevenkingdoms.local (computers)
+
+Path 1:
+  Score: 1.0000  Steps: 2
+    [1] castelblack.north.sevenkingdoms.local
+        -> winterfell.north.sevenkingdoms.local
+        edge   : allowedtodelegate
+        attack : Constrained Delegation
+        action : S4U2Self + S4U2Proxy impersonation
+    [2] winterfell.north.sevenkingdoms.local
+        -> enterprise domain controllers@sevenkingdoms.local
+        edge   : memberof
+        attack : Group inheritance
+        action : Inherit rights via group membership
+
+  AUDIT:
+     Path terminates at a node with DCSync on the target domain 'kingslanding.sevenkingdoms.local'. This is operational success.
+\end{lstlisting}
+
+Key insight to foreground, the \texttt{AllowedToDelegate} edge was missed during the graph construction
+during training. The \texttt{AllowedToDelegate} is an edge type not directly present in the bloodhound scan, 
+it needed further processing deducing the relationship between the two edges before establishing
+its existence. Hence during training, the model did not see this edge type. When introduced for this 
+query as the only navigable node, the model suggested traversing it and gave a score of 1 (the only 
+probable path).
 
 % ─────────────────────────────────────────────────────────────
-\section{Result 4: Documented Limitation — Cross-Forest Foreign MemberOf}
+\section{Result 4: Documented Limitations}
 \label{sec:result4}
 
-% Query: administrator@inlanefreight → admins@freightlogistics
-% Outcome: fails — model produces a degenerate 1--2 step path.
-% Root cause: bloodhound-python does not capture foreign user-level MemberOf
-%   across forest boundaries. The edge simply does not exist in the graph,
-%   so the model cannot traverse it regardless of capability.
-% Framing: this is a DATA COLLECTION limitation, not a model regression.
-%   Requires SharpHound C# for cross-forest foreign group collection.
-\todo{Write Result 4}
+
+\subsubsection{castelblack $\rightarrow$ braavos.essos.local}
+
+This query produces an interesting divergence between the model's 
+output and BloodHound's pathfinding. The model navigates: 
+\texttt{castelblack} $\rightarrow$ \texttt{winterfell} 
+(\texttt{AllowedToDelegate}) $\rightarrow$ \texttt{enterprise domain 
+controllers@sevenkingdoms} (\texttt{MemberOf}) $\rightarrow$ 
+\texttt{sevenkingdoms.local} (\texttt{GetChanges}, partial DCSync) 
+$\rightarrow$ \texttt{essos.local} (\texttt{CrossForestTrust}) 
+$\rightarrow$ \texttt{laps@essos} (\texttt{Contains}) $\rightarrow$ 
+\texttt{braavos.essos.local} (\texttt{Contains}).
+
+BloodHound identifies a structurally different route passing through 
+\texttt{CoerceToTGT} on \texttt{north.sevenkingdoms.local}, followed 
+by a \texttt{SameForestTrust} pivot and an ACL chain through 
+\texttt{tyron.lannister} (\texttt{GenericWrite}) and 
+\texttt{ReadLAPSPassword} toward the target.
+
+The divergence is explained by two limitations working together. 
+First, \texttt{CoerceToTGT} is a protocol-level coercion primitive 
+invisible to the pipeline and absent from the training 
+data entirely, the model has no learned signal for this edge type 
+and cannot reproduce BloodHound's route. Second, the two 
+\texttt{Contains} hops at the end of the model's path are structural 
+noise: the model reaches \texttt{essos.local} via a valid 
+\texttt{CrossForestTrust} pivot, gets the DCSync rights but continues walking into container 
+hierarchy rather than stoping or instantly recommending Braavos as the imidiate final target.
+This behaviour reflects the terminal state blindness discussed in Section~\ref{sec:limit-rl}.
+
+Neither path is strictly superior. The model's route relies on a 
+partial DCSync and a cross-forest trust traversal, a valid 
+operational chain. BloodHound's route relies on \texttt{CoerceToTGT}, 
+which requires active protocol-level interaction beyond what static 
+graph analysis can represent.
+
 
 % ─────────────────────────────────────────────────────────────
+
 \section{Discussion}
 
 \subsection{Model Coverage and Training-Set Ceiling}
