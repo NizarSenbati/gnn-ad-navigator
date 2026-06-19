@@ -50,6 +50,8 @@ import argparse
 import sys
 from pathlib import Path
 from collections import defaultdict
+import time
+from collections import defaultdict, Counter
 
 NODE_TYPES = ["users", "computers", "groups", "domains",
               "gpos", "ous", "containers", "cas", "certtemplates"]
@@ -109,11 +111,7 @@ def make_synthetic_sid(name: str, domain: str) -> str:
 # ── name → SID resolver from existing forest ────────────────────────────────
 
 def build_resolver(forest: dict) -> dict:
-    """
-    Build a lookup from lowercase principal name → ObjectIdentifier.
-    Searches groups, users, and computers since enrollment rights and
-    object control permissions can reference any of these.
-    """
+    """Resolve lowercase principal name → (ObjectIdentifier, NodeType)."""
     resolver = {}
     for nt in ["groups", "users", "computers"]:
         for obj in forest.get(nt, []):
@@ -122,25 +120,24 @@ def build_resolver(forest: dict) -> dict:
             oid   = (obj.get("ObjectIdentifier") or "").upper()
             if not name or not oid:
                 continue
-            resolver[name] = oid
+            
+            # Store tuple: (SID, Node_Type)
+            resolver[name] = (oid, nt) 
             short = name.split("@")[0]
             if short and short not in resolver:
-                resolver[short] = oid
+                resolver[short] = (oid, nt)
     return resolver
 
-
-def resolve_principal(raw_name: str, resolver: dict) -> str | None:
-    """Resolve 'DOMAIN\\Name' or 'name@domain' to an ObjectIdentifier."""
-    if "\\" in raw_name:
-        short = raw_name.split("\\")[-1].lower()
-    else:
-        short = raw_name.lower()
+def resolve_principal(raw_name: str, resolver: dict) -> tuple[str, str] | tuple[None, None]:
+    """Returns (ObjectIdentifier, NodeType)."""
+    short = raw_name.split("\\")[-1].lower() if "\\" in raw_name else raw_name.lower()
+    
     if short in resolver:
         return resolver[short]
     for key in resolver:
         if key.startswith(short + "@"):
             return resolver[key]
-    return None
+    return None, None
 
 
 # ── certipy parsing ──────────────────────────────────────────────────────────
@@ -236,63 +233,54 @@ def build_template_nodes(templates: list, domain: str) -> list:
 # the principal. build_dataset.py inverts to principal→target convention
 # when producing tensors. This keeps the JSON BloodHound-compatible.
 
-def build_adcs_edges(ca_nodes: list,
-                     template_nodes: list,
-                     resolver: dict) -> list:
-    """
-    Returns a list of edge dicts. The merger and build_dataset.py
-    will read these as ACE entries on the target object's Aces array.
-
-    Edge types:
-        Enroll       — principal (user/group) → template
-        PublishedTo  — template → CA
-        GenericAll   — full-control principals → template
-        WriteDACL    — write-DACL principals → template
-        WriteOwner   — write-owner principals → template
-        HttpEnroll   — domain users → CA when ESC8 (web enrollment enabled)
-    """
+def build_adcs_edges(ca_nodes: list, template_nodes: list, resolver: dict, domain_oid: str) -> list:
     edges  = []
-    ca_map = {n["Properties"]["ca_name"]: n["ObjectIdentifier"]
-              for n in ca_nodes}
+    ca_map = {n["Properties"]["ca_name"]: n["ObjectIdentifier"] for n in ca_nodes}
 
     for tmpl_node in template_nodes:
         tmpl_oid  = tmpl_node["ObjectIdentifier"]
 
         # Enroll
         for raw_principal in tmpl_node.get("EnrollmentRights", []):
-            src_oid = resolve_principal(raw_principal, resolver)
+            src_oid, src_type = resolve_principal(raw_principal, resolver)
             if src_oid:
-                edges.append({"src": src_oid, "dst": tmpl_oid, "type": "Enroll"})
+                edges.append({"src": src_oid, "src_type": src_type, "dst": tmpl_oid, "type": "Enroll"})
 
         # PublishedTo (template → CA)
         for ca_name in tmpl_node.get("CertificateAuthorities", []):
             ca_oid = ca_map.get(ca_name)
             if ca_oid:
-                edges.append({"src": tmpl_oid, "dst": ca_oid, "type": "PublishedTo"})
+                edges.append({"src": tmpl_oid, "src_type": "certtemplates", "dst": ca_oid, "type": "PublishedTo"})
 
-        # Object control
+        # Object control (GenericAll, WriteDACL, etc.)
         ocp = tmpl_node.get("ObjectControlPermissions", {}) or {}
-        for raw in ocp.get("Full Control Principals", []):
-            src_oid = resolve_principal(raw, resolver)
-            if src_oid:
-                edges.append({"src": src_oid, "dst": tmpl_oid, "type": "GenericAll"})
-        for raw in ocp.get("Write Dacl Principals", []):
-            src_oid = resolve_principal(raw, resolver)
-            if src_oid:
-                edges.append({"src": src_oid, "dst": tmpl_oid, "type": "WriteDACL"})
-        for raw in ocp.get("Write Owner Principals", []):
-            src_oid = resolve_principal(raw, resolver)
-            if src_oid:
-                edges.append({"src": src_oid, "dst": tmpl_oid, "type": "WriteOwner"})
+        for right, right_name in [("Full Control Principals", "GenericAll"), 
+                                  ("Write Dacl Principals", "WriteDACL"), 
+                                  ("Write Owner Principals", "WriteOwner")]:
+            for raw in ocp.get(right, []):
+                src_oid, src_type = resolve_principal(raw, resolver)
+                if src_oid:
+                    edges.append({"src": src_oid, "src_type": src_type, "dst": tmpl_oid, "type": right_name})
 
     # ESC8 — Domain Users → CA via HttpEnroll
-    domain_users_oid = resolve_principal("domain users", resolver)
+    domain_users_oid, du_type = resolve_principal("domain users", resolver)
     for ca_node in ca_nodes:
         if ca_node["Properties"].get("esc8") and domain_users_oid:
             edges.append({
-                "src":  domain_users_oid,
-                "dst":  ca_node["ObjectIdentifier"],
-                "type": "HttpEnroll",
+                "src": domain_users_oid, 
+                "src_type": du_type, 
+                "dst": ca_node["ObjectIdentifier"], 
+                "type": "HttpEnroll"
+            })
+
+    # --- THE MISSING LINK: Escape the CA Black Hole ---
+    if domain_oid:
+        for ca_node in ca_nodes:
+            edges.append({
+                "src": ca_node["ObjectIdentifier"],
+                "src_type": "cas",
+                "dst": domain_oid,
+                "type": "TrustedForNTAuth"
             })
 
     return edges
@@ -333,7 +321,7 @@ def inject(forest: dict, ca_nodes: list, template_nodes: list,
             continue
         target_obj.setdefault("Aces", []).append({
             "PrincipalSID":  edge["src"],
-            "PrincipalType": "Unknown",
+            "PrincipalType": edge["src_type"].capitalize(), # Now returns 'User', 'Group', 'Cas', etc.
             "RightName":     edge["type"],
             "IsInherited":   False,
             "Source":        "Certipy",
@@ -399,14 +387,27 @@ def main():
 
     # ─ resolver + edges ─
     resolver = build_resolver(forest)
-    edges    = build_adcs_edges(ca_nodes, template_nodes, resolver)
+    domain_oid = None
+    for dom in forest.get("domains", []):
+        if dom.get("Properties", {}).get("name", "").lower() == domain:
+            domain_oid = dom.get("ObjectIdentifier", "").upper()
+            break
+    edges    = build_adcs_edges(ca_nodes, template_nodes, resolver, domain_oid)
 
     if not args.quiet:
         print(f"Resolver entries  : {len(resolver)}")
         print(f"ADCS edges to inject: {len(edges)}")
 
-    # ─ inject ─
     injected, skipped = inject(forest, ca_nodes, template_nodes, edges)
+
+    if not args.quiet:
+        print("\nInjected Edge Inventory:")
+        edge_counts = Counter(e["type"] for e in edges)
+        for etype, count in sorted(edge_counts.items(), key=lambda x: -x[1]):
+            print(f"  {etype:<25}: {count}")
+            
+        print(f"\n  Total Injected : {injected}")
+        print(f"  Total Skipped  : {skipped}  (target node not found)")
 
     if not args.quiet:
         print(f"  Injected : {injected}")
@@ -414,6 +415,25 @@ def main():
 
     # ─ write output ─
     output = {nt: forest.get(nt, []) for nt in NODE_TYPES}
+    
+    # --- ADD THIS METADATA BLOCK ---
+    output["_stitch_metadata"] = {
+        "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "certipy_input": str(certipy_path),
+        "target_domain": domain,
+        "ca_nodes_added": len(ca_nodes),
+        "template_nodes_added": len(template_nodes),
+        "edges_injected": injected,
+        "edges_skipped": skipped,
+        "ntauth_link_established": domain_oid is not None
+    }
+    # -------------------------------
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(output, indent=2, ensure_ascii=False),
+        encoding="utf-8"
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(output, indent=2, ensure_ascii=False),

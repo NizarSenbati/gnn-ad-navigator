@@ -966,7 +966,65 @@ We are to more or less guide  the model to gravitate towards the edge attack wit
 the environment, the one with less noise and impact. To reach the desired effect each valid transition
 is scored. This score is reflected directly in the loss function through the \texttt{step\_cost} feature.
 
-In summary, the feature engineering phase introduced three mechanisms: 
+\begin{table}[H]
+\centering
+\caption{Step cost assignment by attack category.}
+\label{tab:step_cost}
+\begin{tabularx}{\textwidth}{>{\bfseries}l c X}
+\toprule
+Attack Category & Cost Range & Rationale \\
+\midrule
+Topological / Logical  & 0.1 -- 0.2 &
+  Operations such as adding a member to a group or enrolling in a 
+  certificate template. These transitions are structurally clean and 
+  rarely trigger alerts unless heavy auditing is configured. \\[6pt]
+
+Credential Abuse & 0.3 -- 0.4 &
+  Using a recovered password or a forged TGT. Low noise overall, 
+  but detectable by honeytokens or behavioural analysis tools. \\[6pt]
+
+Active Enumeration & 0.5 &
+  Kerberoasting or intensive LDAP queries. Intermediate noise level; 
+  commonly detected by modern SIEMs monitoring ticket requests or 
+  query volume anomalies. \\[6pt]
+
+Memory / Disk Dumping & 0.6 -- 0.7 &
+  Dumping the SAM database or LSASS process memory. High detection 
+  risk; endpoint protection tools such as Microsoft Defender and 
+  CrowdStrike flag these operations near-immediately. \\[6pt]
+
+Network Exploitation & 0.8 -- 0.9 &
+  Active coercion and relay attacks such as PetitPotam or NTLM 
+  Relaying, and brute-force techniques such as password spraying. 
+  Very noisy; triggers IDS/IPS rules and account lockout policies. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The \texttt{step\_cost} value assigned to each transition feeds 
+directly into the loss function through the effective weight 
+computation:
+
+\begin{equation}
+  \text{eff\_weight} = \text{path\_weight} \times (1 - \text{step\_cost})
+  \label{eq:eff_weight}
+\end{equation}
+
+\noindent where \texttt{path\_weight} reflects the overall visibility 
+and quality of the full attack path, and \texttt{step\_cost} 
+penalises individual transitions according to their noise category 
+in Table~\ref{tab:step_cost}. A high \texttt{step\_cost} reduces the 
+effective training weight of that transition, making the model less 
+likely to replicate it when a lower-cost alternative exists in the 
+training data. Conversely, topological transitions with a low 
+\texttt{step\_cost} receive a higher effective weight and are 
+reinforced more strongly during training. The result is a model that, 
+when faced with a choice between two structurally valid transitions, 
+gravitates toward the one with less environmental impact --- not 
+because it was explicitly told to, but because the training signal 
+made that choice more frequent and more rewarded.
+
+The feature engineering phase introduced three mechanisms: 
 filters to eliminate CVE-dependent transitions invisible to the graph 
 collector; path weights reflecting a composite visibility score that 
 prioritises transitions where the graph structure itself is the primary 
@@ -1066,8 +1124,10 @@ traversing edges the same way it had learned during training on this new archite
     to compromise the \texttt{help desk level 1} group.
     \item \textbf{Group Inheritance:} This access provides an implicit \texttt{MemberOf} transition 
     into the \texttt{information technology} group.
-    \item \textbf{Full Control to DCSync:} The \texttt{information technology} group exercises 
+    \item \textbf{Control DCSync user:} The \texttt{information technology} group exercises 
     \texttt{GenericAll} over the user \texttt{adunn}.
+    \item \textbf{Domain compromise:} The \texttt{user adunn} is connected via the ACL edge 
+    \texttt{GetChangesAll} to the domain controller, allowing it to dump the \texttt{NTDS.nit} database file.
 \end{enumerate}
 
 Crucially, the pipeline's audit module halts the beam search precisely at \texttt{adunn}. 
@@ -1264,11 +1324,10 @@ hierarchy rather than stoping or instantly recommending Braavos as the imidiate 
 This behaviour reflects the terminal state blindness discussed in Section~\ref{sec:limit-rl}.
 
 Neither path is strictly superior. The model's route relies on a 
-partial DCSync and a cross-forest trust traversal, a valid 
+partial DCSync and a cross-forest trust traversal its a valid 
 operational chain. BloodHound's route relies on \texttt{CoerceToTGT}, 
-which requires active protocol-level interaction beyond what static 
+requiring active protocol-level interaction beyond what static 
 graph analysis can represent.
-
 
 % ─────────────────────────────────────────────────────────────
 
@@ -1279,28 +1338,102 @@ graph analysis can represent.
 % The model never sees GPLink chains, RBCD, Kerberoasting in training.
 % Failure on out-of-distribution queries is expected and correct behaviour.
 % The model is NOT broken — it operates correctly at its coverage edge.
+
+The training environment GOAD, allows for about 10 documented paths, each tested and reproduced 
+befor adding to the csv file. The extracted paths are then evaluated based on visibility and how much 
+topologicaly depandant each of their transitions are. In total the final dataset is about 49 different
+transition. Filtering the unvisible and non learnable attacks, leaves us with 33 viable and trainable attacks.
+This final number directly influences the architecture of the system.
+The first approach was to have a context aware policy head, that stores the user creds collected during 
+attack paths, it was meant to have the model navigate and base its future suggested pahts on the user 
+inventory. This methodology required an extended dataset and Crucially time that i am limited on.
+Later, changed it to only having the model understand what creds where used with what techniques
+but at this scale, most of the documented viable attacks relied on the current node's creds giving no new 
+information to the model.
+
+Attack inventory generation is a natural extension but requires a different training objective, a larger
+dataset and is left as future work.
+
 \todo{Write coverage discussion}
 
 \subsection{Expressiveness vs.\ Transferability: HGT vs.\ GCN}
-% HGT > GCN on training distribution (GOAD).
-% GCN $\geq$ HGT on cross-environment transfer (INLANEFREIGHT).
-% Interpretation: HGT's per-relation expressiveness overfits slightly to
-%   training meta-relations; GCN's simplicity transfers more robustly.
-%   Both recover the correct path — the gap is in raw scores, not correctness.
+
+During the diagnostic phase we observed the \gls{gcn} baseline alongside 
+BloodHound's standard shortest-path outputs. From extensive querying, the 
+GCN appears to produce paths that sit somewhere between a naive shortest path 
+and a fully stealthy route. However, we noticed that it frequently misses 
+direct hits on the target. Because the GCN treats all connections equally, 
+this lack of edge-based attention seems to hinder its ability to directly 
+abuse specific misconfigurations. It appears to struggle to distinguish between 
+a highly detectable attack edge and a quiet structural link.
+
+On the other hand, the \gls{hgt} computes attention differently for each type 
+of relationship. This allows the HGT to capture the practical meaning of 
+different Active Directory edges, recognizing that an \edge{AllowedToDelegate} 
+edge is much quieter than a forced password reset. In our tests on the 
+training data (\gls{goad}), this expressiveness helped the HGT perform very 
+well, as it learned to select precise and stealthy exploit chains.
+
+However, when evaluating the models on the unseen 4\,000-node \texttt{INLANEFREIGHT} 
+environment, we noted an interesting trade-off. The GCN actually produced 
+slightly higher raw confidence scores than the HGT ($GCN \geq HGT$). This 
+observation suggests that the HGT's complex attention mechanism might be 
+slightly overfitting to the specific graph patterns it saw during training. 
+Meanwhile, the simpler design of the GCN seems to transfer more smoothly 
+to new environments, since it relies on general node closeness rather than 
+exact sequences of edge types.
+
+Ultimately, both models successfully recovered the correct attack paths. 
+The difference we observed was purely in their raw probability scores, 
+rather than their actual ability to find a working route.
+
 \todo{Write HGT vs. GCN discussion}
 
-\subsection{Pipeline Completeness as a First-Class Contribution}
-% Result 3 demonstrates that expanding what the pipeline extracts
-%   directly expands what the model can discover — without retraining.
-%   This decoupling of graph coverage from model capability is a design
-%   insight worth foregrounding in the thesis narrative.
-\todo{Write pipeline completeness discussion}
+\subsection{Pipeline Completeness impact}
+
+One of the most interesting observations from Result 3 the Constrained 
+Delegation path is how the model handles completely unseen edge types. 
+During training on the \gls{goad} dataset, the model never encountered an 
+\edge{AllowedToDelegate} edge. However, once we updated the data pipeline 
+to extract this specific edge type, the model successfully traversed it 
+during inference without any retraining.
+
+This behavior suggests that the model's ability to discover new attack paths 
+is heavily tied to the completeness of the data collection pipeline. 
+Because the model uses the graph's physical topology to evaluate possible 
+next steps, introducing a new edge type simply adds a new structural pathway. 
+Even without learned attention weights specifically tuned for 
+\edge{AllowedToDelegate}, the model still opted to traverse it because it 
+represented the most viable route to progress toward the target.
+
+This decoupling of graph coverage from model capability is a significant 
+takeaway. It implies that we might not need to retrain the neural network 
+from scratch every time a new Active Directory vulnerability or edge type 
+is discovered. Instead, simply updating the extraction tools (like 
+\tool{build\_dataset.py}) to map the new edge seems sufficient to immediately 
+expand the model's operational reach. 
+
+For this reason, we consider the completeness and accuracy of the data 
+pipeline to be a major contribution, playing a role 
+that is just as critical as the neural network architecture itself.
 
 
 %% ============================================================
 %%  CHAPTER 5 — LIMITATIONS AND FUTURE WORK
 %% ============================================================
 \chapter{Limitations and Future Work}
+
+\section{Architectural limitation}
+\label{sec:architectural-oversight}
+
+During the diagnostics phase, the model behaved differently to the expected paths, often choosing 
+to bypass a clear hop over a computer node, even if it presents the best transition.
+This behavior is a direct result of an oversight in the architecture of the \texttt{PyG} edge directions, 
+nodes like computers end up with only incoming edges, making them impossible to traverse. This is due to 
+nature of the node, a computer in an Active Directory doesnt have rights over other objects, it's often
+the users with session over these computers that actually have access and hold outgoing edges.
+BloodHound handles this by looking at the nodes with writes over the computer
+
 
 \section{Data Collection Incompleteness}
 \label{sec:limit-data}
@@ -1321,6 +1454,25 @@ graph analysis can represent.
 %
 % Implication for future iterations: C# collection is not optional for
 % cross-forest attack path completeness.
+
+A major limitation encountered early into the project yet remained unsolved was the the scaning tool.
+The python injestor \texttt{bloodhound-ce-python} gets the general structure of the graph, 
+the necessary ACL edges, allowing a pentester limited to linux attack host to access a less powerfull
+version of the tool, and still have a good scan and indentification of the Active Directory environment.
+The python injestor compared to the recommended C\# bloodhound injestor, misses mainly the ADCS scans
+where we had to fall back to and older version of certipy that once supported a bloodhound formated
+output. Trust accounts, are also missing in the python injestor scan, not having them didnt impact the
+overall cross domain relationships, however having the trust account could allow the model to understand
+better the transition between two domains, telling the user explicitly to target the trust account.
+Having had the C\# injestor scans, the tool could have benefited from a 
+lighter, less complex and more complete data processing pipeline. With no stitching script for the ADCS 
+support and less processing required to extract the trust relationships and node-based ACL edges such as 
+\texttt{GPLink - CoerceToTGT}.
+A lab dependant technical difficulty where the VMnet module couldn't allow for communication with the machines.
+After the initial scans where done and by the time i realised the incompleteness of the scans, vmware 
+needed an update to its kernel modules that broke the communication. I managed to spin up and provision
+the ESSOS.local domain allowing me to get the ADCS templates.
+
 \todo{Write data collection limitations section}
 
 % ─────────────────────────────────────────────────────────────

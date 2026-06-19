@@ -136,6 +136,10 @@ fi
 SCRIPT_DIR="$PROJECT_DIR/scripts"
 mkdir -p "$OUTPUT_DIR"
 LOG="$OUTPUT_DIR/pipeline.log"
+# --- OPEN THE GLOBAL LOGGING VALVE ---
+# Redirects both stdout (1) and stderr (2) through tee to append (-a) to the log
+exec > >(tee -a "$LOG_FILE") 2>&1
+echo "=== Pipeline Run Started at $(date) ==="
 
 if [[ $SKIP_PREP -eq 0 ]]; then
     mkdir -p "$OUTPUT_DIR/cleaned"
@@ -217,47 +221,74 @@ PY
     # ── stage 3: stitch ─────────────────────────────────────────────────────
     echo ""
     echo "[3/5] Stitching ADCS data..."
-
     CERTIPY_LIST="$OUTPUT_DIR/_certipy_list.txt"
     if [[ -s "$CERTIPY_LIST" ]]; then
-        while IFS= read -r certipy_file; do
+        while IFS= read -r certipy_file || [[ -n "$certipy_file" ]]; do
             [[ -z "$certipy_file" ]] && continue
+            # Strip hidden carriage returns (\r) just in case
+            certipy_file=$(echo "$certipy_file" | tr -d '\r')
 
             domain=$(python - "$certipy_file" <<'PY'
 import json, re, sys
-data = json.loads(open(sys.argv[1]).read())
 
-for tmpl in (data.get("Certificate Templates", {}) or {}).values():
-    dn = tmpl.get("Distinguished Name", "")
-    dcs = re.findall(r"DC=([^,]+)", dn, flags=re.IGNORECASE)
-    if dcs:
-        print(".".join(dcs).lower()); sys.exit(0)
+try:
+    filepath = sys.argv[1].strip()
+    with open(filepath, "r", encoding="utf-8") as f:
+        data = json.loads(f.read())
+    
+    # 1. Try CA Subject (Most accurate: extracting DC=essos, DC=local)
+    cas = data.get("Certificate Authorities", {}) or {}
+    for key, ca in cas.items():
+        if isinstance(ca, dict):
+            subject = ca.get("Certificate Subject", "")
+            dcs = re.findall(r"DC=([^,]+)", subject, flags=re.IGNORECASE)
+            if dcs:
+                print(".".join(dcs).strip().lower())
+                sys.exit(0)
+            
+            # Fallback to DNS Name
+            dns = ca.get("DNS Name", "")
+            if "." in dns:
+                print(".".join(dns.split(".")[1:]).strip().lower())
+                sys.exit(0)
 
-for ca in (data.get("Certificate Authorities", {}) or {}).values():
-    dns = ca.get("DNS Name", "")
-    if "." in dns:
-        print(".".join(dns.split(".")[1:]).lower()); sys.exit(0)
+    # 2. Try Templates Fallback
+    tmpls = data.get("Certificate Templates", {}) or {}
+    for key, tmpl in tmpls.items():
+        if isinstance(tmpl, dict):
+            dn = tmpl.get("Distinguished Name", "")
+            dcs = re.findall(r"DC=([^,]+)", dn, flags=re.IGNORECASE)
+            if dcs:
+                print(".".join(dcs).strip().lower())
+                sys.exit(0)
+
+except Exception as e:
+    # Force the error to stderr so it prints to the terminal/log
+    print(f"PYTHON PARSE ERROR: {e}", file=sys.stderr)
 
 sys.exit(1)
 PY
 )
+            echo "$certipy_file"
+            echo 'hello5'
             if [[ -z "$domain" ]]; then
                 echo "  ⚠ $(basename "$certipy_file"): could not detect domain — skipping"
                 continue
             fi
-
             echo "  → $(basename "$certipy_file")  [domain: $domain]"
-            python "$SCRIPT_DIR/stitching.py" \
+            # ── Stage 3: ADCS Stitching ────────────────────────────────────────────────
+            echo "Running ADCS Stitcher..."
+            python "$SCRIPT_DIR/stitcher.py" \
                 --certipy "$certipy_file" \
                 --domain  "$domain" \
                 --input   "$OUTPUT_DIR/forest_graph.json" \
                 --output  "$OUTPUT_DIR/forest_graph.json" \
-                >> "$LOG" 2>&1 || { echo "FAIL: stitch $domain"; exit 2; }
+
+            # The global exec block handles the logging automatically now!
         done < "$CERTIPY_LIST"
     else
         echo "  (no Certipy scans found)"
     fi
-
     # ── stage 4: build tensors ─────────────────────────────────────────────
     echo ""
     echo "[4/5] Building tensors..."

@@ -1,34 +1,7 @@
 """
 build_dataset.py
 ----------------
-Converts a merged forest_graph.json into the tensors that the model
-consumes: a PyG HeteroData object plus a JSON list of training examples.
-
-Key responsibilities of this stage:
-    1. Translate BloodHound's nested JSON into edge_index tensors.
-    2. Apply BloodHound's standard direction convention:
-           principal → target  (the principal HAS the right ON the target)
-    3. Extract trust edges from the Trusts array on domain objects.
-    4. Canonicalise edge type names (lowercase, alias variants).
-    5. Build state vectors and labels from zoom.csv (training mode only).
-
-INPUTS
-    results/forest_graph.json     — merged + stitched graph (from merger.py)
-    results/zoom.csv              — expert traces for training (optional)
-
-OUTPUTS
-    results/heterodata.pt         — torch_geometric HeteroData (graph + features)
-    results/training_examples.json — list of training example dicts (if zoom.csv present)
-
-Run modes:
-    Training data preparation:
-        python build_dataset.py --graph results/forest_graph.json \\
-                                 --zoom  results/zoom.csv \\
-                                 --out   results/
-
-    Inference data preparation (no zoom.csv):
-        python build_dataset.py --graph testing_data/forest_graph.json \\
-                                 --out   testing_data/
+Converts a merged forest_graph.json into true PyG HeteroData tensors.
 """
 
 import json
@@ -62,9 +35,6 @@ NODE_FEATURES = {
 NODE_ORDER = list(NODE_FEATURES.keys())
 MAX_FEAT   = max(len(v) for v in NODE_FEATURES.values()) + 3  # +3 extras
 
-# ── edge type canonicalization ────────────────────────────────────────────────
-
-# all trust-like edges normalized to one of these canonical names
 TRUST_EDGE_ALIASES = {
     "sameforesttrust":     "sameforesttrust",
     "crossforesttrust":    "crossforesttrust",
@@ -74,15 +44,11 @@ TRUST_EDGE_ALIASES = {
 }
 
 def trust_type_to_edge_name(trust_type: str) -> str:
-    """Map BloodHound's TrustType field to a canonical edge name."""
-    if trust_type in ("ParentChild", "TreeRoot"):
-        return "sameforesttrust"
-    if trust_type == "Forest":
-        return "crossforesttrust"
+    if trust_type in ("ParentChild", "TreeRoot"): return "sameforesttrust"
+    if trust_type == "Forest": return "crossforesttrust"
     return "sameforesttrust"
 
 def canonicalize_edge_name(rel: str) -> str:
-    """Normalize edge type name. Lowercased + trust aliases applied."""
     rel = rel.lower()
     return TRUST_EDGE_ALIASES.get(rel, rel)
 
@@ -103,6 +69,7 @@ def extract_features(obj: dict, node_type: str) -> list:
     props = obj.get("Properties", {}) or {}
     spec  = NODE_FEATURES.get(node_type, [])
     feats = []
+    
     for key, default in spec:
         v = props.get(key, default)
         if isinstance(v, bool):
@@ -111,14 +78,18 @@ def extract_features(obj: dict, node_type: str) -> list:
             feats.append(min(float(v), 10.0) / 10.0)
         else:
             feats.append(0.0)
+            
     if node_type in ("users", "computers"):
         feats.append(is_service(props))
         feats.append(ou_depth(props.get("distinguishedname", "")))
     else:
         feats.extend([0.0, 0.0])
-    feats.append(0.0)  # is_objective — set later from zoom.csv
-    while len(feats) < MAX_FEAT:
+        
+    # BUGFIX: Pad FIRST, append objective LAST
+    while len(feats) < MAX_FEAT - 1:
         feats.append(0.0)
+    feats.append(0.0)  # is_objective guaranteed at index [-1]
+    
     return feats[:MAX_FEAT]
 
 # ── load graph and build indices ─────────────────────────────────────────────
@@ -126,187 +97,153 @@ def extract_features(obj: dict, node_type: str) -> list:
 def load_graph(path: Path):
     forest = json.loads(path.read_text(encoding="utf-8"))
 
-    id_to_idx  = {}
-    name_to_id = {}
-    feat_rows  = []
+    global_map  = {}   # SID -> (node_type, local_idx)
+    name_to_sid = {}
+    sid_to_global = {} # Keep global ID mapping for legacy compatibility
+    feat_rows_dict = {nt: [] for nt in NODE_ORDER}
+    
+    global_counter = 0
 
     for nt in NODE_ORDER:
         for obj in forest.get(nt, []) or []:
             oid  = (obj.get("ObjectIdentifier") or "").upper()
-            if not oid or oid in id_to_idx:
+            if not oid or oid in global_map:
                 continue
 
             name = (obj.get("Properties", {}).get("name") or "").lower()
-            idx  = len(id_to_idx)
-            id_to_idx[oid]   = idx
-            name_to_id[name] = oid
+            local_idx = len(feat_rows_dict[nt])
+            
+            global_map[oid] = (nt, local_idx)
+            sid_to_global[oid] = global_counter
+            name_to_sid[name] = oid
 
             short = name.split("@")[0].split(".")[0]
-            if short and short not in name_to_id:
-                name_to_id[short] = oid
+            if short and short not in name_to_sid:
+                name_to_sid[short] = oid
 
-            feat_rows.append(extract_features(obj, nt))
+            feat_rows_dict[nt].append(extract_features(obj, nt))
+            global_counter += 1
 
-    # null credential sentinel — used for Mode 2 (unconstrained) inference
-    feat_rows.append([0.0] * MAX_FEAT)
+    # Null credential sentinel for Unconstrained mode
+    sentinel_local_idx = len(feat_rows_dict["users"])
+    feat_rows_dict["users"].append([0.0] * MAX_FEAT)
+    sentinel_global_idx = global_counter
 
-    X = torch.tensor(feat_rows, dtype=torch.float32)
-    return forest, id_to_idx, name_to_id, X
+    X_dict = {nt: torch.tensor(rows, dtype=torch.float32) for nt, rows in feat_rows_dict.items() if rows}
+    
+    return forest, global_map, name_to_sid, sid_to_global, X_dict, sentinel_local_idx, sentinel_global_idx
 
-# ── edge construction (the core fix) ─────────────────────────────────────────
+# ── edge construction (Hetero Triplet Upgrade) ───────────────────────────────
 
-def build_edges(forest: dict, id_to_idx: dict) -> dict:
-    """
-    Edge direction convention applied here:
-
-        ACL edges      : principal → target object   (BloodHound standard)
-        MemberOf       : member → group              (BloodHound standard)
-        Trust edges    : source_domain → target_domain
-        ChildObjects   : parent → child container
-
-    These all match what BloodHound GUI renders.
-    """
-    known = set(id_to_idx.keys())
+def build_edges(forest: dict, global_map: dict) -> dict:
     edges = defaultdict(list)
 
     for nt in NODE_ORDER:
         for obj in forest.get(nt, []) or []:
             target_sid = (obj.get("ObjectIdentifier") or "").upper()
-            if target_sid not in known:
+            if target_sid not in global_map:
                 continue
-            target_idx = id_to_idx[target_sid]
+            t_type, t_local = global_map[target_sid]
 
-            # ── ACE-based edges: principal → target ──
             for ace in obj.get("Aces", []) or []:
-                principal_sid = (ace.get("PrincipalSID") or "").upper()
-                if principal_sid not in known:
-                    continue
-                rel = canonicalize_edge_name(ace.get("RightName") or "unknown")
-                edges[rel].append((id_to_idx[principal_sid], target_idx))
+                p_sid = (ace.get("PrincipalSID") or "").upper()
+                if p_sid in global_map:
+                    p_type, p_local = global_map[p_sid]
+                    rel = canonicalize_edge_name(ace.get("RightName") or "unknown")
+                    edges[(p_type, rel, t_type)].append((p_local, t_local))
 
-            # ── Members: member → group ──
-            # 'obj' here is the group; entries in Members are the members
             for member in obj.get("Members", []) or []:
-                m_sid = (member if isinstance(member, str)
-                         else member.get("ObjectIdentifier", "")).upper()
-                if m_sid in known:
-                    edges["memberof"].append((id_to_idx[m_sid], target_idx))
+                m_sid = (member if isinstance(member, str) else member.get("ObjectIdentifier", "")).upper()
+                if m_sid in global_map:
+                    m_type, m_local = global_map[m_sid]
+                    edges[(m_type, "memberof", t_type)].append((m_local, t_local))
 
-            # ── ChildObjects: parent → child ──
             for child in obj.get("ChildObjects", []) or []:
-                c_sid = (child if isinstance(child, str)
-                         else child.get("ObjectIdentifier", "")).upper()
-                if c_sid in known:
-                    edges["contains"].append((target_idx, id_to_idx[c_sid]))
+                c_sid = (child if isinstance(child, str) else child.get("ObjectIdentifier", "")).upper()
+                if c_sid in global_map:
+                    c_type, c_local = global_map[c_sid]
+                    edges[(t_type, "contains", c_type)].append((t_local, c_local))
 
-            # ── Links (GPLink): GPO → linked OU/domain ──
-            # The Links field lives on the OU/domain (current `obj`). Each
-            # entry names a GPO via its GUID. BloodHound's GPLink edge
-            # convention is GPO → container (the GPO acts on the container).
             for link in obj.get("Links", []) or []:
-                if isinstance(link, str):
-                    l_sid = link.upper()
-                else:
-                    # bloodhound-python uses "GUID"; some collectors emit
-                    # "ObjectIdentifier" — accept either
-                    l_sid = (link.get("GUID")
-                             or link.get("ObjectIdentifier") or "").upper()
-                if l_sid in known:
-                    edges["gplink"].append((id_to_idx[l_sid], target_idx))
+                l_sid = (link if isinstance(link, str) else (link.get("GUID") or link.get("ObjectIdentifier") or "")).upper()
+                if l_sid in global_map:
+                    l_type, l_local = global_map[l_sid]
+                    edges[(l_type, "gplink", t_type)].append((l_local, t_local))
 
-            # ── AllowedToDelegate: source → delegation target ──
-            # Field lives on the principal (current `obj`). Each entry is a
-            # target the principal can authenticate-as via Kerberos
-            # constrained delegation. Edge: principal → target.
             for d in obj.get("AllowedToDelegate", []) or []:
-                d_sid = (d if isinstance(d, str)
-                         else d.get("ObjectIdentifier", "")).upper()
-                if d_sid in known:
-                    edges["allowedtodelegate"].append(
-                        (target_idx, id_to_idx[d_sid])
-                    )
+                d_sid = (d if isinstance(d, str) else d.get("ObjectIdentifier", "")).upper()
+                if d_sid in global_map:
+                    d_type, d_local = global_map[d_sid]
+                    edges[(t_type, "allowedtodelegate", d_type)].append((t_local, d_local))
 
-            # ── AllowedToAct (RBCD): allowed principal → target ──
-            # Field lives on the TARGET (current `obj`). Each entry is a
-            # principal that can act on the target's behalf via Resource-
-            # Based Constrained Delegation. Edge follows the escalation:
-            # principal → target.
             for a in obj.get("AllowedToAct", []) or []:
-                a_sid = (a if isinstance(a, str)
-                         else a.get("ObjectIdentifier", "")).upper()
-                if a_sid in known:
-                    edges["allowedtoact"].append(
-                        (id_to_idx[a_sid], target_idx)
-                    )
+                a_sid = (a if isinstance(a, str) else a.get("ObjectIdentifier", "")).upper()
+                if a_sid in global_map:
+                    a_type, a_local = global_map[a_sid]
+                    edges[(a_type, "allowedtoact", t_type)].append((a_local, t_local))
 
-            # ── HasSIDHistory: user → historical SID ──
-            # The current user inherits the rights of a historical
-            # principal — common in cross-forest migrations.
             for h in obj.get("HasSIDHistory", []) or []:
-                h_sid = (h if isinstance(h, str)
-                         else h.get("ObjectIdentifier", "")).upper()
-                if h_sid in known:
-                    edges["hassidhistory"].append(
-                        (target_idx, id_to_idx[h_sid])
-                    )
+                h_sid = (h if isinstance(h, str) else h.get("ObjectIdentifier", "")).upper()
+                if h_sid in global_map:
+                    h_type, h_local = global_map[h_sid]
+                    edges[(t_type, "hassidhistory", h_type)].append((t_local, h_local))
 
-            # ── Trust edges from domain objects: source → target ──
+            # BUGFIX: HasSession edge capture
+            for s in obj.get("Sessions", []) or []:
+                s_sid = (s if isinstance(s, str) else s.get("ObjectIdentifier", "")).upper()
+                if s_sid in global_map:
+                    s_type, s_local = global_map[s_sid]
+                    edges[(t_type, "hassession", s_type)].append((t_local, s_local))
+
             if nt == "domains":
                 for trust in obj.get("Trusts", []) or []:
-                    target_dom_sid = (trust.get("TargetDomainSid") or "").upper()
-                    if target_dom_sid not in known:
-                        continue
-                    rel = trust_type_to_edge_name(trust.get("TrustType", ""))
-                    edges[rel].append((target_idx, id_to_idx[target_dom_sid]))
-                    # bidirectional trusts: add reverse too
-                    if trust.get("TrustDirection") == "Bidirectional":
-                        edges[rel].append((id_to_idx[target_dom_sid], target_idx))
+                    td_sid = (trust.get("TargetDomainSid") or "").upper()
+                    if td_sid in global_map:
+                        td_type, td_local = global_map[td_sid]
+                        rel = trust_type_to_edge_name(trust.get("TrustType", ""))
+                        edges[(t_type, rel, td_type)].append((t_local, td_local))
+                        if trust.get("TrustDirection") == "Bidirectional":
+                            edges[(td_type, rel, t_type)].append((td_local, t_local))
 
-    # convert to tensors
     edge_tensors = {}
-    for rel, pairs in edges.items():
-        if not pairs:
-            continue
-        t = torch.tensor(pairs, dtype=torch.long).t().contiguous()
-        edge_tensors[rel] = t
+    for triplet, pairs in edges.items():
+        if pairs:
+            # Deduplicate and format for PyG
+            unique_pairs = list(set(pairs))
+            edge_tensors[triplet] = torch.tensor(unique_pairs, dtype=torch.long).t().contiguous()
 
     return edge_tensors
 
-# ── assemble HeteroData ──────────────────────────────────────────────────────
-
-def build_heterodata(X: torch.Tensor, edge_tensors: dict) -> HeteroData:
+def build_heterodata(X_dict: dict, edge_tensors: dict) -> HeteroData:
     data = HeteroData()
-    data["node"].x         = X
-    data["node"].num_nodes = X.shape[0]
-    for rel, ei in edge_tensors.items():
-        data["node", rel, "node"].edge_index = ei
+    for nt, X in X_dict.items():
+        data[nt].x = X
+        data[nt].num_nodes = X.shape[0]
+    for triplet, ei in edge_tensors.items():
+        data[triplet].edge_index = ei
     return data
 
 # ── zoom.csv handling for training mode ──────────────────────────────────────
 
-def resolve(val: str, name_to_id: dict, id_to_idx: dict):
+def resolve_sid(val: str, name_to_sid: dict, global_map: dict):
     if not val or not val.strip():
         return None
     v = val.strip()
-    if v.upper() in id_to_idx:
-        return id_to_idx[v.upper()]
-    lower = v.lower()
-    oid   = name_to_id.get(lower)
-    if oid:
-        return id_to_idx.get(oid)
-    short = lower.split("@")[0].split(".")[0]
-    oid   = name_to_id.get(short)
-    if oid:
-        return id_to_idx.get(oid)
-    return None
+    oid = v.upper() if v.upper() in global_map else None
+    
+    if not oid:
+        lower = v.lower()
+        oid = name_to_sid.get(lower)
+        if not oid:
+            short = lower.split("@")[0].split(".")[0]
+            oid = name_to_sid.get(short)
+            
+    return oid if oid in global_map else None
 
-def load_zoom(path: Path, name_to_id: dict, id_to_idx: dict,
-              X: torch.Tensor) -> tuple[list, set]:
-    """
-    Parse zoom.csv into training examples.
-    Returns (examples_list, objective_idxs_set).
-    """
-    paths    = defaultdict(list)
+def load_zoom(path: Path, name_to_sid: dict, global_map: dict, sid_to_global: dict,
+              X_dict: dict, sentinel_local: int, sentinel_global: int) -> tuple[list, set]:
+    
+    paths = defaultdict(list)
     raw_rows = []
 
     with open(path, newline="", encoding="utf-8") as f:
@@ -314,143 +251,112 @@ def load_zoom(path: Path, name_to_id: dict, id_to_idx: dict,
             raw_rows.append(row)
             paths[row["path_id"].strip()].append(row)
 
-    # dynamic objective inference — last next_hop per path
-    objective_idxs = set()
+    objective_sids = set()
     for pid, rows in paths.items():
         rows_sorted = sorted(rows, key=lambda r: int(r["step"]))
-        last_hop    = rows_sorted[-1]["next_hop_id"].strip().upper()
-        idx         = resolve(last_hop, name_to_id, id_to_idx)
-        if idx is not None:
-            objective_idxs.add(idx)
-            X[idx, -1] = 1.0   # set is_objective feature
+        last_hop_sid = resolve_sid(rows_sorted[-1]["next_hop_id"], name_to_sid, global_map)
+        if last_hop_sid:
+            objective_sids.add(last_hop_sid)
+            nt, local_idx = global_map[last_hop_sid]
+            X_dict[nt][local_idx, -1] = 1.0   # Set objective locally
 
     examples = []
     skipped  = 0
-    null_idx = X.shape[0] - 1   # Mode 2 sentinel
 
     for row in raw_rows:
         path_id    = row["path_id"].strip()
         step       = int(row["step"])
         train_on   = int(row.get("train_on_step", "1") or "1")
-        path_w     = float(row.get("path_weight", "1.0") or "1.0")
-        step_cost  = float(row.get("step_cost",   "0.0") or "0.0")
-        eff_weight = path_w * (1.0 - step_cost)
+        eff_weight = float(row.get("path_weight", "1.0") or "1.0") * (1.0 - float(row.get("step_cost", "0.0") or "0.0"))
 
         if train_on == 0:
             continue
 
-        cur  = resolve(row["current_node_id"],    name_to_id, id_to_idx)
-        hop  = resolve(row["next_hop_id"],        name_to_id, id_to_idx)
-        cred = resolve(row["credential_used_id"], name_to_id, id_to_idx)
+        cur_sid  = resolve_sid(row["current_node_id"], name_to_sid, global_map)
+        hop_sid  = resolve_sid(row["next_hop_id"], name_to_sid, global_map)
+        cred_sid = resolve_sid(row["credential_used_id"], name_to_sid, global_map)
 
-        if cur is None or hop is None or cred is None:
+        if not cur_sid or not hop_sid or not cred_sid:
             print(f"  WARN [{path_id} step {step}]: unresolved nodes — skipped")
             skipped += 1
             continue
 
-        for mode, cred_idx in [("constrained", cred),
-                                ("unconstrained", null_idx)]:
+        cur_type, cur_local = global_map[cur_sid]
+        hop_type, hop_local = global_map[hop_sid]
+
+        for mode, c_sid in [("constrained", cred_sid), ("unconstrained", "SENTINEL")]:
+            if c_sid == "SENTINEL":
+                cred_type, cred_local, cred_global = "users", sentinel_local, sentinel_global
+            else:
+                cred_type, cred_local = global_map[c_sid]
+                cred_global = sid_to_global[c_sid]
+
             examples.append({
-                "path_id":        path_id,
-                "step":           step,
-                "current_idx":    cur,
-                "credential_idx": cred_idx,
-                "next_hop_idx":   hop,
-                "eff_weight":     round(eff_weight, 4),
-                "mode":           mode,
-                "notes":          row.get("notes", ""),
+                "path_id":          path_id,
+                "step":             step,
+                "mode":             mode,
+                # Typed coordinates (For Heterogeneous Models)
+                "current_type":     cur_type,
+                "current_local":    cur_local,
+                "credential_type":  cred_type,
+                "credential_local": cred_local,
+                "next_hop_type":    hop_type,
+                "next_hop_local":   hop_local,
+                # Global coordinates (For backwards compatibility)
+                "current_idx":      sid_to_global[cur_sid],
+                "credential_idx":   cred_global,
+                "next_hop_idx":     sid_to_global[hop_sid],
+                "eff_weight":       round(eff_weight, 4),
+                "notes":            row.get("notes", ""),
             })
 
-    return examples, objective_idxs, skipped
+    return examples, objective_sids, skipped
 
 # ── main ────────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--graph", required=True,
-                        help="Path to merged forest_graph.json")
-    parser.add_argument("--zoom",  default=None,
-                        help="Optional zoom.csv for training mode")
-    parser.add_argument("--out",   required=True,
-                        help="Output directory")
+    parser.add_argument("--graph", required=True, help="Path to merged forest_graph.json")
+    parser.add_argument("--zoom",  default=None, help="Optional zoom.csv for training mode")
+    parser.add_argument("--out",   required=True, help="Output directory")
     args = parser.parse_args()
 
-    graph_path = Path(args.graph)
-    out_dir    = Path(args.out)
+    graph_path, out_dir = Path(args.graph), Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     print("=" * 60)
-    print("build_dataset.py")
+    print("build_dataset.py (HGT Upgrade)")
     print("=" * 60)
-    print(f"Graph : {graph_path}")
-    if args.zoom:
-        print(f"Zoom  : {args.zoom}")
-    print(f"Out   : {out_dir}")
-    print()
 
-    # ─ load graph ─
-    print("[1] Loading graph...")
-    forest, id_to_idx, name_to_id, X = load_graph(graph_path)
-    print(f"  Nodes      : {len(id_to_idx)}")
-    print(f"  Feature dim: {X.shape[1]}")
+    print("[1] Loading heterogeneous graph...")
+    forest, global_map, name_to_sid, sid_to_global, X_dict, sentinel_local, sentinel_global = load_graph(graph_path)
+    print(f"  Nodes      : {len(global_map)}")
+    
+    print("\n[2] Building heterogeneous edges...")
+    edge_tensors = build_edges(forest, global_map)
+    print(f"  Edge Triplet Types : {len(edge_tensors)}")
 
-    # ─ edges ─
-    print("\n[2] Building edges (principal→target convention)...")
-    edge_tensors = build_edges(forest, id_to_idx)
-    print(f"  Edge types : {len(edge_tensors)}")
-    for rel, t in sorted(edge_tensors.items(), key=lambda x: -x[1].shape[1]):
-        print(f"    {rel:<25}: {t.shape[1]}")
-
-    # ─ trust edges report ─
-    trust_edges = sum(
-        edge_tensors[r].shape[1]
-        for r in ["sameforesttrust", "crossforesttrust"]
-        if r in edge_tensors
-    )
-    print(f"\n  Trust edges captured: {trust_edges}")
-
-    # ─ zoom.csv if training mode ─
     objectives = set()
     examples   = []
     if args.zoom:
         print(f"\n[3] Parsing {args.zoom}...")
         examples, objectives, skipped = load_zoom(
-            Path(args.zoom), name_to_id, id_to_idx, X
+            Path(args.zoom), name_to_sid, global_map, sid_to_global, X_dict, sentinel_local, sentinel_global
         )
         print(f"  Examples   : {len(examples)}")
         print(f"  Objectives : {len(objectives)}")
-        if skipped:
-            print(f"  Skipped    : {skipped}")
 
-    # ─ HeteroData ─
     print("\n[4] Assembling HeteroData...")
-    data = build_heterodata(X, edge_tensors)
-    print(f"  data['node'].x       : {data['node'].x.shape}")
-    print(f"  data['node'].num_nodes: {data['node'].num_nodes}")
-    print(f"  edge_types           : {len(data.edge_types)}")
+    data = build_heterodata(X_dict, edge_tensors)
+    for nt in data.node_types:
+        print(f"  data['{nt}'].x : {data[nt].x.shape}")
+    print(f"  Total Edge Types: {len(data.edge_types)}")
 
-    # ─ save ─
     print("\n[5] Saving...")
-    hetero_path = out_dir / "heterodata.pt"
-    torch.save(data, hetero_path)
-    print(f"  heterodata.pt          → {hetero_path}")
-
+    torch.save(data, out_dir / "heterodata.pt")
     if args.zoom:
-        examples_path = out_dir / "training_examples.json"
-        examples_path.write_text(
-            json.dumps(examples, indent=2, ensure_ascii=False),
-            encoding="utf-8"
-        )
-        print(f"  training_examples.json → {examples_path}")
+        (out_dir / "training_examples.json").write_text(json.dumps(examples, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    print("\n" + "=" * 60)
-    print("Summary:")
-    print(f"  Nodes      : {len(id_to_idx)}")
-    print(f"  Edge types : {len(edge_tensors)}")
-    print(f"  Trust edges: {trust_edges}")
-    if args.zoom:
-        print(f"  Examples   : {len(examples)}")
-    print("\nNext: train.py (if examples present) or inference notebook")
     print("=" * 60)
 
 if __name__ == "__main__":

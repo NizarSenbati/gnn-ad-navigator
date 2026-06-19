@@ -1,31 +1,16 @@
 """
-prepare_training_examples.py
-----------------------------
+prepare_training_examples.py (HGT Upgraded)
+-------------------------------------------
 Translates zoom.csv (human-readable attack paths) into
-training_examples.json (indexed tuples consumed by the trainer).
+training_examples.json containing both Heterogeneous coordinate pairs
+and legacy global indices.
 
-This is a separate step from build_dataset.py because it's only
-needed for training. Inference doesn't touch it.
+python scripts/prepare_training_examples.py \
+    --graph data_work/training_data/testing/output/forest_graph.json \
+    --zoom data_work/training_data/testing/zoom.csv \
+    --out data_work/training_data/testing/output/training_examples.json \
+    --hetero data_work/training_data/testing/output/heterodata.pt
 
-INPUTS
-    --graph    forest_graph.json    (for name → index resolution)
-    --zoom     zoom.csv             (expert traces)
-    --hetero   heterodata.pt        (optional, only used to validate
-                                      that indices match the tensor's
-                                      node count, including the null sentinel)
-
-OUTPUTS
-    training_examples.json
-
-zoom.csv expected columns:
-    path_id, step, current_node_id, next_hop_id, credential_used_id,
-    path_weight, train_on_step, notes, step_cost
-
-Each row produces two examples (Mode 1 + Mode 2 twin):
-    constrained   — uses real credential_idx
-    unconstrained — uses null sentinel (last node index)
-
-eff_weight = path_weight * (1 - step_cost)
 """
 
 import json
@@ -39,63 +24,73 @@ NODE_TYPES = ["users", "computers", "groups", "domains",
               "gpos", "ous", "containers", "cas", "certtemplates"]
 
 
-# ── name → index resolver (mirrors build_dataset.py ordering) ───────────────
+# ── name → index resolver (Hetero Upgrade) ──────────────────────────────────
 
-def build_resolver(graph_path: Path) -> tuple[dict, dict, int]:
+def build_resolver(graph_path: Path) -> tuple[dict, dict, dict, int, int]:
     """
-    Walk forest_graph.json in the same order as build_dataset.py
-    to recover the exact (oid → idx) and (name → idx) mappings.
-    Returns (id_to_idx, name_to_idx, n_real_nodes).
+    Builds the heterogeneous coordinate map.
+    Returns: (global_map, name_to_sid, sid_to_global, sentinel_local, sentinel_global)
     """
     forest = json.loads(graph_path.read_text(encoding="utf-8"))
 
-    id_to_idx   = {}
-    name_to_idx = {}
+    global_map    = {}  # SID -> (node_type, local_idx)
+    name_to_sid   = {}
+    sid_to_global = {}  # SID -> flat global index
+    
+    global_counter = 0
 
     for nt in NODE_TYPES:
+        local_idx = 0
         for obj in forest.get(nt, []) or []:
             oid = (obj.get("ObjectIdentifier") or "").upper()
-            if not oid or oid in id_to_idx:
+            if not oid or oid in global_map:
                 continue
 
             name = (obj.get("Properties", {}).get("name") or "").lower()
-            idx  = len(id_to_idx)
-            id_to_idx[oid]    = idx
-            name_to_idx[name] = idx
+            
+            global_map[oid]    = (nt, local_idx)
+            sid_to_global[oid] = global_counter
+            name_to_sid[name]  = oid
 
-            # short name (before @ or first dot)
             short = name.split("@")[0].split(".")[0]
-            if short and short not in name_to_idx:
-                name_to_idx[short] = idx
+            if short and short not in name_to_sid:
+                name_to_sid[short] = oid
 
-    return id_to_idx, name_to_idx, len(id_to_idx)
+            local_idx += 1
+            global_counter += 1
+
+    # The null sentinel is dynamically attached to the end of the "users" tensor
+    sentinel_local  = len(forest.get("users", []))
+    sentinel_global = global_counter
+
+    return global_map, name_to_sid, sid_to_global, sentinel_local, sentinel_global
 
 
-def resolve(val: str, name_to_idx: dict, id_to_idx: dict):
+def resolve_sid(val: str, name_to_sid: dict, global_map: dict):
     if not val or not val.strip():
         return None
     v = val.strip()
-    if v.upper() in id_to_idx:
-        return id_to_idx[v.upper()]
-    lower = v.lower()
-    if lower in name_to_idx:
-        return name_to_idx[lower]
-    short = lower.split("@")[0].split(".")[0]
-    if short in name_to_idx:
-        return name_to_idx[short]
-    return None
+    oid = v.upper() if v.upper() in global_map else None
+    
+    if not oid:
+        lower = v.lower()
+        oid = name_to_sid.get(lower)
+        if not oid:
+            short = lower.split("@")[0].split(".")[0]
+            oid = name_to_sid.get(short)
+            
+    return oid if oid in global_map else None
 
 
 # ── zoom.csv parsing ────────────────────────────────────────────────────────
 
 def parse_zoom(zoom_path: Path,
-               name_to_idx: dict,
-               id_to_idx: dict,
-               null_idx: int) -> tuple[list, dict]:
-    """
-    Returns (examples_list, stats_dict).
-    Each constrained row becomes 2 examples: constrained + unconstrained twin.
-    """
+               name_to_sid: dict,
+               global_map: dict,
+               sid_to_global: dict,
+               sentinel_local: int,
+               sentinel_global: int) -> tuple[list, dict]:
+               
     examples = []
     paths    = defaultdict(list)
     raw_rows = []
@@ -107,20 +102,19 @@ def parse_zoom(zoom_path: Path,
 
     objectives = set()
     for pid, rows in paths.items():
-        rows_sorted = sorted(rows, key=lambda r: int(r["step"]))
-        last_hop    = rows_sorted[-1]["next_hop_id"].strip().upper()
-        idx         = resolve(last_hop, name_to_idx, id_to_idx)
-        if idx is not None:
-            objectives.add(idx)
+        rows_sorted  = sorted(rows, key=lambda r: int(r["step"]))
+        last_hop_sid = resolve_sid(rows_sorted[-1]["next_hop_id"], name_to_sid, global_map)
+        if last_hop_sid:
+            objectives.add(last_hop_sid)
 
     stats = {
-        "rows":            len(raw_rows),
-        "paths":           len(paths),
-        "objectives":      len(objectives),
-        "skipped_invisible": 0,
+        "rows":               len(raw_rows),
+        "paths":              len(paths),
+        "objectives":         len(objectives),
+        "skipped_invisible":  0,
         "skipped_unresolved": 0,
-        "constrained":     0,
-        "unconstrained":   0,
+        "constrained":        0,
+        "unconstrained":      0,
     }
 
     for row in raw_rows:
@@ -131,85 +125,95 @@ def parse_zoom(zoom_path: Path,
         step_cost  = float(row.get("step_cost",   "0.0") or "0.0")
         eff_weight = path_w * (1.0 - step_cost)
 
+        # Skip logic handles 'Unauthenticated' and name anomalies gracefully
         if train_on == 0:
             stats["skipped_invisible"] += 1
             continue
 
-        cur  = resolve(row["current_node_id"],    name_to_idx, id_to_idx)
-        hop  = resolve(row["next_hop_id"],        name_to_idx, id_to_idx)
-        cred = resolve(row["credential_used_id"], name_to_idx, id_to_idx)
+        cur_sid  = resolve_sid(row["current_node_id"],    name_to_sid, global_map)
+        hop_sid  = resolve_sid(row["next_hop_id"],        name_to_sid, global_map)
+        cred_sid = resolve_sid(row["credential_used_id"], name_to_sid, global_map)
 
-        if cur is None or hop is None or cred is None:
+        if not cur_sid or not hop_sid or not cred_sid:
             unresolved = []
-            if cur  is None: unresolved.append(f"current='{row['current_node_id']}'")
-            if hop  is None: unresolved.append(f"next_hop='{row['next_hop_id']}'")
-            if cred is None: unresolved.append(f"credential='{row['credential_used_id']}'")
+            if not cur_sid:  unresolved.append(f"current='{row['current_node_id']}'")
+            if not hop_sid:  unresolved.append(f"next_hop='{row['next_hop_id']}'")
+            if not cred_sid: unresolved.append(f"credential='{row['credential_used_id']}'")
             print(f"  WARN [{path_id} step {step}]: unresolved → {', '.join(unresolved)}")
             stats["skipped_unresolved"] += 1
             continue
 
-        # Mode 1 — constrained (real credential)
-        examples.append({
-            "path_id":        path_id,
-            "step":           step,
-            "current_idx":    cur,
-            "credential_idx": cred,
-            "next_hop_idx":   hop,
-            "eff_weight":     round(eff_weight, 4),
-            "mode":           "constrained",
-            "notes":          row.get("notes", ""),
-        })
-        stats["constrained"] += 1
+        cur_type, cur_local = global_map[cur_sid]
+        hop_type, hop_local = global_map[hop_sid]
 
-        # Mode 2 — unconstrained twin (null credential sentinel)
-        examples.append({
-            "path_id":        path_id,
-            "step":           step,
-            "current_idx":    cur,
-            "credential_idx": null_idx,
-            "next_hop_idx":   hop,
-            "eff_weight":     round(eff_weight, 4),
-            "mode":           "unconstrained",
-            "notes":          row.get("notes", ""),
-        })
-        stats["unconstrained"] += 1
+        # Mode 1 & 2: Constrained (real cred) and Unconstrained (null sentinel)
+        for mode, c_sid in [("constrained", cred_sid), ("unconstrained", "SENTINEL")]:
+            if c_sid == "SENTINEL":
+                cred_type, cred_local, cred_global = "users", sentinel_local, sentinel_global
+            else:
+                cred_type, cred_local = global_map[c_sid]
+                cred_global = sid_to_global[c_sid]
+
+            examples.append({
+                "path_id":          path_id,
+                "step":             step,
+                "mode":             mode,
+                # New Hetero PyG Coordinates
+                "current_type":     cur_type,
+                "current_local":    cur_local,
+                "credential_type":  cred_type,
+                "credential_local": cred_local,
+                "next_hop_type":    hop_type,
+                "next_hop_local":   hop_local,
+                # Legacy Flat IDs (kept for backward compatibility)
+                "current_idx":      sid_to_global[cur_sid],
+                "credential_idx":   cred_global,
+                "next_hop_idx":     sid_to_global[hop_sid],
+                "eff_weight":       round(eff_weight, 4),
+                "notes":            row.get("notes", ""),
+            })
+            stats[mode] += 1
 
     return examples, stats
 
 
 # ── optional heterodata sanity check ────────────────────────────────────────
 
-def validate_against_hetero(hetero_path: Path,
-                            examples: list,
-                            n_real_nodes: int) -> tuple[bool, str]:
+def validate_against_hetero(hetero_path: Path, examples: list) -> tuple[bool, str]:
     """
-    Verify that the indices in our generated examples are valid for the
-    heterodata's actual node count. Returns (ok, message).
+    Verify that the typed local indices in our generated examples do not
+    exceed the bounds of the actual PyG HeteroData tensors.
     """
     try:
         import torch
         data = torch.load(hetero_path, map_location="cpu", weights_only=False)
-        n_hetero = data["node"].num_nodes
     except Exception as e:
         return False, f"could not load heterodata: {e}"
 
-    # heterodata includes the null sentinel = n_real_nodes + 1
-    expected = n_real_nodes + 1
-    if n_hetero != expected:
-        return False, (f"node count mismatch — heterodata has {n_hetero} nodes, "
-                       f"expected {expected} ({n_real_nodes} real + 1 sentinel). "
-                       f"Did the graph change since heterodata was built?")
-
     bad = []
     for e in examples:
-        for key in ["current_idx", "credential_idx", "next_hop_idx"]:
-            if not (0 <= e[key] < n_hetero):
-                bad.append((e["path_id"], e["step"], key, e[key]))
+        # Check Current
+        ct = e["current_type"]
+        if ct not in data.node_types or e["current_local"] >= data[ct].num_nodes:
+            bad.append((e["path_id"], e["step"], "current", ct, e["current_local"]))
+            
+        # Check Hop
+        ht = e["next_hop_type"]
+        if ht not in data.node_types or e["next_hop_local"] >= data[ht].num_nodes:
+            bad.append((e["path_id"], e["step"], "next_hop", ht, e["next_hop_local"]))
+            
+        # Check Credential
+        crt = e["credential_type"]
+        # Allow +1 for the sentinel appended to the 'users' tensor
+        allowance = 1 if crt == "users" else 0
+        if crt not in data.node_types or e["credential_local"] >= (data[crt].num_nodes + allowance):
+            bad.append((e["path_id"], e["step"], "credential", crt, e["credential_local"]))
 
     if bad:
-        return False, f"{len(bad)} out-of-range indices found (showing 3): {bad[:3]}"
+        return False, f"{len(bad)} out-of-range typed indices found (showing 3): {bad[:3]}"
 
-    return True, f"validated against heterodata ({n_hetero} nodes)"
+    types_str = ", ".join([f"{nt}:{data[nt].num_nodes}" for nt in data.node_types])
+    return True, f"validated against heterodata boundaries ({types_str})"
 
 
 # ── main ────────────────────────────────────────────────────────────────────
@@ -223,7 +227,7 @@ def main():
     parser.add_argument("--out",    required=True,
                         help="Output training_examples.json")
     parser.add_argument("--hetero", default=None,
-                        help="Optional heterodata.pt for index validation")
+                        help="Optional heterodata.pt for tensor boundary validation")
     args = parser.parse_args()
 
     graph_path = Path(args.graph)
@@ -231,7 +235,7 @@ def main():
     out_path   = Path(args.out)
 
     print("=" * 60)
-    print("prepare_training_examples.py")
+    print("prepare_training_examples.py (HGT Upgraded)")
     print("=" * 60)
     print(f"Graph : {graph_path}")
     print(f"Zoom  : {zoom_path}")
@@ -240,38 +244,33 @@ def main():
         print(f"Check : {args.hetero}")
     print()
 
-    # ─ build resolver ─
-    print("[1] Building resolver from forest_graph...")
-    id_to_idx, name_to_idx, n_real_nodes = build_resolver(graph_path)
-    null_idx = n_real_nodes  # sentinel = n_real_nodes (build_dataset adds zero row at this index)
-    print(f"  Real nodes      : {n_real_nodes}")
-    print(f"  Null sentinel at: {null_idx}")
-    print(f"  Resolvable names: {len(name_to_idx)}")
+    print("[1] Building heterogeneous resolver from forest_graph...")
+    global_map, name_to_sid, sid_to_global, s_local, s_global = build_resolver(graph_path)
+    print(f"  Real nodes      : {len(global_map)}")
+    print(f"  Null sentinel   : type 'users', local index {s_local}")
+    print(f"  Resolvable names: {len(name_to_sid)}")
 
-    # ─ parse zoom.csv ─
     print(f"\n[2] Parsing zoom.csv...")
-    examples, stats = parse_zoom(zoom_path, name_to_idx, id_to_idx, null_idx)
+    examples, stats = parse_zoom(zoom_path, name_to_sid, global_map, sid_to_global, s_local, s_global)
 
-    print(f"\n  Rows in CSV       : {stats['rows']}")
-    print(f"  Distinct paths    : {stats['paths']}")
-    print(f"  Objectives        : {stats['objectives']}")
-    print(f"  Skipped (invisible): {stats['skipped_invisible']}")
-    print(f"  Skipped (unresolved): {stats['skipped_unresolved']}")
+    print(f"\n  Rows in CSV          : {stats['rows']}")
+    print(f"  Distinct paths       : {stats['paths']}")
+    print(f"  Objectives           : {stats['objectives']}")
+    print(f"  Skipped (invisible)  : {stats['skipped_invisible']}")
+    print(f"  Skipped (unresolved) : {stats['skipped_unresolved']}")
     print(f"  Constrained examples : {stats['constrained']}")
     print(f"  Unconstrained twins  : {stats['unconstrained']}")
     print(f"  Total examples       : {len(examples)}")
 
-    # ─ optional heterodata validation ─
     if args.hetero:
-        print(f"\n[3] Validating against heterodata...")
-        ok, msg = validate_against_hetero(Path(args.hetero), examples, n_real_nodes)
+        print(f"\n[3] Validating coordinate boundaries against heterodata...")
+        ok, msg = validate_against_hetero(Path(args.hetero), examples)
         if ok:
             print(f"  ✓ {msg}")
         else:
             print(f"  ✗ {msg}", file=sys.stderr)
             return 1
 
-    # ─ write output ─
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(
         json.dumps(examples, indent=2, ensure_ascii=False),
