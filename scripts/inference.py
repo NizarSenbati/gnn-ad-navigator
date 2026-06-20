@@ -144,19 +144,28 @@ def build_name_lookup(graph_path: Path, data: HeteroData):
         local_idx = 0
         for obj in forest.get(nt, []) or []:
             oid = (obj.get("ObjectIdentifier") or "").upper()
-            if not oid: continue
-            
+            if not oid: 
+                continue
+
+            name = (obj.get("Properties", {}).get("name") or "unknown").lower()
             global_idx = type_offsets[nt] + local_idx
-            name = (obj.get("Properties", {}).get("name") or "").lower()
-            
-            name_to_idx[name]  = global_idx
-            idx_to_name[global_idx] = name
-            idx_to_type[global_idx] = nt
-            
+
+            # 1. NATIVE SID SUPPORT
+            name_to_idx[oid] = global_idx
+
+            # 2. FULL NAME SUPPORT (Protected)
+            if name not in name_to_idx:
+                name_to_idx[name] = global_idx
+                
+            # 3. SHORT NAME ALIAS (Protected)
             short = name.split("@")[0].split(".")[0]
             if short and short not in name_to_idx:
                 name_to_idx[short] = global_idx
-                
+
+            # Model lookups
+            idx_to_name[global_idx] = name
+            idx_to_type[global_idx] = nt
+            
             local_idx += 1
 
         # Map the null/sentinel credential appended to "users"
@@ -259,7 +268,7 @@ def has_dcsync_on(node_idx, target_domain_name, edge_tensors_flat, idx_to_name):
             won = True; break
     return won, list(domains_with_both)
 
-def beam_search(model, embeddings, edge_tensors_flat, start_idx, target_idx, idx_to_name, beam_width=3, max_depth=8):
+def beam_search(model, embeddings, edge_tensors_flat, start_idx, target_idx, idx_to_name, edge_name_map, known_edges, beam_width=3, max_depth=8):
     target_domain = get_node_domain(target_idx, idx_to_name) or ""
     beam = [(0.0, [start_idx])]
     completed = []
@@ -275,7 +284,7 @@ def beam_search(model, embeddings, edge_tensors_flat, start_idx, target_idx, idx
                 continue
                 
             nbrs = get_neighbors(cur, edge_tensors_flat)
-            nbrs = [n for n in nbrs if n not in path]
+            nbrs = [n for n in nbrs if n not in path and n < embeddings.shape[0]]
             if not nbrs: continue
             
             with torch.no_grad():
@@ -283,13 +292,21 @@ def beam_search(model, embeddings, edge_tensors_flat, start_idx, target_idx, idx
                 probs  = F.softmax(scores, dim=0)
                 
             for i, nb in enumerate(nbrs):
-                ns = log_score + math.log(probs[i].item() + 1e-9)
+                # 1. Identify the relationship type
+                rel = edge_name_map.get((cur, nb), "unknown")
+                
+                # 2. THE FALLBACK BYPASS
+                # If the model has never seen this edge during training, bypass the 
+                # neural network's score and assign it a low baseline operational score.
+                if rel not in known_edges:
+                    prob_val = 0.05
+                else:
+                    prob_val = probs[i].item()
+                    
+                # 3. Calculate the new sequence score
+                ns = log_score + math.log(prob_val + 1e-9)
                 new_path = path + [nb]
                 candidates.append((ns, new_path))
-                
-                won_nb, _ = has_dcsync_on(nb, target_domain, edge_tensors_flat, idx_to_name)
-                if nb == target_idx or won_nb:
-                    completed.append((ns, new_path))
                     
         if not candidates: break
         candidates.sort(key=lambda x: x[0], reverse=True)
@@ -461,6 +478,7 @@ def load_hgt(checkpoint_path: Path, data: HeteroData, device):
     
     model.load_state_dict(ckpt["model_state"])
     model.eval()
+    model.known_edges = [et[1] for et in training_metadata[1]]
     with torch.no_grad(): emb = model.encode(x_dict, edge_index_dict_training)
     return model, emb
 
@@ -525,8 +543,45 @@ def main():
     else:
         model, emb = load_hgt(Path(args.model), data, device)
 
-    # ─ Execute ─
-    paths = beam_search(model, emb, edge_tensors_flat, s_idx, t_idx, idx_to_name, args.beam_width, args.max_depth)
+# ─ Execute ─
+    
+    # 1. Extract known edges safely (Pulling directly from the HGTConv layer)
+    known_edges = []
+    if args.model_type == "hgt":
+        known_edges = model.known_edges
+
+    # 2. Build edge_name_map dynamically from the PyG data object
+    edge_name_map = {}
+    if hasattr(data, 'edge_index_dict'):
+        for (src_t, rel, dst_t), ei in data.edge_index_dict.items():
+            if src_t not in offsets or dst_t not in offsets: 
+                continue
+            src_indices = ei[0] + offsets[src_t]
+            dst_indices = ei[1] + offsets[dst_t]
+            for s, d in zip(src_indices.tolist(), dst_indices.tolist()):
+                if (s, d) not in edge_name_map:
+                    edge_name_map[(s, d)] = rel
+    else:
+        # Legacy fallback for old homogenous format
+        for rel in data.edge_types:
+            ei = data[rel].edge_index
+            for s, d in zip(ei[0].tolist(), ei[1].tolist()):
+                if (s, d) not in edge_name_map:
+                    edge_name_map[(s, d)] = rel[1]
+
+    # 3. Call beam_search with ALL the correct arguments in order!
+    paths = beam_search(
+        model, 
+        emb, 
+        edge_tensors_flat, 
+        s_idx, 
+        t_idx, 
+        idx_to_name, 
+        edge_name_map,      # <-- Newly added
+        known_edges,        # <-- Newly added
+        args.beam_width, 
+        args.max_depth
+    )
 
     print(f"\n{'=' * 60}\nRESULTS — top {len(paths)} path(s)\n{'=' * 60}")
     if not paths:

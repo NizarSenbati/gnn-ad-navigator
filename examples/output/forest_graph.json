@@ -517862,6 +517862,13 @@
           "IsInherited": false,
           "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-32-544",
           "PrincipalType": "Group"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-5A0D4D5A",
+          "PrincipalType": "Cas",
+          "RightName": "TrustedForNTAuth",
+          "IsInherited": false,
+          "Source": "Certipy"
         }
       ],
       "Links": [
@@ -542707,14 +542714,3399 @@
       ]
     }
   ],
-  "cas": [],
-  "certtemplates": [],
-  "_merge_metadata": {
-    "generated_at": "2026-06-14T20:29:10Z",
-    "inputs": [
-      "gnn-ad-navigator/examples/output/cleaned"
-    ],
-    "node_count": 3967,
-    "trust_count": 4
+  "cas": [
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-5A0D4D5A",
+      "Properties": {
+        "name": "inlanefreight-ca@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=inlanefreight-ca,cn=certification authorities,academy-ea-ca01.inlanefreight.local",
+        "ca_name": "INLANEFREIGHT-CA",
+        "dns_name": "ACADEMY-EA-CA01.INLANEFREIGHT.LOCAL",
+        "web_enrollment": false,
+        "esc7": false,
+        "esc8": false,
+        "enabled": true,
+        "admincount": false,
+        "is_ca": true
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-AEA26FFA",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-F0B357E2",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-AEE9EFC3",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-4C8DE3F3",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-E1BD1532",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-3CEEBD0E",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-491319A2",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-E50801D0",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-58EEDF4C",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-A866BBC5",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-F29FE8EA",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-GHOST-26043D55",
+          "PrincipalType": "Certtemplates",
+          "RightName": "PublishedTo",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy CA — synthetic SID (no SID in Certipy output)"
+    }
+  ],
+  "certtemplates": [
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-AEA26FFA",
+      "Properties": {
+        "name": "academycomputer@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=academycomputer,cn=certificate templates",
+        "template_name": "academycomputer",
+        "enabled": true,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-515",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-1001",
+          "PrincipalType": "Users",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-1001",
+          "PrincipalType": "Users",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Computers",
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\lab_adm",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+          "INLANEFREIGHT.LOCAL\\lab_adm"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+          "INLANEFREIGHT.LOCAL\\lab_adm"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+          "INLANEFREIGHT.LOCAL\\lab_adm"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-F0B357E2",
+      "Properties": {
+        "name": "kerberosauthentication@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=kerberosauthentication,cn=certificate templates",
+        "template_name": "kerberosauthentication",
+        "enabled": true,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-498",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-516",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Enterprise Read-only Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Domain Controllers"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-53C78DEA",
+      "Properties": {
+        "name": "ocspresponsesigning@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=ocspresponsesigning,cn=certificate templates",
+        "template_name": "ocspresponsesigning",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-AFEA2CD3",
+      "Properties": {
+        "name": "rasandiasserver@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=rasandiasserver,cn=certificate templates",
+        "template_name": "rasandiasserver",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-553",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "INLANEFREIGHT.LOCAL\\RAS and IAS Servers"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-0B1C39E8",
+      "Properties": {
+        "name": "workstation@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=workstation,cn=certificate templates",
+        "template_name": "workstation",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-515",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Computers",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-AEE9EFC3",
+      "Properties": {
+        "name": "directoryemailreplication@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=directoryemailreplication,cn=certificate templates",
+        "template_name": "directoryemailreplication",
+        "enabled": true,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-498",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-516",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Enterprise Read-only Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Domain Controllers"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-4C8DE3F3",
+      "Properties": {
+        "name": "domaincontrollerauthentication@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=domaincontrollerauthentication,cn=certificate templates",
+        "template_name": "domaincontrollerauthentication",
+        "enabled": true,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-498",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-516",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Enterprise Read-only Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Domain Controllers"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-85896FFD",
+      "Properties": {
+        "name": "keyrecoveryagent@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=keyrecoveryagent,cn=certificate templates",
+        "template_name": "keyrecoveryagent",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": true,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-11876DAA",
+      "Properties": {
+        "name": "caexchange@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=caexchange,cn=certificate templates",
+        "template_name": "caexchange",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-8F4B3B77",
+      "Properties": {
+        "name": "crossca@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=crossca,cn=certificate templates",
+        "template_name": "crossca",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 1,
+        "any_purpose": true,
+        "enrollment_agent": true,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-B90BBE92",
+      "Properties": {
+        "name": "exchangeusersignature@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=exchangeusersignature,cn=certificate templates",
+        "template_name": "exchangeusersignature",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-EE6EFAB3",
+      "Properties": {
+        "name": "exchangeuser@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=exchangeuser,cn=certificate templates",
+        "template_name": "exchangeuser",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-A704F3A5",
+      "Properties": {
+        "name": "cepencryption@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=cepencryption,cn=certificate templates",
+        "template_name": "cepencryption",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": true,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": true,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-3DDCC872",
+      "Properties": {
+        "name": "offlinerouter@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=offlinerouter,cn=certificate templates",
+        "template_name": "offlinerouter",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": true,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-CACC3AB2",
+      "Properties": {
+        "name": "ipsecintermediateoffline@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=ipsecintermediateoffline,cn=certificate templates",
+        "template_name": "ipsecintermediateoffline",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-0A786FB9",
+      "Properties": {
+        "name": "ipsecintermediateonline@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=ipsecintermediateonline,cn=certificate templates",
+        "template_name": "ipsecintermediateonline",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-515",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-516",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Computers",
+        "INLANEFREIGHT.LOCAL\\Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-E1BD1532",
+      "Properties": {
+        "name": "subca@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=subca,cn=certificate templates",
+        "template_name": "subca",
+        "enabled": true,
+        "client_authentication": true,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": true,
+        "enrollment_agent": true,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": true,
+        "esc2": true,
+        "esc3": true,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-3C4F9F9F",
+      "Properties": {
+        "name": "ca@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=ca,cn=certificate templates",
+        "template_name": "ca",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": true,
+        "enrollment_agent": true,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": true,
+        "esc2": true,
+        "esc3": true,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-3CEEBD0E",
+      "Properties": {
+        "name": "webserver@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=webserver,cn=certificate templates",
+        "template_name": "webserver",
+        "enabled": true,
+        "client_authentication": false,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-491319A2",
+      "Properties": {
+        "name": "domaincontroller@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=domaincontroller,cn=certificate templates",
+        "template_name": "domaincontroller",
+        "enabled": true,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-498",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-516",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "INLANEFREIGHT.LOCAL-S-1-5-9",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Enterprise Read-only Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Controllers",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Domain Controllers"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-E50801D0",
+      "Properties": {
+        "name": "machine@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=machine,cn=certificate templates",
+        "template_name": "machine",
+        "enabled": true,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-515",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Computers",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-0D7E5690",
+      "Properties": {
+        "name": "machineenrollmentagent@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=machineenrollmentagent,cn=certificate templates",
+        "template_name": "machineenrollmentagent",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": true,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": true,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-E1CE31BF",
+      "Properties": {
+        "name": "enrollmentagentoffline@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=enrollmentagentoffline,cn=certificate templates",
+        "template_name": "enrollmentagentoffline",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": true,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": true,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": true,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-2B6C8C86",
+      "Properties": {
+        "name": "enrollmentagent@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=enrollmentagent,cn=certificate templates",
+        "template_name": "enrollmentagent",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": true,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": true,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-E537403B",
+      "Properties": {
+        "name": "ctlsigning@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=ctlsigning,cn=certificate templates",
+        "template_name": "ctlsigning",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-8BC4ED25",
+      "Properties": {
+        "name": "codesigning@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=codesigning,cn=certificate templates",
+        "template_name": "codesigning",
+        "enabled": false,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-58EEDF4C",
+      "Properties": {
+        "name": "efsrecovery@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=efsrecovery,cn=certificate templates",
+        "template_name": "efsrecovery",
+        "enabled": true,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-A866BBC5",
+      "Properties": {
+        "name": "administrator@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=administrator,cn=certificate templates",
+        "template_name": "administrator",
+        "enabled": true,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-F29FE8EA",
+      "Properties": {
+        "name": "efs@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=efs,cn=certificate templates",
+        "template_name": "efs",
+        "enabled": true,
+        "client_authentication": false,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-513",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Users",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-50B36F5E",
+      "Properties": {
+        "name": "smartcardlogon@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=smartcardlogon,cn=certificate templates",
+        "template_name": "smartcardlogon",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-F15FC094",
+      "Properties": {
+        "name": "clientauth@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=clientauth,cn=certificate templates",
+        "template_name": "clientauth",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-513",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Users",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-DDAD894C",
+      "Properties": {
+        "name": "smartcarduser@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=smartcarduser,cn=certificate templates",
+        "template_name": "smartcarduser",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-7AC10D8A",
+      "Properties": {
+        "name": "usersignature@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=usersignature,cn=certificate templates",
+        "template_name": "usersignature",
+        "enabled": false,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-513",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Users",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    },
+    {
+      "ObjectIdentifier": "S-1-5-21-GHOST-26043D55",
+      "Properties": {
+        "name": "user@inlanefreight.local",
+        "domain": "inlanefreight.local",
+        "distinguishedname": "cn=user,cn=certificate templates",
+        "template_name": "user",
+        "enabled": true,
+        "client_authentication": true,
+        "enrollee_supplies_subject": false,
+        "requires_manager_approval": false,
+        "authorized_signatures": 0,
+        "any_purpose": false,
+        "enrollment_agent": false,
+        "admincount": false,
+        "hasspn": false,
+        "esc1": false,
+        "esc2": false,
+        "esc3": false,
+        "esc4": true,
+        "esc9": false,
+        "esc13": false
+      },
+      "Aces": [
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-513",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "Enroll",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteDACL",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-512",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        },
+        {
+          "PrincipalSID": "S-1-5-21-3842939050-3880317879-2865463114-519",
+          "PrincipalType": "Groups",
+          "RightName": "WriteOwner",
+          "IsInherited": false,
+          "Source": "Certipy"
+        }
+      ],
+      "EnrollmentRights": [
+        "INLANEFREIGHT.LOCAL\\Domain Admins",
+        "INLANEFREIGHT.LOCAL\\Domain Users",
+        "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+      ],
+      "ObjectControlPermissions": {
+        "Owner": "INLANEFREIGHT.LOCAL\\Enterprise Admins",
+        "Write Owner Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Dacl Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ],
+        "Write Property Principals": [
+          "INLANEFREIGHT.LOCAL\\Domain Admins",
+          "INLANEFREIGHT.LOCAL\\Enterprise Admins"
+        ]
+      },
+      "CertificateAuthorities": [
+        "INLANEFREIGHT-CA"
+      ],
+      "IsGhost": true,
+      "GhostReason": "Certipy template — synthetic SID, real edges"
+    }
+  ],
+  "_stitch_metadata": {
+    "generated_at": "2026-06-20T13:21:36Z",
+    "certipy_input": "examples/input/20260514132200_Certipy.json",
+    "target_domain": "inlanefreight.local",
+    "ca_nodes_added": 1,
+    "template_nodes_added": 34,
+    "edges_injected": 241,
+    "edges_skipped": 0,
+    "ntauth_link_established": true
   }
 }

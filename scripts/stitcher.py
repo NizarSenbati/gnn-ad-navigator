@@ -330,6 +330,65 @@ def inject(forest: dict, ca_nodes: list, template_nodes: list,
     return injected, skipped
 
 
+# ── synthetic edges (coercetgt) ─────────────────────────────────────────────
+
+def build_synthetic_edges(forest: dict) -> list:
+    """
+    Scans the existing forest to find logically vulnerable delegation paths 
+    and generates synthetic 'coercetgt' edges.
+    """
+    edges = []
+    
+    # Flatten the forest for easy cross-referencing, keeping track of node types
+    all_nodes = []
+    for nt, objs in forest.items():
+        for obj in objs:
+            all_nodes.append((nt, obj))
+            
+    for src_type, src_node in all_nodes:
+        src_props = src_node.get("Properties", {})
+        
+        # Condition 1: Source has Unconstrained Delegation
+        if src_props.get("unconstraineddelegation") == True:
+            src_oid = src_node.get("ObjectIdentifier")
+            if not src_oid: continue
+            
+            for tgt_type, tgt_node in all_nodes:
+                
+                # ---------------------------------------------------------
+                # CRITICAL FIX: Target MUST be a Computer account!
+                # This prevents wormholing into OUs, Groups, or Domains.
+                # ---------------------------------------------------------
+                if tgt_type != "computers":
+                    continue
+                
+                tgt_props = tgt_node.get("Properties", {})
+                distinguished_name = tgt_props.get("distinguishedname", "").lower()
+                
+                # Condition 2: Target is a Domain Controller
+                if "ou=domain controllers" in distinguished_name:
+                    
+                    # Condition 3: Target is NOT protected against delegation
+                    if tgt_props.get("sensitive") == True:
+                        continue
+                    
+                    tgt_oid = tgt_node.get("ObjectIdentifier")
+                    
+                    # Prevent a DC from coercing itself
+                    if not tgt_oid or src_oid == tgt_oid:
+                        continue
+                    
+                    # Append using the exact format expected by inject()
+                    edges.append({
+                        "src": src_oid,
+                        "src_type": src_type,
+                        "dst": tgt_oid,
+                        "type": "coercetgt"
+                    })
+                    
+    print(f"[*] Generated {len(edges)} synthetic CoerceToTGT edges.")
+    return edges
+
 # ── main ────────────────────────────────────────────────────────────────────
 
 def main():
@@ -392,12 +451,21 @@ def main():
         if dom.get("Properties", {}).get("name", "").lower() == domain:
             domain_oid = dom.get("ObjectIdentifier", "").upper()
             break
-    edges    = build_adcs_edges(ca_nodes, template_nodes, resolver, domain_oid)
+    adcs_edges = build_adcs_edges(ca_nodes, template_nodes, resolver, domain_oid)
+    
+    # 2. Build the synthetic delegation edges
+    synthetic_edges = build_synthetic_edges(forest)
+    
+    # 3. Combine them into a single list for the injector
+    edges = adcs_edges + synthetic_edges
 
     if not args.quiet:
-        print(f"Resolver entries  : {len(resolver)}")
-        print(f"ADCS edges to inject: {len(edges)}")
+        print(f"Resolver entries     : {len(resolver)}")
+        print(f"ADCS edges to inject : {len(adcs_edges)}")
+        print(f"CoerceTGT to inject  : {len(synthetic_edges)}")
+        print(f"Total edges to inject: {len(edges)}")
 
+    # 4. Inject all of them seamlessly into the forest object
     injected, skipped = inject(forest, ca_nodes, template_nodes, edges)
 
     if not args.quiet:
@@ -423,6 +491,7 @@ def main():
         "target_domain": domain,
         "ca_nodes_added": len(ca_nodes),
         "template_nodes_added": len(template_nodes),
+        "synthetic_edges_added": len(synthetic_edges),  # <-- Add this line
         "edges_injected": injected,
         "edges_skipped": skipped,
         "ntauth_link_established": domain_oid is not None
