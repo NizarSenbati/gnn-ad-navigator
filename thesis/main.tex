@@ -583,11 +583,49 @@ a Windows domain environment.\href{https://academy.hackthebox.com/module/74/sect
   \label{fig:ad-hierarchy}
 \end{figure}
 
-A basic AD user account with no added privileges can be used to enumerate the majority of objects 
-contained within AD, including but not limited to
-% TODO: Finish literature review
+Figure 1.1 illustrates the standard hierarchical structure of an Active 
+Directory environment. At the highest level is the Forest, which serves 
+as the absolute security boundary for the organization. Within the forest, 
+one or more Domains act as logical partitions to manage resources. To 
+streamline administration, these domains are further subdivided into 
+Organizational Units OUs. OUs act as geographical or functional 
+containers to group specific base objects, such as users, 
+service accounts, security groups, and computers. Additionally, the 
+diagram highlights how Group Policy Objects GPOs can be linked directly 
+to OUs to enforce specific security configurations across all objects 
+within that container.
+
+By design, Active Directory allows almost any authenticated user---regardless 
+of their administrative privilege level---to read and query the directory. 
+This open read-access is intended to facilitate normal network operations, 
+such as allowing a user to look up a colleague's email address or locate a 
+network printer. However, this feature creates a significant security 
+vulnerability. 
+
+If an adversary compromises a single, unprivileged user account or workstation, 
+they can abuse this read access using standard protocols like LDAP and RPC. 
+The attacker can silently sweep the directory to extract the exact same list 
+of computers, group memberships, trust relationships, and Access Control 
+Lists (ACLs) detailed above. By stitching this data together, the adversary 
+can map the entire network topology and identify hidden, multi-step privilege 
+escalation paths leading from their starting point to high-value targets 
+like Domain Admin.
+
+Because the relationships between thousands of Active Directory objects create 
+a highly complex web of permissions, manually identifying these chained 
+vulnerabilities is nearly impossible. To address this, security professionals, 
+defenders, and penetration testers utilize graph-based pathfinding tools. 
+By ingesting the same directory data that an attacker would enumerate, these 
+tools model the Active Directory environment as a mathematical graph. This 
+allows operators to visualize hidden attack paths, proactively identify 
+structural weaknesses, and remediate dangerous permission chains before they 
+can be exploited during a real breach.
+
+A standard Active Directory user account with no administrative privileges can be leveraged to query and enumerate a vast amount of structural and security data across the network. This accessible information includes, but is not limited to:
 
 \begin{itemize}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
   \item Domain Computers
   \item Domain Group Information
   \item Default Domain Policy
