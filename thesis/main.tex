@@ -195,7 +195,7 @@
   pdftitle={Learning Offensive Navigation Policies on Heterogeneous Attack Graphs},
   pdfauthor={Nizar Senbati},
   pdfsubject={Master PFE Thesis},
-  pdfkeywords={GNN, Active Directory, Attack Graph, Privilege Escalation, HGT}
+  pdfkeywords={GNN, Active Directory, Attack Graph, Privilege Escalation, HGT, Active Directory}
 ]{hyperref}
 \usepackage{cleveref}   % \cref{} for smart cross-references
 
@@ -449,38 +449,52 @@ over heterogeneous Active Directory graphs.
   \item A \gls{hgt}-based navigation policy trained on \gls{goad} traces and
         evaluated on the entirely unseen INLANEFREIGHT enterprise environment,
         demonstrating generalisation from a 351-node lab to a 4\,000-node network.
-  \item A diagnostic evaluation of the learned policy's architectural 
-        boundaries identifying how each design oversight \gls{dcsync} 
-        goal-state blindness, computer-node edge directionality, and 
-        training-distribution sparsity propagated into observable 
-        failure modes, and estimating the performance ceiling imitation 
-        learning could reach if these constraints were lifted.
-  \item A forward-looking system hypothesis describing a second-generation 
-        tool where identified oversights are addressed: a goal-conditioned 
-        policy with \gls{dcsync}-aware terminal learning, bidirectional 
-        computer-node traversal, and an expanded training corpus 
-        outlining what the approach is capable of reaching beyond the 
-        bounds of this proof of concept.
+  \item An evaluation of the tool's current limitations. Identifying how the search algorithm 
+  naturally penalizes long paths, which creates an unintended bias toward shorter, noisier attacks rather 
+  than longer, stealthier desired routes. A highlight of the model's limited line of sight \/
+  receptive field when trying to discover deep, multi-step continuous attack chains. Also  
+  acknowledging that testing was restricted to lab environments rather than enterprise networks 
+  due to time and resource constraints.
+  
+  \item A proposal for a future, second-generation tool that addresses these limitations by: 
+  implementing a guided search algorithm (such as A-Star) to help the model value stealth and 
+  keep long attack paths alive; using natural language AI to read and understand entirely new 
+  types of attacks based on their descriptions instead of relying on a hardcoded list; and adding 
+  a time dimension to the graph to accurately reflect temporary network states, such as active user 
+  sessions that log on and off. An automated "divide-and-conquer" routing system that breaks 
+  excessively long attack chains into smaller manageable segments using major network hubs or 
+  domain boundaries as checkpoints.
 \end{itemize}
 
 \section*{Report Outline}
 The remainder of this document is structured as follows. 
-Chapter 1 establishes the theoretical foundation, reviewing the architecture of Active Directory, 
-common privilege escalation techniques, the machine learning logic behind GNNs and the current 
-state of graph-based attack path analysis.
-Chapter 2 details the methodology and system architecture, introducing the heterogeneous graph 
-pipeline designed to transform raw BloodHound data into navigable tensors and present the core logic 
-of the navigation policy the loss function and the beam search method. 
-Chapter 3 presents the architecture and training paradigm of the Graph Neural Network (GNN) 
-navigation policy. 
-Chapter~4 provides an empirical evaluation of the learned policy across 
-multiple environments, documents both successful generalisations and precise 
-failure modes, and identifies the architectural oversights that bound the 
-current approach.
-Chapter~5 concludes the report by reviewing what this proof of concept 
-achieved and laying out its limitations honestly. It then builds a hypothesis
-where a second generation tool, one where the identified oversights are properly handled,
-could theoretically reach as well as pinpointing where future research might target.
+
+Chapter 1 establishes the theoretical foundation, reviewing the architecture 
+of Active Directory, common privilege escalation techniques, the machine 
+learning logic behind GNNs, and the current state of graph-based attack 
+path analysis.
+
+Chapter 2 details the methodology and system architecture, introducing the 
+heterogeneous graph pipeline designed to transform raw BloodHound data into 
+navigable tensors. It also presents the core logic of the navigation policy, 
+the loss function, and the beam search method.
+
+Chapter 3 presents the internal architecture and the training paradigm of 
+the Graph Neural Network GNN navigation policy.
+
+Chapter 4 provides an empirical evaluation of the learned policy across 
+multiple environments, documenting both successful generalizations and 
+precise failure modes. It evaluates the tool's current limitations, 
+specifically identifying how the search algorithm naturally penalizes 
+long paths (creating a bias toward shorter, noisier attacks) and defining 
+the model's limited receptive field when navigating deep attack chains.
+
+Chapter 5 concludes the report by reviewing the achievements of this proof 
+of concept and honestly assessing its limitations. It then proposes a 
+second-generation tool featuring practical engineering improvements, such 
+as automated waypoint routing to chunk long paths, guided search algorithms 
+to prioritize stealth, and the integration of natural language models to 
+dynamically interpret novel attack techniques.
 
 
 %% ============================================================
@@ -499,7 +513,7 @@ Active Directory (AD) a directory service for Windows network environments. It i
 hierarchical structure that allows for centralized management of an organization's resources, 
 including users, computers, groups, network devices, file shares, group policies, servers 
 and workstations, and trusts. AD provides authentication and authorization functions within 
-a Windows domain environment.\href{https://academy.hackthebox.com/module/74/section/1347}{1}
+a Windows domain environment.\cite{htbacademy}
 \\
 \\
 \begin{figure}[H]
@@ -595,8 +609,8 @@ diagram highlights how Group Policy Objects GPOs can be linked directly
 to OUs to enforce specific security configurations across all objects 
 within that container.
 
-By design, Active Directory allows almost any authenticated user---regardless 
-of their administrative privilege level---to read and query the directory. 
+By design, Active Directory allows almost any authenticated user regardless 
+of their administrative privilege level to read and query the directory. 
 This open read-access is intended to facilitate normal network operations, 
 such as allowing a user to look up a colleague's email address or locate a 
 network printer. However, this feature creates a significant security 
@@ -621,7 +635,9 @@ allows operators to visualize hidden attack paths, proactively identify
 structural weaknesses, and remediate dangerous permission chains before they 
 can be exploited during a real breach.
 
-A standard Active Directory user account with no administrative privileges can be leveraged to query and enumerate a vast amount of structural and security data across the network. This accessible information includes, but is not limited to:
+A standard Active Directory user account with no administrative privileges can be leveraged 
+to query and enumerate a vast amount of structural and security data across the network. 
+This accessible information includes, but is not limited to:
 
 \begin{itemize}
   \setlength{\itemsep}{0pt}
@@ -640,91 +656,589 @@ A standard Active Directory user account with no administrative privileges can b
 
 
 \subsection{Authentication Protocols}
-% Kerberos: TGT/TGS flow, delegation types (unconstrained, constrained, RBCD).
-% NTLM: challenge-response, relevance to lateral movement.
-% Keep it concise — this is background, not a Kerberos tutorial.
-\todo{Write authentication section}
+\label{sec:auth_protocols}
+
+Active Directory manages network security through the fundamental AAA 
+framework: Authentication, Authorization, and Accounting 
+\cite{microsoft_ad_sec}. When a user, machine, or service attempts to 
+access a network resource, AD first verifies their cryptographic 
+identity (Authentication). Once identity is proven, the system evaluates 
+the user's embedded Security Identifier (SID) and group memberships 
+against the target resource's Access Control Lists (Authorization). 
+Finally, the Domain Controller logs the logon events and access requests 
+(Accounting) to ensure auditability. To execute the initial authentication 
+phase, Active Directory relies primarily on two distinct network 
+protocols: Kerberos and NTLM.
+
+\subsubsection*{Kerberos}
+Kerberos is the default and preferred authentication protocol in modern 
+Active Directory environments \cite{rfc4120}. It operates as a 
+sophisticated, ticket-based system brokered by a Key Distribution Center 
+(KDC), a service that runs natively on every Domain Controller. Rather 
+than transmitting passwords or hashes across the network, Kerberos relies 
+on symmetric-key cryptography. Upon a successful initial logon, the KDC 
+issues the client a Ticket Granting Ticket (TGT). When the client needs 
+to access a specific network service (such as a file share or database), 
+it presents the TGT to the KDC to request a Service Ticket (ST) for that 
+specific resource. While Kerberos relies on strict timestamping to 
+prevent replay attacks and is cryptographically robust, its complex 
+delegation and ticketing mechanics make it a primary target for advanced 
+adversaries who abuse it via techniques such as Pass-the-Ticket, Golden 
+Tickets, and delegation hijacking.
+
+\begin{figure}[H]
+  \centering
+  \textbf{\color{navyblue} Kerberos Authentication Flow} \\[0.5em]
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[node distance=2.5cm and 0.8cm]
+
+  \node[diagramtitle] (T) {};
+
+  %% Entities
+  \node[entitybox, below=1.0cm of T, xshift=-6.0cm] (kc)
+    {Client};
+  \node[entitybox, below=1.0cm of T] (kdc)
+    {KDC\\(Domain Controller)\\{\scriptsize KRBTGT account}};
+  \node[entitybox, below=1.0cm of T, xshift=6.0cm] (ksvc)
+    {Service\\(e.g.\ MSSQL)\\{\scriptsize SPN: MSSQLSvc/...}};
+
+  %% Lifelines
+  % Extended to -8.5 to accommodate all arrows and text
+  \draw[draw=slategray!50, dashed, thick]
+    (kc.south) -- ++(0,-8.5);
+  \draw[draw=slategray!50, dashed, thick]
+    (kdc.south) -- ++(0,-8.5);
+  \draw[draw=slategray!50, dashed, thick]
+    (ksvc.south) -- ++(0,-8.5);
+
+  %% 1 AS-REQ
+  \draw[thesisarrow]
+    ([yshift=-1.2cm]kc.south) -- ([yshift=-1.2cm]kdc.south)
+    node[arrowlabel, above, midway] {\stepnum{1}~\texttt{KRB\_AS\_REQ}}
+    node[arrowlabel, below, midway] {Request TGT (encrypted w/ NTLM hash)};
+
+  %% 2 AS-REP
+  \draw[thesisarrow]
+    ([yshift=-2.8cm]kdc.south) -- ([yshift=-2.8cm]kc.south)
+    node[arrowlabel, above, midway] {\stepnum{2}~\texttt{KRB\_AS\_REP}}
+    node[arrowlabel, below, midway] {Receive TGT};
+
+  %% 3 TGS-REQ
+  \draw[thesisarrow]
+    ([yshift=-4.4cm]kc.south) -- ([yshift=-4.4cm]kdc.south)
+    node[arrowlabel, above, midway] {\stepnum{3}~\texttt{KRB\_TGS\_REQ}}
+    node[arrowlabel, below, midway] {Present TGT, request service ticket (SPN)};
+
+  %% 4 TGS-REP
+  \draw[thesisarrow]
+    ([yshift=-6.0cm]kdc.south) -- ([yshift=-6.0cm]kc.south)
+    node[arrowlabel, above, midway] {\stepnum{4}~\texttt{KRB\_TGS\_REP}}
+    node[arrowlabel, below, midway] {TGS encrypted with service account NTLM hash};
+
+  %% 5 AP-REQ client→service
+  % Now perfectly bridges from the Client lifeline directly to the Service lifeline
+  \draw[thesisarrow]
+    ([yshift=-7.6cm]kc.south) -- ([yshift=-7.6cm]ksvc.south)
+    node[arrowlabel, above, midway] {\stepnum{5}~\texttt{KRB\_AP\_REQ}}
+    node[arrowlabel, below, midway] {Present TGS for service access};
+
+  %% Annotation: Kerberoasting
+  % Positioned exactly halfway between KDC and Service (xshift=3.0cm)
+  \node[msgbox, minimum width=3.8cm, align=left] at ([xshift=3.0cm, yshift=-4.4cm]kdc.south) {
+    \textbf{Kerberoasting:}\\
+    Any auth. user may\\
+    request a TGS for\\
+    any SPN. Encrypted\\
+    hash crackable offline.
+  };
+
+  \end{tikzpicture}%
+  } 
+  \caption{Kerberos Authentication Flow}
+  \label{fig:kerberos-auth}
+\end{figure}
+
+Within the specific context of this thesis, two Kerberos-related dynamics 
+are of critical offensive relevance. First, Constrained Delegation allows 
+a service to request a Service Ticket on behalf of any user. This abuse 
+primitive is captured by our data extraction pipeline as an 
+\edge{AllowedToDelegate} edge, enabling the highly stealthy privilege 
+escalation chains that our model learns to navigate. Second, while 
+Kerberos secures standard authentication, ultimate domain compromise often 
+bypasses ticket exchanges entirely. For instance, the DCSync attack 
+leverages \edge{GetChanges} and \edge{GetChangesAll} replication rights 
+to extract NTLM hashes directly from the Domain Controller without ever 
+interacting with the Kerberos KDC.
+
+\subsubsection*{NT LAN Manager (NTLM)}
+NT LAN Manager (NTLM) is a legacy suite of Microsoft security protocols 
+that remains widely enabled in Active Directory environments, primarily 
+to ensure backwards compatibility with older clients or poorly configured 
+applications. Unlike the ticket-brokered architecture of Kerberos, NTLM 
+utilizes a direct challenge-response mechanism. When a client attempts 
+to authenticate to a server, the server issues a random challenge. The 
+client then encrypts this challenge using the NTLM hash of the user's 
+password and returns it to prove their identity. Because NTLM lacks 
+mutual authentication and transmits cryptographic material in a 
+predictable challenge-response format, it is inherently weaker than 
+Kerberos. Offensively, NTLM is frequently targeted for exploitation 
+through hash extraction (Pass-the-Hash) and network interception 
+(NTLM Relay attacks).
 
 \subsection{Trust Relationships}
-% Intra-domain, cross-domain (SameForestTrust), cross-forest (TrustedBy).
-% Explain why trusts create transitive attack paths and why SharpHound version
-% differences (TrustedBy vs. SameForestTrust naming) matter for the pipeline.
-\todo{Write trust relationships section}
+\label{sec:trust_relationships}
+
+In large enterprise environments, organizations frequently span multiple 
+domains or even entirely separate Active Directory forests. To allow 
+users in one domain to access resources located in another, Active 
+Directory employs a mechanism known as Trust Relationships 
+\cite{microsoft_ad_sec}. A trust acts as a secure cryptographic bridge 
+between two boundaries. These relationships can be configured as 
+one-way, where Domain A trusts Domain B (but not vice versa), or 
+two-way, where both domains trust each other equally. Furthermore, 
+trusts can be transitive---meaning the trust flows through a chain 
+of domains---or non-transitive, restricting the relationship strictly 
+to the two interacting domains. As illustrated in the diagram below, 
+these trust links can occur between child and parent domains within 
+the same forest, or across entirely different corporate forests.
+
+\begin{figure} [H]
+  \centering
+  \textbf{\color{navyblue} Forest and Trust Relationships} \\[0.5em]
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[node distance=0.9cm and 1.8cm]
+    \node[diagramtitle] (T) {};
+
+    %% Forest A
+    \node[forestbox, below=0.8cm of T, xshift=-4.0cm] (fA)
+      {Forest A\\\texttt{corp.local}};
+    \node[domainbox, below left=0.9cm and 0.9cm of fA] (dA1)
+      {Root Domain\\\texttt{corp.local}};
+    \node[domainbox, below right=0.9cm and 0.9cm of fA] (dA2)
+      {Child Domain\\\texttt{eu.corp.local}};
+
+    \draw[thesisarrow] (fA.south) -- ++(0,-0.2) -| (dA1.north);
+    \draw[thesisarrow] (fA.south) -- ++(0,-0.2) -| (dA2.north);
+
+    \draw[bidiarrow] (dA1.east) -- (dA2.west)
+      node[arrowlabel, above, midway] {Two-way Transitive};
+
+    %% Forest B
+    \node[forestbox, below=0.8cm of T, xshift=4.0cm] (fB)
+      {Forest B\\\texttt{partner.com}};
+    \node[domainbox, below=1.5cm of fB] (dB1)
+      {Root Domain\\\texttt{partner.com}};
+    \draw[thesisarrow] (fB.south) -- (dB1.north);
+
+    %% Cross-forest trust
+    \draw[bidiarrow, dashed]
+      (fA.east) -- (fB.west)
+      node[arrowlabel, above, midway] {Cross-Forest Trust}
+      node[arrowlabel, below, midway] {\texttt{TrustedBy} / \texttt{SameForestTrust}};
+
+    %% Annotation
+  %  \node[msgbox, below=3.5cm of T, minimum width=7.5cm] (note) {
+  %    \textbf{BloodHound edge naming inconsistency:} SharpHound versions\\
+  %    differ in how they label trust edges (\texttt{TrustedBy} vs.\\
+  %    \texttt{SameForestTrust}). Both are aliased in \texttt{build\_dataset.py}.
+  %  };
+
+  \end{tikzpicture}
+} 
+  \caption{Active Directory Trust relationships.}
+  \label{fig:ad-hierarchy}
+\end{figure}
+
+While trust relationships are essential for administrative flexibility 
+and resource sharing, they introduce complex attack vectors when 
+misconfigured or overly permissive \cite{harmj0y_trusts}. Adversaries 
+frequently abuse bidirectional transitive trusts to move laterally 
+across an entire forest boundary. For instance, if an attacker 
+compromises a loosely secured child domain, they can forge an 
+inter-realm ticket or abuse the SID History attribute to escalate 
+privileges to the parent root domain, effectively compromising the 
+entire forest. Similarly, poorly audited cross-forest trusts can 
+inadvertently grant external users excessive permissions. This allows 
+an attacker who compromises a partner organization's network to pivot 
+seamlessly into the primary corporate environment. Consequently, mapping 
+and analyzing these trust links is a critical component of assessing 
+an organization's true security perimeter.
 
 % ─────────────────────────────────────────────────────────────
 \section{Privilege Escalation in AD Environments}
 
 \subsection{Offensive ACL Abuse}
-% WriteDACL, GenericAll, GenericWrite, ForceChangePassword, AddMember.
-% Explain what each right enables in an attack chain.
-\todo{Write ACL abuse section}
+\label{sec:acl_abuse}
+
+Access Control Lists (ACLs) serve as the granular security foundation of 
+Active Directory, defining exactly which principals have specific permissions 
+over directory objects. Historically, defenders focused primarily on network 
+vulnerabilities or missing software patches. However, modern offensive 
+tradecraft has demonstrated that abusing misconfigured ACLs is often the 
+most common, reliable, and critical path for privilege escalation within an 
+enterprise environment \cite{specterops_ace}. 
+
+Because ACL misconfigurations allow attackers to subvert the intended 
+security architecture seamlessly without triggering traditional malware 
+alerts, mapping these specific permissions is the primary function of 
+data collection tools like BloodHound. Consequently, these structural 
+ACL relationships form the foundational dataset that the GNN-AD-Navigator 
+pipeline extracts. Our model heavily bases its recommended paths on these 
+extracted rights, learning to weigh the operational cost of exploiting 
+each specific permission.
+
+When an adversary compromises a basic account, they enumerate the 
+directory to identify objects where their controlled principal holds 
+abusive rights. The most critical offensive ACL primitives include:
+
+\begin{itemize}
+  \item \textbf{GenericAll:} This right grants complete, unrestricted 
+  control over the target object. An attacker holding \texttt{GenericAll} 
+  can execute any action, such as adding a user to a highly privileged 
+  group, resetting an account's password, or modifying critical attributes 
+  to establish persistence.
+  
+  \item \textbf{WriteDACL:} This permission allows a principal to modify 
+  the target object's access control list itself. From an offensive 
+  perspective, an attacker can abuse \texttt{WriteDACL} to simply grant 
+  themselves \texttt{GenericAll} privileges, effectively taking full 
+  control of the target in a two-step process.
+  
+  \item \textbf{GenericWrite:} While not providing full control, this right 
+  allows an attacker to update specific properties of an object. It is 
+  frequently weaponized to modify the \texttt{servicePrincipalName} (SPN) 
+  attribute to enable targeted Kerberoasting, or to alter the 
+  \texttt{msDS-AllowedToActOnBehalfOfOtherIdentity} attribute to execute 
+  Resource-Based Constrained Delegation (RBCD) attacks.
+  
+  \item \textbf{ForceChangePassword:} This specific permission allows an 
+  attacker to reset the password of a target user without knowing the 
+  current password. While highly effective for immediately compromising an 
+  account and hijacking its session, it is operationally ``loud.'' It 
+  disrupts the legitimate user's access, making it highly detectable by 
+  defenders.
+  
+  \item \textbf{AddMember:} If held over a security group, this right 
+  allows an attacker to directly append their own controlled account 
+  (or another compromised user) into the target group. This immediately 
+  grants the attacker all the privileges inherited by that group across 
+  the entire domain.
+\end{itemize}
 
 \subsection{DCSync Attack}
-% Required rights: GetChanges AND GetChangesAll on the domain object.
-% What DCSync enables (secret replication, credential extraction).
-% Why it is used as the terminal goal state in this work.
-\todo{Write DCSync section}
+\label{sec:dcsync}
+
+The DCSync attack is one of the most critical techniques used by 
+adversaries to extract credentials from a domain without requiring 
+direct code execution on a Domain Controller \cite{mimikatz_dcsync}. 
+Active Directory relies on the Directory Replication Service Remote 
+Protocol (MS-DRSR) to synchronize data across multiple Domain 
+Controllers. To abuse this, an attacker only needs an account that 
+holds specific replication permissions---specifically, 
+\edge{GetChanges} (Replicating Directory Changes) and 
+\edge{GetChangesAll} (Replicating Directory Changes All) at the domain 
+root level. 
+
+Once these permissions are acquired, the attacker's machine can 
+masquerade as a legitimate Domain Controller and issue a replication 
+request. The target DC will respond by transmitting the requested 
+account credentials, including the highly sensitive NTLM hash of the 
+\texttt{krbtgt} account. Securing these replication rights is often the 
+terminal objective in offensive pathfinding operations, as it allows 
+for the immediate creation of Golden Tickets and total forest compromise.
 
 \subsection{ADCS Attack Paths}
-% Certificate-based privilege escalation: ESC1, ESC8.
-% Why Certipy data is injected into the graph in the stitcher step.
-\todo{Write ADCS section}
+\label{sec:adcs_paths}
+
+Active Directory Certificate Services (ADCS) is Microsoft's native 
+Public Key Infrastructure (PKI) implementation. While it provides 
+essential cryptographic functions, misconfigured certificate templates 
+introduce devastating escalation vectors \cite{specterops_adcs}. These 
+vulnerabilities, famously categorized into escalating scenarios 
+(ESC1 through ESC15), often allow an unprivileged user to request a 
+certificate on behalf of a highly privileged principal, such as a 
+Domain Admin. 
+
+By leveraging the PKINIT protocol, the attacker can use the fraudulently 
+obtained certificate to request a Kerberos Ticket Granting Ticket (TGT) 
+for the impersonated admin, instantly seizing control of the domain. 
+The inclusion of ADCS nodes and edges (such as \edge{Enroll} and 
+\edge{ManageCA}) drastically expands the complexity of the Active 
+Directory attack graph, presenting massive new navigational challenges 
+for automated pathfinding tools.
 
 \subsection{SID History Abuse and RBCD}
-% HasSIDHistory: cross-domain privilege inheritance.
-% AllowedToAct (RBCD): resource-based constrained delegation as an attack primitive.
-\todo{Write SIDHistory and RBCD section}
+\label{sec:sid_rbcd}
 
-% ─────────────────────────────────────────────────────────────
+Beyond standard access controls, advanced adversaries frequently abuse 
+inherent Active Directory features designed for compatibility and 
+migration. The \texttt{sIDHistory} attribute, originally intended to 
+preserve a user's access rights when migrating between domains, can be 
+weaponized. If an attacker compromises a domain, they can inject the 
+Security Identifier (SID) of a highly privileged group (such as 
+Enterprise Admins) into an account's \texttt{sIDHistory}. This grants 
+the attacker persistent, cross-domain administrative access while 
+bypassing standard group membership audits.
+
+Similarly, Resource-Based Constrained Delegation (RBCD) shifts the 
+control of delegation from the domain administrator to the target 
+resource itself \cite{elad_rbcd}. If an attacker acquires 
+\edge{GenericWrite} privileges over a target computer object, they can 
+modify its \texttt{msDS-AllowedToActOnBehalfOfOtherIdentity} attribute. 
+This modification allows the attacker to authorize a computer they 
+already control to impersonate any user on the compromised target, 
+effectively granting them full administrative access to the machine. 
+Because RBCD relies on targeted attribute modification rather than 
+global delegation rights, it represents a stealthy and highly effective 
+edge in modern attack graphs.
+
 \section{Existing Tools and Their Limitations}
 
 \subsection{BloodHound and SharpHound}
-% BloodHound: Neo4j-backed, Cypher query interface, built-in pathfinding (Dijkstra/BFS).
-% SharpHound C#: comprehensive collection, cross-forest MemberOf support.
-% Why Dijkstra is insufficient: no stealth scoring, no sequential decision model,
-% no ability to weight discreetness of individual edge types.
-\todo{Write BloodHound/SharpHound section}
+\label{sec:bloodhound}
 
-\subsection{bloodhound-python}
-% Python collector: easier deployment, no Windows dependency.
-% Key limitations: does not capture foreign user-level MemberOf across forests,
-% Trusts array requires explicit parsing to recover trust edges.
-% These limitations directly bound what the model can discover — documented
-% honestly as a data collection constraint, not a model flaw.
-\todo{Write bloodhound-python limitations}
+BloodHound has become the de facto industry standard for visualizing and 
+analyzing Active Directory security structures \cite{bloodhound_repo}. 
+Operating on a Neo4j graph database backend, BloodHound ingests data 
+collected by its C\# ingestor, SharpHound, to map relationships between 
+users, computers, and groups. By representing AD components as nodes and 
+privileges as edges, BloodHound allows security professionals to visualize 
+complex attack paths that would be impossible to identify manually.
+
+However, BloodHound's primary limitation lies in its routing logic. The 
+platform relies heavily on Dijkstra's algorithm to calculate the shortest 
+path between an attacker's starting node and their target. In this 
+deterministic model, every edge is treated with an equal, unweighted cost 
+of one. BloodHound cannot natively distinguish between a highly detectable, 
+noisy action (such as forcing a password reset on an active administrator) 
+and a highly stealthy vector (such as abusing an \edge{AllowedToDelegate} 
+trust). Because it strictly minimizes hop count, the tool frequently 
+recommends operationally unviable or easily detectable attack paths, 
+leaving a critical gap for context-aware, machine learning-driven routing 
+solutions.
+
+\subsection{\texttt{bloodhound-python}}
+\label{sec:bh_python}
+
+While SharpHound is designed to be executed directly from a compromised 
+Windows host, \texttt{bloodhound-python} serves as its Python-based 
+equivalent, designed for cross-platform and remote execution 
+\cite{bloodhound_python}. Developed primarily for UNIX-like environments, 
+this tool leverages the \texttt{impacket} library to query LDAP and RPC 
+remotely. It is an essential component for attackers operating from external 
+infrastructure or non-Windows pivot machines, and it serves as the primary 
+data collection engine for the pipeline developed in this thesis.
+
+\subsection{\texttt{bloodhound-python}}
+\label{sec:bh_python}
+
+While SharpHound is designed to be executed directly from a compromised 
+Windows host, \texttt{bloodhound-python} serves as its Python-based 
+equivalent, designed for cross-platform and remote execution 
+\cite{bloodhound_python}. Developed primarily for UNIX-like environments, 
+this tool leverages the \texttt{impacket} library to query LDAP and RPC 
+remotely. It is an essential component for attackers operating from external 
+infrastructure or non-Windows pivot machines, and it serves as the primary 
+data collection engine for the pipeline developed in this thesis.
+
+However, \texttt{bloodhound-python} suffers from severe functional 
+limitations compared to its C\# counterpart. Most critically, it lacks 
+native support for enumerating \gls{adcs} 
+templates. To bridge this gap, operators are forced to rely on external 
+tooling such as \texttt{Certipy}. This introduces a fragile dependency 
+chain: because Certipy officially retired BloodHound integration in its 
+v5.0.0 release, operators must intentionally downgrade and maintain legacy 
+versions (e.g., v4.3.0) strictly for dataset compatibility \cite{certipy_repo}.
+
+Furthermore, \texttt{bloodhound-python} exhibits blind spots in complex 
+enterprise architectures, notably struggling to accurately map specific 
+cross-domain trust accounts. Because its default implementation relies on 
+static and often lagging extraction logic, the ingestor will blindly bypass 
+novel misconfigurations or unmapped edge types unless its underlying parsing 
+code is manually updated. This effectively blinds any downstream pathfinding 
+algorithms to those specific routes, cementing the pipeline's extraction 
+phase as a critical bottleneck for the overall model.
 
 \subsection{Other Automated Attack Path Tools}
-% Brief survey: Planner-based tools (PRISM, MulVAL), RL-based pen-testing agents
-% (if any relevant prior work). Keep short — show the gap this work fills.
-\todo{Write related tools survey}
+\label{sec:other_tools}
+
+The success of BloodHound has inspired several supplementary tools aimed 
+at automating attack path execution and reporting. Tools such as PlumHound 
+and GoFetch interact directly with BloodHound's Neo4j database to generate 
+human-readable audit reports or to automatically execute the identified 
+exploit chains \cite{gofetch}. Similarly, auditing software like PingCastle 
+provides rapid, rule-based assessments of Active Directory risk scores by 
+flagging known misconfigurations \cite{pingcastle}.
+
+While these tools excel at operationalizing graph data and generating 
+compliance reports, they fundamentally inherit the baseline limitations of 
+the underlying Neo4j Cypher queries. They do not generate novel paths or 
+apply dynamic, environment-specific heuristics to evaluate edge costs. The 
+offensive security industry currently lacks a widely adopted tool capable 
+of applying heterogeneous attention mechanisms to weigh the semantic value 
+of AD relationships. This thesis addresses this exact void by substituting 
+deterministic shortest-path algorithms with a \gls{gnn} 
+policy capable of learning stealth and operational viability.
 
 % ─────────────────────────────────────────────────────────────
 \section{Graph Neural Networks}
 
 \subsection{Message Passing and Neighbourhood Aggregation}
-% Core GNN formulation: aggregate → combine → update.
-% Why the graph structure of AD (heterogeneous node/edge types) requires
-% more than a vanilla homogeneous GNN.
-\todo{Write GNN fundamentals}
+\label{sec:gnn_fundamentals}
 
-\subsection{Graph Convolutional Network (GCN)}
-% Kipf \& Welling formulation.
-% Role in this work: homogeneous baseline.
-% Why expressiveness on heterogeneous graphs is limited.
-\todo{Write GCN section}
+Standard deep learning models are generally designed for structured data, 
+such as grids of pixels or sequences of text. However, Active Directory (AD) 
+environments are highly interconnected and asymmetrical, making them best 
+represented as graphs. Graph Neural Networks (GNNs) address this by learning 
+directly from the structural relationships between entities in the network.
+
+Let an Active Directory environment be defined as a graph 
+$\mathcal{G} = (\mathcal{V}, \mathcal{E})$, where $\mathcal{V}$ represents 
+the set of nodes (users, groups, computers) and $\mathcal{E}$ represents 
+the set of edges (permissions, trusts, active sessions). The primary 
+objective of a GNN is to encode each node into a continuous numerical 
+vector, a \textbf{node embedding}. The initial state of a node 
+$v \in \mathcal{V}$ is denoted by its starting feature vector, 
+$\mathbf{h}_v^{(0)} = \mathbf{x}_v$.
+
+To capture the topology of the network, GNNs rely on a mechanism called 
+\textit{message passing}. During this process, each node gathers information 
+from its direct neighbours to update its own state. Mathematically, the 
+operation at the $k$-th \textbf{hidden layer} consists of an aggregation 
+step and an update step. The message collected from the neighbourhood 
+$\mathcal{N}(v)$ is defined as:
+
+$$
+\mathbf{m}_{\mathcal{N}(v)}^{(k)} = \text{AGGREGATE}^{(k)} \left( \left\{ \mathbf{h}_u^{(k-1)} : u \in \mathcal{N}(v) \right\} \right)
+$$
+
+where $\text{AGGREGATE}$ is a mathematical function such as the sum or mean. 
+After aggregating this neighbourhood data, the node updates its own 
+embedding. It combines its previous state with the newly collected message 
+using a learned weight matrix $\mathbf{W}^{(k)}$ and a non-linear activation 
+function $\sigma$:
+
+$$
+\mathbf{h}_v^{(k)} = \sigma \left( \mathbf{W}^{(k)} \cdot \left( \mathbf{h}_v^{(k-1)} \parallel \mathbf{m}_{\mathcal{N}(v)}^{(k)} \right) \right)
+$$
+
+The number of hidden layers, $K$, determines the receptive field of the 
+model—meaning how far a node can "see" into the graph. For example, in a 
+network with $K=3$ layers, the final embedding $\mathbf{h}_v^{(K)}$ captures 
+structural information from nodes up to three hops away.
+
+Once the node embeddings are finalized, they are used to make routing 
+decisions during an attack path simulation. This is managed by the 
+\textbf{policy head}. Since the number of outbound connections varies 
+greatly across AD nodes, the policy head evaluates each potential neighbour 
+individually. It concatenates the current node's embedding $\mathbf{h}_v^{(K)}$, 
+the candidate neighbour's embedding $\mathbf{h}_u^{(K)}$, and the target 
+node's embedding $\mathbf{h}_{\text{target}}^{(K)}$, passing them through a 
+Multi-Layer Perceptron (MLP) to generate a raw transition score:
+
+$$
+e_{v,u} = \text{MLP} \left( \mathbf{h}_v^{(K)} \parallel \mathbf{h}_u^{(K)} \parallel \mathbf{h}_{\text{target}}^{(K)} \right)
+$$
+
+These raw scores are then normalized across all valid neighbours using a 
+Softmax function. This produces a valid probability distribution $\pi$ that 
+guides the pathfinding algorithm toward the most promising next step:
+
+$$
+\pi(u | v) = \frac{\exp(e_{v,u})}{\sum_{w \in \mathcal{N}(v)} \exp(e_{v,w})}
+$$
+
+\subsubsection*{The Impact of Graph Size and Density}
+
+While GNNs are highly effective, their performance is closely tied to the 
+graph's size and connectivity. In large Active Directory networks, dense 
+configurations—such as heavily nested group memberships—can cause 
+\textit{neighbourhood explosion}. This drastically increases the computational 
+overhead during the message passing phase.
+
+Additionally, increasing the number of hidden layers to expand the 
+receptive field can trigger \textit{over-smoothing}. In this scenario, 
+repeated aggregation causes the embeddings of structurally distinct nodes 
+(e.g., a standard workstation and a Domain Controller) to blend together 
+and lose their unique characteristics. Therefore, balancing the number of 
+layers is crucial to maintaining the model's accuracy.
+
+Finally, standard GNN architectures assume that all nodes and edges share 
+the same properties. To properly model the diverse object types and distinct 
+permission structures found in Active Directory, this foundation must be 
+extended into a Heterogeneous Graph Transformer (HGT).
 
 \subsection{Heterogeneous Graph Transformer (HGT)}
-% Hu et al. (2020): per-meta-relation attention, type-level linear projections.
-% Why this maps naturally to AD graphs: different relation types
-% (MemberOf, WriteDACL, AllowedToDelegate...) carry fundamentally different semantics.
-% Architecture choices made: 64D, 4 heads, 2 layers.
-\todo{Write HGT section}
+\label{sec:hgt}
 
-\subsection{PyTorch Geometric and HeteroData}
-% Brief: HeteroData format, edge\_index per (src\_type, edge\_type, dst\_type),
-% why this is the natural container for the AD graph.
-\todo{Write PyG section}
+While a standard \gls{gcn} aggregates neighbourhood features uniformly, Active 
+Directory graphs are fundamentally heterogeneous. A \edge{MemberOf} 
+relationship carries drastically different operational semantics and 
+stealth implications than an \edge{AllowedToDelegate} or \edge{WriteDACL} 
+edge. The critical need for context-aware routing is currently driving 
+rapid innovation in the offensive security space; for instance, recent 
+2025 research applying Physics-Informed GNNs to Active Directory graphs 
+achieved an F1 score of 0.9308 when predicting paths across 16 distinct 
+offensive edge types \cite{mdpi_gnn_2025}. 
 
+To capture this required semantic diversity, this research employs the 
+\gls{hgt} architecture proposed by Hu et al. 
+\cite{hu2020hgt}. HGT introduces a type-specific attention mechanism. 
+Instead of sharing weights globally, it computes attention based on the 
+specific meta-relation triplet $\tau = (\tau(s), \tau(e), \tau(t))$, 
+representing the source node type, edge type, and target node type. 
+The mutual attention score between a source node $s$ and a target node $t$ 
+is calculated by projecting their embeddings into distinct Query and Key 
+spaces via type-specific linear projections:
+
+$$
+\text{Attention}(s, t) = \underset{\forall s \in \mathcal{N}(t)}{\text{Softmax}} \left( \underset{i \in [1, h]}{\parallel} \frac{\mathbf{K}^{(i)}_s \mathbf{W}_{\tau(e)}^{(i)} {\mathbf{Q}^{(i)}_t}^T}{\sqrt{d/h}} \right)
+$$
+
+This formulation allows the network to dynamically learn which specific 
+attack vectors are most relevant when navigating between different entity 
+types. Regarding the specific architecture implemented in this pipeline, 
+the model utilizes an embedding dimension of 64, 4 attention heads, and 
+is constrained to only 2 hidden layers. These hyperparameters act as a 
+deliberate regularization strategy. The primary deciding factors were 
+the physical size of the \gls{goad} dataset during training, and the strict 
+need to prevent the severe over-smoothing that occurs when aggregating 
+features across dense Active Directory topologies.
+
+\subsection{PyTorch Geometric and \texttt{HeteroData}}
+\label{sec:pyg_heterodata}
+
+To implement these mathematical frameworks, this project leverages 
+PyTorch Geometric (PyG), a specialized extension library for deep 
+learning on irregularly structured data \cite{fey2019pyg}. Within PyG, 
+the AD graph is constructed using the \texttt{HeteroData} format.
+
+Traditional graph libraries store all connections in a single adjacency 
+matrix, fundamentally stripping away semantic meaning. In contrast, the 
+\texttt{HeteroData} architecture partitions the graph into distinct 
+dictionaries based on meta-relations. Each relationship type---such as 
+\texttt{(user, memberof, group)}---maintains its own isolated 
+\texttt{edge\_index} tensor of shape $[2, |\mathcal{E}_{\tau}|]$. 
+
+This isolated tensor structure is uniquely suited to the modern trajectory 
+of offensive security. The industry is rapidly moving beyond isolated 
+Windows domains; notably, the 2025 release of BloodHound Community 
+Edition v8 introduced ``OpenGraph,'' which expands pathfinding to include 
+hybrid cloud identities, Entra ID, and third-party platforms like GitHub 
+\cite{bloodhound_v8}. A homogeneous adjacency matrix would collapse under 
+the introduction of these vastly different node and edge types. 
+\texttt{HeteroData} natively supports this expansion by simply allowing 
+the injection of new relationship dictionaries without restructuring the 
+existing graph.
+
+Furthermore, decoupling the graph structure from the ingestion logic 
+provides massive pipeline resilience. As legacy data collection scripts 
+face deprecation---such as Kali Linux 2025 enforcing strict Python 3.13 
+environments that break older Neo4j drivers \cite{kali_2025_bh}---our 
+PyG-based pipeline remains agnostic. By storing the graph purely as 
+isolated PyTorch tensors rather than relying on an active database 
+connection, the GNN can cleanly mask out irrelevant relationships and 
+accommodate future data collection tools with minimal friction.
 % ─────────────────────────────────────────────────────────────
 \section{Summary and Positioning}
 % Synthesise the gap: BloodHound finds paths, but cannot learn which paths are
@@ -1116,7 +1630,7 @@ Worth noting is that the path mentioned later are not provided in the training d
 
 %The final model is subject to continuous prompting comparting its output with bloodhound's path 
 %indentification. the choices the models made, along with further probing allows for precise isolation 
-%of the limitation. Combined with knowledge about the python injestor data and the pipeline treated final data
+%of the limitation. Combined with knowledge about the python ingestor data and the pipeline treated final data
 %we can be sure about the final conclusion and also propose the direct remediation actions for future work.
 
 The evaluation methodology follows a continuous prompting approach: 
@@ -1494,15 +2008,15 @@ BloodHound handles this by looking at the nodes with writes over the computer
 % cross-forest attack path completeness.
 
 A major limitation encountered early into the project yet remained unsolved was the the scaning tool.
-The python injestor \texttt{bloodhound-ce-python} gets the general structure of the graph, 
+The python ingestor \texttt{bloodhound-ce-python} gets the general structure of the graph, 
 the necessary ACL edges, allowing a pentester limited to linux attack host to access a less powerfull
 version of the tool, and still have a good scan and indentification of the Active Directory environment.
-The python injestor compared to the recommended C\# bloodhound injestor, misses mainly the ADCS scans
+The python ingestor compared to the recommended C\# bloodhound ingestor, misses mainly the ADCS scans
 where we had to fall back to and older version of certipy that once supported a bloodhound formated
-output. Trust accounts, are also missing in the python injestor scan, not having them didnt impact the
+output. Trust accounts, are also missing in the python ingestor scan, not having them didnt impact the
 overall cross domain relationships, however having the trust account could allow the model to understand
 better the transition between two domains, telling the user explicitly to target the trust account.
-Having had the C\# injestor scans, the tool could have benefited from a 
+Having had the C\# ingestor scans, the tool could have benefited from a 
 lighter, less complex and more complete data processing pipeline. With no stitching script for the ADCS 
 support and less processing required to extract the trust relationships and node-based ACL edges such as 
 \texttt{GPLink - CoerceToTGT}.
