@@ -230,6 +230,12 @@
 \newacronym{goad}{GOAD}{Game of Active Directory}
 \newacronym{dc}{DC}{Domain Controller}
 \newacronym{dcsync}{DCSync}{Directory Replication Service synchronisation attack}
+\newacronym{ca}{CA}{Certificate Authority}
+\newacronym{apt}{APT}{Advanced Persistent Threat}
+\newacronym{OPSEC}{OPSEC}{Operational Security}
+\newacronym{siem}{SIEM}{Security Information and Event Management}
+\newacronym{oov}{OOV}{Out Of Vocabulary}
+\newacronym{lotl}{LotL}{Living of the Land}
 
 %% ── Custom Commands ──────────────────────────────────────────
 \newcommand{\tool}[1]{\texttt{#1}}
@@ -250,7 +256,7 @@
 %% ── TITLE PAGE ───────────────────────────────────────────────
 \begin{titlepage}
   \centering
-  \includegraphics[width=0.35\textwidth]{fst_logo.png}\\[1cm]
+  \includegraphics[width=0.35\textwidth]{ressources/fst_logo.png}\\[1cm]
   % Replace fst_logo with your actual logo filename (no extension needed if .png/.pdf)
 
   {\large\bfseries Faculté des Sciences et Techniques de Tanger}\\[0.3cm]
@@ -594,7 +600,7 @@ a Windows domain environment.\cite{htbacademy}
 \end{tikzpicture}
 }
   \caption{Active Directory object hierarchy.}
-  \label{fig:ad-hierarchy}
+  \label{fig:active-directory-hierarchy}
 \end{figure}
 
 Figure 1.1 illustrates the standard hierarchical structure of an Active 
@@ -1017,17 +1023,21 @@ recommends operationally unviable or easily detectable attack paths,
 leaving a critical gap for context-aware, machine learning-driven routing 
 solutions.
 
-\subsection{\texttt{bloodhound-python}}
-\label{sec:bh_python}
+\subsection{\texttt{Certipy}}
+\label{sec:certipy}
 
-While SharpHound is designed to be executed directly from a compromised 
-Windows host, \texttt{bloodhound-python} serves as its Python-based 
-equivalent, designed for cross-platform and remote execution 
-\cite{bloodhound_python}. Developed primarily for UNIX-like environments, 
-this tool leverages the \texttt{impacket} library to query LDAP and RPC 
-remotely. It is an essential component for attackers operating from external 
-infrastructure or non-Windows pivot machines, and it serves as the primary 
-data collection engine for the pipeline developed in this thesis.
+SharpHound historically lacked deep inspection 
+capabilities for certificate infrastructure. To address this, \texttt{Certipy} 
+was developed as a Python-based equivalent specifically for \gls{adcs}, 
+designed for cross-platform and remote execution. Created by Oliver Lyak, 
+Certipy is explicitly defined as an ``offensive tool for enumerating and 
+abusing Active Directory Certificate Services'' \cite{certipy_pypi}. 
+Developed primarily for UNIX-like environments, this tool leverages remote 
+queries to extract certificate templates, Certificate Authorities, and 
+complex PKI permissions. It is an essential component for attackers operating 
+from external infrastructure or non-Windows pivot machines, and it serves 
+as the primary \gls{adcs} data collection engine for the pipeline developed 
+in this thesis.
 
 \subsection{\texttt{bloodhound-python}}
 \label{sec:bh_python}
@@ -1241,19 +1251,48 @@ connection, the GNN can cleanly mask out irrelevant relationships and
 accommodate future data collection tools with minimal friction.
 % ─────────────────────────────────────────────────────────────
 \section{Summary and Positioning}
-% Synthesise the gap: BloodHound finds paths, but cannot learn which paths are
-% preferable under a cost model. GNN navigation over heterogeneous AD graphs
-% has not been addressed in prior work. This thesis is a PoC establishing
-% feasibility and demonstrating cross-environment generalisation.
-While recent work has explored GNN-based modelling of attacker 
-behaviour in AD graphs from a \textit{defensive} perspective --- 
-approximating attacker decision-making to guide edge-blocking 
-strategies~\cite{goel2025coevolutionary} --- the complementary 
-offensive direction remains largely unexplored. This thesis 
-addresses that gap by learning an offensive navigation policy 
-directly from labelled attack traces, evaluated on real enterprise 
-environments rather than synthetic graphs.
-\todo{Write summary and positioning}
+\label{sec:summary}
+
+The application of deep learning to cybersecurity has historically been 
+constrained by the rigid, Euclidean data structures required by traditional 
+neural networks. However, enterprise networks are inherently non-Euclidean; 
+they are highly complex webs of varying entities (users, computers, groups, 
+policies) and heterogeneous relationships (authentication sessions, explicit 
+permissions, cryptographic trusts). Graph Neural Networks represent the 
+perfect theoretical fit for this domain, as they are natively capable of 
+ingesting and learning from this structural and semantic diversity.
+
+Despite this architectural alignment, the majority of applied GNN research 
+in cybersecurity has been heavily skewed toward defensive anomaly detection. 
+Models such as HetGLM \cite{hetglm_2022} have demonstrated the efficacy of 
+utilizing heterogeneous graphs to spot irregular lateral movement and anomalous 
+authentication links. While highly valuable for Security Operations Centers 
+(SOCs), these approaches model attacker behavior retrospectively. They attempt 
+to catch active intrusions probabilistically rather than mapping structural 
+vulnerabilities proactively.
+
+More recently, literature has begun to explore GNNs for proactive attack 
+path prediction, notably through Physics-Informed Graph Neural Networks 
+\cite{mdpi_gnn_2025}. However, these approaches frequently suffer from a 
+purely mathematical, theory-driven bias. Because these models are often 
+developed outside the context of applied offensive security, they rely 
+heavily on auto-generated, synthetic datasets that fail to replicate the 
+messy idiosyncrasies of real-world Active Directory deployments. Furthermore, 
+rather than learning the true operational cost of a specific exploit---such 
+as weighing the stealth of an \edge{AllowedToDelegate} abuse against the high 
+detectability of a \edge{ForceChangePassword} action---these models often 
+devolve into simply replicating BloodHound's shortest-path Dijkstra logic 
+across larger matrices.
+
+This thesis directly addresses that gap. Rather than approaching the 
+directory graph as a pure mathematical traversal problem on synthetic data, 
+this research positions the GNN as an offensive agent. By leveraging the 
+Heterogeneous Graph Transformer architecture and training it against 
+operationally accurate environments, the pipeline developed in this work 
+learns a nuanced offensive navigation policy. It does not simply seek the 
+mathematically shortest path; it learns the most operationally viable route, 
+effectively bridging the gap between academic graph theory and practical 
+penetration testing tradecraft.
 
 
 %% ============================================================
@@ -1262,78 +1301,356 @@ environments rather than synthetic graphs.
 \chapter{System Architecture and Design}
 
 \section{System Overview}
-% Present the full pipeline as a diagram (replicate or adapt the Mermaid diagram
-% from the README as a TikZ figure or imported PNG).
-% Describe the three operational modes:
-%   1. Data preparation only:   ./launch.sh ./input ./output
-%   2. Preparation + query:     ./launch.sh ./input ./output --start X --target Y
-%   3. Inference only:          ./launch.sh ... --skip-prep
-% State the principal design decision: BloodHound-standard principal→target
-% edge direction throughout.
-\todo{Write system overview and include pipeline diagram}
+
+The GNN-AD-Navigator is designed to process and analyze any \gls{ad} 
+environment. It maps raw BloodHound scans into traversable \gls{pyg} 
+nodes and edges, allowing the model to navigate and score potential 
+attack transitions. Furthermore, given a BloodHound-compatible Certipy 
+scan, the tool is capable of stitching missing \gls{adcs} templates 
+back into a unified \gls{pyg} graph.
+
+To achieve this, the pipeline utilizes a series of targeted scripts to 
+construct the final \texttt{heterodata.pt} tensor object. These scripts 
+handle the merging of dissected scans (for example, scans representing 
+different domains or collected from different privilege levels), the 
+injection of \gls{adcs} templates, and the cleanup of dangling nodes and edges. 
+A validation script then ensures data integrity while generating clear, 
+readable logs.
+
+\subsection*{Operational Modes and Design Decisions}
+
+To accommodate different stages of a red team engagement, the pipeline 
+was built with three primary operational modes, managed via the 
+\texttt{launch.sh} wrapper:
+\begin{enumerate}
+    \item \textbf{Data Preparation Only:} Parses the raw JSON files, 
+    stitches the graphs, and builds the tensors without querying the AI.
+    \item \textbf{Preparation and Query:} Builds the tensors and 
+    immediately launches the inference script from a specified start 
+    node to a target node.
+    \item \textbf{Inference Only:} Once the \texttt{heterodata.pt} object 
+    is created the user can skip the data preparation phase and 
+    run the pathfinding algorithm directly.
+\end{enumerate}
+
+A principal design decision maintained throughout this pipeline is the 
+enforcement of the BloodHound-standard principal-to-target edge 
+directionality. This ensures that the simulated attacker can only 
+traverse edges where they mathematically hold the source privilege.
+
+\subsection*{Path Discovery and Auditing}
+
+Once the graph accurately mirrors the target \gls{ad} environment, the 
+inference phase begins. The \texttt{beam\_search} algorithm queries the 
+model's policy head to navigate the graph, discovering viable attack 
+paths and ranking them based on the network's confidence scores. 
+Finally, the tool runs an operational audit against static rules, 
+evaluating the output and reminding the user to carefully review each 
+path before proceeding with active exploitation.
 
 % ─────────────────────────────────────────────────────────────
 \section{Data Collection and Preprocessing}
 
-\subsection{Input Sources}
-% BloodHound JSON (domains, users, computers, GPOs, ACLs, trusts).
-% Certipy JSON (ADCS templates and CA objects).
-\todo{Write input sources section}
+The launch.sh script serves as the primary execution pipeline for the GNN-AD-Navigator, orchestrating both the data preparation and model inference phases. During the preparation stage, it categorizes raw JSON outputs from BloodHound and Certipy, cleans the data, and merges it into a unified Active Directory forest graph. It then translates this combined graph into tensor formats \texttt{heterodata.pt} required by PyTorch. Finally, the script can execute an inference query using either a GCN or HGT model to calculate potential attack paths between a user-defined starting node and target node.
 
-\subsection{\tool{clean\_bloodhound.py}: Filtering and Multi-Domain Accumulation}
-% Purpose: filter raw BloodHound exports, accumulate data across multiple files
-% and domains without overwriting.
-% Critical bug fixed: original code used assignment (\texttt{all\_data[key] = data["data"]})
-% which silently collapsed 3 domains into 1. Fixed to use \texttt{.extend()}.
-% Added recursive directory walk for nested scan directories.
-\todo{Write clean\_bloodhound.py section}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        % Tighter node distances for a compact vertical footprint
+        node distance=0.5cm and 0.8cm,
+        % Data artifacts: Light gray fill, dark border, rounded
+        data/.style = {rectangle, draw=black!80, fill=black!10, thick, rounded corners, 
+                       text width=3.8cm, align=center, minimum height=0.9cm, 
+                       font=\small\bfseries\color{black!90}},
+        % Scripts: White fill, dark border, sharp corners
+        script/.style = {rectangle, draw=black!80, fill=white, thick, 
+                         text width=4cm, align=center, minimum height=0.9cm, 
+                         font=\small\ttfamily\color{black!90}},
+        % External inputs/models: Medium gray fill, dark border, rounded
+        external/.style = {rectangle, draw=black!80, fill=black!20, thick, rounded corners, 
+                           text width=2.8cm, align=center, minimum height=0.9cm, 
+                           font=\small\bfseries\color{black!90}},
+        % Arrows: Dark gray/black
+        arrow/.style = {draw, thick, -{Stealth[length=2.5mm, width=1.5mm]}, color=black!80},
+        dashed_arrow/.style = {draw, thick, dashed, -{Stealth[length=2.5mm, width=1.5mm]}, color=black!80},
+        % Edge labels: placed automatically at the 75% mark
+        edge_lbl/.style = {font=\scriptsize\sffamily, color=black!80, align=center, fill=white, inner sep=1.5pt}
+    ]
 
-\subsection{\tool{merger.py}: Normalisation and Merging}
-% Lowercases all edge type names to resolve casing inconsistencies
-% (e.g. WriteDACL vs. WriteDacl across SharpHound versions).
-% Merges multi-domain data into a unified structure.
-% Parses the Trusts array on domain objects — was previously ignored.
-\todo{Write merger.py section}
+    % --- Row 1 & 2: Initial BloodHound Flow ---
+    \node[data] (bh_raw) {Raw BloodHound\\JSON Scans};
+    \node[script, below=of bh_raw] (merger) {clean\_bloodhound.py\\merger.py};
+    \node[data, below=of merger] (base_graph) {forest\_graph.json\\(Base Structure)};
+
+    % --- Row 3: Stitching (Certipy enters laterally) ---
+    \node[script, below=of base_graph] (stitcher) {stitcher.py};
+    \node[data, right=1.0cm of base_graph] (certipy) {Raw Certipy\\JSON Scans};
+
+    % --- Row 4 & 5: Final Graph & Builder ---
+    \node[data, below=of stitcher] (stitched_graph) {forest\_graph.json\\(ADCS Stitched)};
+    \node[script, below=of stitched_graph] (builder) {build\_dataset.py};
+    
+    % --- Row 6: Tensor (Validator enters laterally) ---
+    \node[script, left=0.8cm of builder, text width=3.6cm] (validator) {validate\_dataset.py};
+    \node[data, below=of builder] (tensor) {heterodata.pt\\(PyG Tensor)};
+
+    % --- Row 7: Inference Phase ---
+    % FIX: Increased drop from 2.2cm to 3.5cm to stop the boxes from colliding!
+    \node[script, below=4.5cm of tensor] (inference) {inference.py\\(Beam Search)};
+    \node[external, above left=0.6cm and 0.8cm of inference] (model) {HGT.pt\\(Trained Policy)};
+    \node[external, above right=0.6cm and 0.8cm of inference] (query) {User Query\\(--start, --target)};
+
+    % --- Row 8: Output ---
+    \node[data, below=of inference] (output) {Attack Paths \&\\Audit Logs};
+
+    % --- Edges (Arrows) ---
+    % Prep Flow
+    \draw[arrow] (bh_raw) -- node[edge_lbl] {Filter \& Merge} (merger);
+    \draw[arrow] (merger) -- node[edge_lbl] {Generate} (base_graph);
+    \draw[arrow] (base_graph) -- (stitcher);
+    \draw[arrow] (stitcher) -- node[edge_lbl] {Update} (stitched_graph);
+    \draw[arrow] (stitched_graph) -- node[edge_lbl] {Vectorize} (builder);
+    \draw[arrow] (builder) -- (tensor);
+    
+    % Lateral "Down and Bend" Arrows
+    \draw[arrow] (certipy) |- node[edge_lbl, pos=0.75] {Inject ADCS} (stitcher);
+    \draw[dashed_arrow] (validator) |- node[edge_lbl, pos=0.75] {Audit} (tensor);
+    
+    % Inference Flow
+    \draw[arrow] (tensor) -- node[edge_lbl] {Load State} (inference);
+    \draw[arrow] (model) |- node[edge_lbl, pos=0.75] {Load Weights} (inference);
+    \draw[arrow] (query) |- node[edge_lbl, pos=0.75] {Initialize} (inference);
+    \draw[arrow] (inference) -- node[edge_lbl] {Output} (output);
+
+    % --- Background Boxes to denote modes ---
+    \begin{scope}[on background layer]
+        % Data Prep Mode Box
+        \node[rectangle, draw=black!40, fill=black!2, dashed, rounded corners, thick, 
+              fit=(bh_raw) (certipy) (validator) (tensor), inner xsep=15pt, inner ysep=18pt] (prep_box) {};
+        % FIX: Shifted the label down and right so it stops crossing the dashed line
+        \node[anchor=north west, font=\sffamily\bfseries\color{black!70}] 
+              at ([xshift=8pt, yshift=-8pt]prep_box.north west) {Mode 1: Data Preparation};
+
+        % Inference Mode Box
+        \node[rectangle, draw=black!40, fill=black!2, dashed, rounded corners, thick, 
+              fit=(model) (query) (inference) (output), inner xsep=18pt, inner ysep=22pt] (inf_box) {};
+        % FIX: Shifted the label down and right
+        \node[anchor=north west, font=\sffamily\bfseries\color{black!70}] 
+              at ([xshift=10pt, yshift=-5pt]inf_box.north west) {Mode 3: Inference Only};
+    \end{scope}
+
+    \end{tikzpicture}
+    \caption{Data Pipeline flow.}
+    \label{fig:pipeline_architecture}
+\end{figure}
+
+\subsection{\texttt{clean\_bloodhound.py}: Filtering and Multi-Domain Accumulation}
+\label{sec:clean_bloodhound}
+
+The initial stage of the data preparation pipeline is handled by the 
+\texttt{clean\_bloodhound.py} script, which is responsible for sanitizing 
+raw BloodHound JSON outputs. To support 
+large-scale enterprise environments, the script implements a recursive, 
+multi-domain accumulation mechanism. This ensures that when input 
+data contains scans from multiple domains or is split across various 
+files, no topological data is silently overwritten. The script 
+accomplishes this by deduplicating entities based on their 
+\texttt{ObjectIdentifier} (\gls{sid}), selectively retaining the ``richer'' 
+JSON record if duplicate scans of the same domain occur.
+
+Crucially, this component acts as a noise-reduction filter to optimize 
+the \gls{gnn}'s computational overhead. It builds an initial edge 
+index across all entities to determine topological connectedness. 
+Using this index, the script systematically drops 
+irrelevant nodes. For example, \texttt{Computer} nodes matching 
+standard workstation naming conventions (e.g., \texttt{WKS-0}) are pruned 
+if they lack dangerous \gls{acl} privileges, unconstrained delegation 
+rights, and possess an edge degree of one or less. Similarly, 
+disabled \texttt{User} nodes are purged from the dataset unless they 
+retain active sessions or explicit \gls{acl} edges, while empty 
+\texttt{Group} objects with no members or outbound privileges are entirely 
+discarded. Nodes representing Domains, \glspl{gpo}, and \glspl{ou} 
+are preserved as-is to maintain structural hierarchy.
+
+\subsection{\texttt{merger.py}: Normalisation and Merging}
+\label{sec:merger}
+
+Following the initial filtering and \gls{adcs} data stitching, the 
+pipeline executes \texttt{merger.py}. This script functions as a 
+generic forest merger, capable of accepting heterogeneous inputs such as 
+directories of cleaned JSON files or previously stitched domain graphs and 
+consolidating them into a unified \texttt{forest\_graph.json} structure. Positioned directly before the tensor construction phase, this 
+module is strictly responsible for cryptographic and structural alignment.
+
+To ensure flawless tensor mapping in PyTorch Geometric, the script 
+enforces a strict normalization protocol. All 
+\texttt{ObjectIdentifier} and \texttt{PrincipalSID} values, including 
+cross-domain \texttt{TargetDomainSid} references, are strictly cast to 
+uppercase, while key categorical properties (such as \texttt{name}, 
+\texttt{domain}, and \texttt{RightName}) are normalized to lowercase. 
+
+When merging overlapping datasets, the script resolves conflicts through 
+a deterministic scoring heuristic. The \texttt{score\_obj} function 
+evaluates node richness by awarding points for populated properties, 
+active \gls{acl} rules, and group members, while applying a heavy 
+multiplier to explicit cross-domain \texttt{Trusts} . The 
+conflicting entity with the highest topological score is retained. 
+Finally, the script executes a validation routine that inventories all 
+discovered trust relationships, aggregates edge type frequencies, and 
+calculates a ``dangling-reference rate'' to quantify relational 
+integrity before the data is vectorized into the \gls{gnn}.
 
 \subsection{\tool{stitcher.py}: ADCS Injection and Domain Detection}
-% Injects Certipy-derived ADCS nodes and edges into the merged graph.
-% Auto-detects the target domain from the data rather than requiring manual input.
-\todo{Write stitcher.py section}
+\label{sec:stitcher}
+
+Because Certipy operates independently of BloodHound, its raw JSON output 
+lacks the native topological bindings required to merge seamlessly into an 
+existing \gls{ad} graph. To bridge this gap, the pipeline employs 
+\tool{stitcher.py}, an intermediate augmentation script positioned directly 
+between the filtering and merging phases. Before the script is 
+even invoked, the pipeline's overarching wrapper automatically parses the 
+Certipy output to dynamically detect the target domain. By analyzing 
+the Certificate Subject or Distinguished Name embedded within the 
+scanned certificates, the wrapper extracts the domain context and passes it to the stitcher without requiring manual operator input.
+
+Once invoked, the script injects two novel node categories into the graph: 
+\gls{ca} and \texttt{certtemplates}. 
+Because Certipy does not natively retrieve \glspl{sid} for these entities, 
+the script generates deterministic, synthetic Ghost \glspl{sid} (e.g., 
+\texttt{S-1-5-21-GHOST-...}) by computing an MD5 hash of the template name 
+and the target domain. To connect these isolated nodes to the 
+broader network, the script builds a resolution dictionary that maps 
+lowercase principal names to their existing \texttt{ObjectIdentifier} 
+within the forest. It then translates complex \gls{adcs} 
+relationships into standard BloodHound \texttt{Aces} entries, injecting 
+edges such as \edge{Enroll}, \edge{PublishedTo}, and \edge{WriteDACL}. 
+Critically, it also injects an \edge{HttpEnroll} edge to model ESC8 
+vulnerabilities, and a \edge{TrustedForNTAuth} edge to link the \gls{ca} 
+back to the domain root, preventing the routing algorithm from dead-ending.
+
+Beyond explicit \gls{adcs} integration, \tool{stitcher.py} acts as the 
+engine for synthetic \gls{apt} vector generation. It proactively 
+scans the forest for logically vulnerable delegation configurations. 
+If a source entity possesses \texttt{unconstraineddelegation} rights, the 
+script dynamically generates a \edge{coercetgt} edge to mathematically 
+represent \gls{ntlm} coercion attacks (e.g., PetitPotam). To 
+preserve topological integrity, this script strictly validates that the 
+target is an unprotected Domain Controller computer account, strictly 
+preventing the \gls{gnn} from calculating illogical attack paths through 
+abstract entities like \glspl{ou} or standard user accounts.
+
+
+
+\subsection{Training Environment: GOAD}
+% Game of Active Directory: ~3 domains, deliberately vulnerable AD lab.
+% Used exclusively for training.
+% 33 traces define the coverage ceiling of the model.
+
+The Game of Active Directory (GOAD), developed by Mayfly, serves as the primary 
+training and diagnostic environment for this research. GOAD is a highly complex, 
+multi-domain, and multi-forest vulnerable lab designed specifically to simulate 
+advanced, real-world enterprise architectures. The environment is composed of five 
+virtualized Windows Server machines running Windows Server 2016 and 2019 
+distributed across two distinct forests. The primary forest contains a parent 
+domain \texttt{sevenkingdoms.local} and a child domain 
+\texttt{north.sevenkingdoms.local}, simulating a typical corporate hierarchy 
+with bidirectional transitive trusts. A secondary, external forest 
+\texttt{essos.local} is connected via a forest-to-forest trust with SID history 
+enabled. This sophisticated topological layout provides the heterogeneous graph 
+structure required to train the Graph Neural Network on cross-domain lateral 
+movement and complex trust exploitations.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{ressources/goad_overview.png}
+    \caption{The logical architecture and domain topology of the GOADv2 
+    environment. \textit{Source: Mayfly (2022)}.}
+    \label{fig:goad_architecture}
+\end{figure}
+
+Beyond basic network topography, GOAD is engineered with deeply embedded, 
+configuration-level vulnerabilities that test the limits of automated attack 
+path discovery. The environment features multi-step \gls{acl} 
+kill-chains, deliberately exposed \gls{adcs} 
+configured to be vulnerable to ESC1 through ESC3 and ESC8 relay attacks, and 
+various forms of delegation (Unconstrained, Constrained, and Resource-Based 
+Constrained Delegation). By exposing the Navigation Model to this dense 
+concentration of intersecting vulnerabilities, the network learns to evaluate 
+competing escalation routes—such as choosing between a force change password 
+against an IIS server or a stealthy \texttt{WriteDACL} abuse—making GOAD an 
+ideal foundational dataset for imitation learning in offensive security.
+The attack paths goad provides are to be presented in a learnable and readable training format for the model. Each attack path is deconstructed into transitions,
+ \texttt{current\_node}, \texttt{next\_hope}, \texttt{credentials\_used}, 
+ \texttt{total}, \texttt{path\_weight}, \texttt{train\_on\_step}, \texttt{notes} 
+and the \texttt{step\_cost}.
+
+
+\subsection{Feature engineering}
+
+To a GNN model learning from a bloodhound scan, attack paths are of different importance, 
+some are totaly invisible while others are a gold mine for what the model needs to replicate.
+Paths that rely on unpatched vulnerabilities or outdated systems, for instance, leave no trace in the 
+BloodHound graph and are marked with a \texttt{path\_weight} of 0.
+Paths that are mostely visible with only two or less transitions that do not qualify have the latter marked
+through \texttt{train\_on\_step} set to zero.
+And at last, for an imitation learning model, given the choice between two valide transitions, the model
+choses based on training data, prefering the edge type it has seen most during training. To address this
+We are to more or less guide  the model to gravitate towards the edge attack with less impact on 
+the environment, the one with less noise and impact. To reach the desired effect each valid transition
+is scored. This score is reflected directly in the loss function through the \texttt{step\_cost} feature.
+
+\begin{table}[H]
+\centering
+\caption{Step cost assignment by attack category.}
+\label{tab:step_cost}
+\begin{tabularx}{\textwidth}{>{\bfseries}l c X}
+\toprule
+Attack Category & Cost Range & Rationale \\
+\midrule
+Topological / Logical  & 0.1 -- 0.2 &
+  Operations such as adding a member to a group or enrolling in a 
+  certificate template. These transitions are structurally clean and 
+  rarely trigger alerts unless heavy auditing is configured. \\[6pt]
+
+Credential Abuse & 0.3 -- 0.4 &
+  Using a recovered password or a forged TGT. Low noise overall, 
+  but detectable by honeytokens or behavioural analysis tools. \\[6pt]
+
+Active Enumeration & 0.5 &
+  Kerberoasting or intensive LDAP queries. Intermediate noise level; 
+  commonly detected by modern SIEMs monitoring ticket requests or 
+  query volume anomalies. \\[6pt]
+
+Memory / Disk Dumping & 0.6 -- 0.7 &
+  Dumping the SAM database or LSASS process memory. High detection 
+  risk; endpoint protection tools such as Microsoft Defender and 
+  CrowdStrike flag these operations near-immediately. \\[6pt]
+
+Network Exploitation & 0.8 -- 0.9 &
+  Active coercion and relay attacks such as PetitPotam or NTLM 
+  Relaying, and brute-force techniques such as password spraying. 
+  Very noisy; triggers IDS/IPS rules and account lockout policies. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The \texttt{step\_cost} value assigned to each transition feeds 
+directly into the loss function through the effective weight 
+computation:
+
+
+The feature engineering phase introduced three mechanisms: 
+filters to eliminate CVE-dependent transitions invisible to the graph 
+collector; path weights reflecting a composite visibility score that 
+prioritises transitions where the graph structure itself is the primary 
+escalation vector; and a \texttt{step\_cost} feature guiding the model 
+toward stealthier, less impactful edges when a choice presents itself. 
+This constitutes a simplified reward shaping approach, consistent with 
+standard practices in the imitation learning literature.
+
 
 % ─────────────────────────────────────────────────────────────
-\section{Heterogeneous Graph Construction}
 
-\subsection{Node and Edge Type Schema}
-% List all node types (User, Computer, Group, Domain, GPO, OU, CertTemplate...).
-% List all edge types with directions:
-%   MemberOf, HasSession, GenericAll, WriteDACL, ForceChangePassword,
-%   AllowedToDelegate, AllowedToAct, HasSIDHistory,
-%   GPLink (GPO→container), TrustedBy/SameForestTrust, ADCS edges.
-% A table here is effective.
-\todo{Write node/edge schema — include a table}
-
-\subsection{Direction Convention}
-% Principal → Target (BloodHound standard).
-% Why this matters: navigation traverses outgoing edges from the current node.
-% Consequence: outgoing-only beam search; no "(reverse)" edge tags needed.
-\todo{Write direction convention section}
-
-\subsection{Edge Extraction Details}
-% GPLink bug fix: BloodHound stores the GUID key, not ObjectIdentifier.
-%   Direction was also reversed (was container→GPO, fixed to GPO→container).
-% AllowedToDelegate: extracted from the allowedtodelegate attribute array.
-% AllowedToAct: from the allowedtoact attribute (RBCD).
-% HasSIDHistory: from sidhistory array on user/computer objects.
-\todo{Write edge extraction details}
-
-\subsection{PyG HeteroData Encoding}
-% How node features are constructed (one-hot type encoding, or feature-less
-% with learned embeddings).
-% How edge\_index tensors are built per meta-relation tuple
-% (src\_type, edge\_type, dst\_type).
-\todo{Write PyG encoding section}
-
-% ─────────────────────────────────────────────────────────────
 \section{Navigation Model}
 
 \subsection{HGT Encoder}
@@ -1356,6 +1673,27 @@ environments rather than synthetic graphs.
 % step\_cost: encodes the noisiness / detectability of an edge type.
 % Why this produces paths with lower cumulative cost than Dijkstra on the
 % same graph — the key claim supporting the stealth argument.
+
+
+\begin{equation}
+  \text{eff\_weight} = \text{path\_weight} \times (1 - \text{step\_cost})
+  \label{eq:eff_weight}
+\end{equation}
+
+\noindent where \texttt{path\_weight} reflects the overall visibility 
+and quality of the full attack path, and \texttt{step\_cost} 
+penalises individual transitions according to their noise category 
+in Table~\ref{tab:step_cost}. A high \texttt{step\_cost} reduces the 
+effective training weight of that transition, making the model less 
+likely to replicate it when a lower-cost alternative exists in the 
+training data. Conversely, topological transitions with a low 
+\texttt{step\_cost} receive a higher effective weight and are 
+reinforced more strongly during training. The result is a model that, 
+when faced with a choice between two structurally valid transitions, 
+gravitates toward the one with less environmental impact --- not 
+because it was explicitly told to, but because the training signal 
+made that choice more frequent and more rewarded.
+
 \todo{Write loss function section}
 
 % ─────────────────────────────────────────────────────────────
@@ -1379,7 +1717,7 @@ environments rather than synthetic graphs.
 % At inference time, the HGT is rebuilt from this metadata.
 % Edge types present in the new environment but absent from training receive
 % empty (zero) tensors — the model still traverses them via the beam search
-% topology without dedicated learned parameters.
+% topology without dedicated learned parameters. the model wont crash
 \todo{Write cross-environment inference section}
 
 % ─────────────────────────────────────────────────────────────
@@ -1393,6 +1731,9 @@ environments rather than synthetic graphs.
 % Honest scope: static heuristic flagging, not a substitute for operator judgement.
 \todo{Write audit module section}
 
+\section{Validation Module \& logging}
+%brief paragraph for each how the logging is done and how validation module
+%compares the results via expected outcomes
 
 %% ============================================================
 %%  CHAPTER 3 — IMPLEMENTATION
@@ -1450,35 +1791,33 @@ environments rather than synthetic graphs.
 \todo{Write model checkpoints section}
 
 % ─────────────────────────────────────────────────────────────
-\section{Inference Pipeline}
-% inference.py flow: load checkpoint → rebuild HGT from metadata →
-%   load HeteroData → run beam search → run audit → write log.
-% launch.sh orchestration: how the three modes are dispatched.
-\todo{Write inference pipeline section}
+\section{Graphical \& Command Line Interface}
 
-% ─────────────────────────────────────────────────────────────
-\section{Graphical Interface}
+\subsection{CLI}
+\subsubsection{Commands and interactions}
 
-\subsection{Design and Theme}
+
+\subsection{GUI}
+
+\subsubsection{Design and Theme}
 % Streamlit application with professional office-app theme.
 % Colour palette: navy \#1f4e79, slate and maroon accents — no neon.
 % Rationale: tool intended for professional red-team context.
 \todo{Write GUI design section}
 
-\subsection{Workflow Integration}
+\subsubsection{Workflow Integration}
 % Folder picker (tkinter native popup, text fallback).
 % launch.sh wrapped as subprocess; stdout streamed live to the UI.
 % Auto-skip prep if forest\_graph.json + heterodata.pt already exist.
 % @st.cache\_resource for model and graph loading.
 \todo{Write GUI workflow section}
 
-\subsection{Visualisation}
+\subsubsection{Visualisation}
 % pyvis graph: hierarchical left-to-right layout, height 520 px.
 % Muted colour palette (no neon) — each node type distinct colour.
 % Step-by-step table in collapsible expander below the graph.
 % Inference logs persisted to output/inference\_<timestamp>.log.
 \todo{Write GUI visualisation section}
-
 
 %% ============================================================
 %%  CHAPTER 4 — EXPERIMENTS AND RESULTS
@@ -1486,105 +1825,6 @@ environments rather than synthetic graphs.
 \chapter{Experiments and Results}
 
 \section{Experimental Setup}
-
-\subsection{Training Environment: GOAD}
-% Game of Active Directory: ~3 domains, deliberately vulnerable AD lab.
-% Used exclusively for training.
-% 33 traces define the coverage ceiling of the model.
-Game of Active Directory, a deliberately vulnerable Active Directory lab, created for penetration 
-testers to practice common infrastructure attacks and privilege escalation techniques.
-GOAD consists of three domains --- 
-\texttt{sevenkingdoms.local}, \texttt{north.sevenkingdoms.local}, and 
-\texttt{essos.local} --- interconnected through domain trust relationships, 
-mimicking a realistic multi-domain enterprise architecture.
-The lab exposes various sorts of misconfigurations commonly found in enterprise environments,
-from unpatched system vulnerabilies to unprotected services and network misconfigurations.
-The attack paths goad provides are to be presented in a learnable and readable training format for the model.
-Each attack path is deconstructed into transitions, \texttt{current\_node}, \texttt{next\_hope},
-\texttt{credentials\_used}, \texttt{total}, \texttt{path\_weight}, \texttt{train\_on\_step}, \texttt{notes} 
-and the \texttt{step\_cost}.
-
-\subsection{Feature engineering}
-
-To a GNN model learning from a bloodhound scan, attack paths are of different importance, 
-some are totaly invisible while others are a gold mine for what the model needs to replicate.
-Paths that rely on unpatched vulnerabilities or outdated systems, for instance, leave no trace in the 
-BloodHound graph and are marked with a \texttt{path\_weight} of 0.
-Paths that are mostely visible with only two or less transitions that do not qualify have the latter marked
-through \texttt{train\_on\_step} set to zero.
-And at last, for an imitation learning model, given the choice between two valide transitions, the model
-choses based on training data, prefering the edge type it has seen most during training. To address this
-We are to more or less guide  the model to gravitate towards the edge attack with less impact on 
-the environment, the one with less noise and impact. To reach the desired effect each valid transition
-is scored. This score is reflected directly in the loss function through the \texttt{step\_cost} feature.
-
-\begin{table}[H]
-\centering
-\caption{Step cost assignment by attack category.}
-\label{tab:step_cost}
-\begin{tabularx}{\textwidth}{>{\bfseries}l c X}
-\toprule
-Attack Category & Cost Range & Rationale \\
-\midrule
-Topological / Logical  & 0.1 -- 0.2 &
-  Operations such as adding a member to a group or enrolling in a 
-  certificate template. These transitions are structurally clean and 
-  rarely trigger alerts unless heavy auditing is configured. \\[6pt]
-
-Credential Abuse & 0.3 -- 0.4 &
-  Using a recovered password or a forged TGT. Low noise overall, 
-  but detectable by honeytokens or behavioural analysis tools. \\[6pt]
-
-Active Enumeration & 0.5 &
-  Kerberoasting or intensive LDAP queries. Intermediate noise level; 
-  commonly detected by modern SIEMs monitoring ticket requests or 
-  query volume anomalies. \\[6pt]
-
-Memory / Disk Dumping & 0.6 -- 0.7 &
-  Dumping the SAM database or LSASS process memory. High detection 
-  risk; endpoint protection tools such as Microsoft Defender and 
-  CrowdStrike flag these operations near-immediately. \\[6pt]
-
-Network Exploitation & 0.8 -- 0.9 &
-  Active coercion and relay attacks such as PetitPotam or NTLM 
-  Relaying, and brute-force techniques such as password spraying. 
-  Very noisy; triggers IDS/IPS rules and account lockout policies. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The \texttt{step\_cost} value assigned to each transition feeds 
-directly into the loss function through the effective weight 
-computation:
-
-\begin{equation}
-  \text{eff\_weight} = \text{path\_weight} \times (1 - \text{step\_cost})
-  \label{eq:eff_weight}
-\end{equation}
-
-\noindent where \texttt{path\_weight} reflects the overall visibility 
-and quality of the full attack path, and \texttt{step\_cost} 
-penalises individual transitions according to their noise category 
-in Table~\ref{tab:step_cost}. A high \texttt{step\_cost} reduces the 
-effective training weight of that transition, making the model less 
-likely to replicate it when a lower-cost alternative exists in the 
-training data. Conversely, topological transitions with a low 
-\texttt{step\_cost} receive a higher effective weight and are 
-reinforced more strongly during training. The result is a model that, 
-when faced with a choice between two structurally valid transitions, 
-gravitates toward the one with less environmental impact --- not 
-because it was explicitly told to, but because the training signal 
-made that choice more frequent and more rewarded.
-
-The feature engineering phase introduced three mechanisms: 
-filters to eliminate CVE-dependent transitions invisible to the graph 
-collector; path weights reflecting a composite visibility score that 
-prioritises transitions where the graph structure itself is the primary 
-escalation vector; and a \texttt{step\_cost} feature guiding the model 
-toward stealthier, less impactful edges when a choice presents itself. 
-This constitutes a simplified reward shaping approach, consistent with 
-standard practices in the imitation learning literature.
-
 
 \subsection{Test Environment: INLANEFREIGHT}
 % HTB Academy enterprise AD lab: ~4\,000 nodes, multiple domains, cross-domain trusts.
@@ -1975,133 +2215,336 @@ that is just as critical as the neural network architecture itself.
 %% ============================================================
 \chapter{Limitations and Future Work}
 
-\section{Architectural limitation}
-\label{sec:architectural-oversight}
+While the empirical evaluation in Chapter 4 demonstrates that the 
+Heterogeneous Graph Transformer \gls{hgt} successfully learns and generalises 
+offensive navigation policies, the current pipeline remains a proof of 
+concept. Transitioning from a controlled laboratory environment to a 
+production-ready red teaming tool requires an honest assessment of the 
+system's boundaries. This chapter systematically details the fundamental 
+mathematical, algorithmic, and operational limitations of the current 
+approach, and proposes a concrete engineering roadmap for a 
+second-generation architecture.
 
-During the diagnostics phase, the model behaved differently to the expected paths, often choosing 
-to bypass a clear hop over a computer node, even if it presents the best transition.
-This behavior is a direct result of an oversight in the architecture of the \texttt{PyG} edge directions, 
-nodes like computers end up with only incoming edges, making them impossible to traverse. This is due to 
-nature of the node, a computer in an Active Directory doesnt have rights over other objects, it's often
-the users with session over these computers that actually have access and hold outgoing edges.
-BloodHound handles this by looking at the nodes with writes over the computer
+\section{Mathematical and Algorithmic Limitations}
+
+The most significant constraints on the GNN-AD-Navigator do not stem 
+from data ingestion or environmental scanning, but from the inherent 
+mechanics of deep learning when applied to complex, asymmetrical graph 
+structures. Understanding these mathematical flaws is critical for 
+interpreting the model's behaviour during deep attack simulations.
+
+\subsection{Multiplicative Probability Decay and Search Bias}
+
+The inference phase relies on a heuristic beam search to navigate the 
+Active Directory graph. At each step, the policy head outputs a Softmax 
+probability distribution over all available candidate edges. The total 
+confidence score for a given attack path is then calculated by multiplying 
+the individual probabilities of each hop along that route.
+
+Mathematically, multiplying fractions consistently yields a smaller 
+product (e.g., $0.8 \times 0.8 \times 0.8 = 0.512$). In the context of 
+Active Directory attack paths, this creates a phenomenon known as 
+\textit{multiplicative probability decay}. The search algorithm 
+inherently penalises long attack chains simply because they require more 
+mathematical transitions.
+
+From an offensive security perspective, this mathematical decay directly 
+contradicts the foundational objective of the navigation policy. The primary 
+motivation for engineering transition-specific confidence scores---effectively 
+acting as an \gls{OPSEC} step cost---was to explicitly train 
+the model to prioritise stealth over path efficiency. In professional red 
+teaming engagements, operators heavily rely on \gls{lotl}
+techniques, deliberately chaining multiple low-privilege, native Active 
+Directory misconfigurations to escalate privileges without triggering \gls{siem} 
+(Security Information and Event Management) alarms. The model was designed to 
+recognise these stealthy, deep attack chains as operationally superior to a 
+noisy, direct exploit. However, because the probability decay compounds with 
+every additional transition, the mathematical penalty of path length 
+eventually overwhelms the learned OPSEC rewards. As a result, the beam 
+search prematurely prunes the desired stealthy chains, paradoxically forcing the 
+model to revert to the exact behaviour it was engineered to avoid: 
+demonstrating a strong preference for shorter, highly detectable attacks 
+simply because they require fewer algorithmic multiplications.
+
+\subsection{Bounded Receptive Field and the Horizon Problem}
+
+The expressiveness of a Graph Neural Network is fundamentally tied to its 
+receptive field, which is dictated by the number of hidden layers ($K$). 
+During the message-passing phase, a node aggregates feature data from $K$ 
+hops away. Therefore, to intrinsically understand the structural relationship 
+between a compromised starting user and a target Domain Controller seven 
+steps away, the model would theoretically require seven layers of message 
+passing.
+
+However, Active Directory environments are highly dense, "small world" 
+networks, characterised by heavily nested group memberships and extensive 
+permissions. In such dense topologies, expanding the depth of the 
+network triggers a well-documented graph learning limitation known as 
+\textit{over-smoothing}. If the Heterogeneous Graph Transformer \gls{hgt} is 
+configured with too many layers, the repeated aggregation of neighbourhood 
+features causes the embeddings of structurally distinct nodes---such as a 
+standard workstation and an Enterprise Admin group---to mathematically 
+converge toward indistinguishable mean vectors.
+
+To preserve the distinct privilege hierarchies required for accurate 
+routing, the GNN-AD-Navigator's architecture is strictly bounded to a 
+shallow depth (specifically $K=2$ layers, as established in the methodology). 
+While this successfully prevents over-smoothing and maintains structural 
+fidelity, it directly introduces the \textit{horizon problem}. When 
+executing a deep attack simulation (e.g., a 7-hop path), the starting 
+node's embedding contains zero latent information about a target that lies 
+beyond its two-hop receptive field. The policy head is effectively blind 
+to the distant destination, forcing the algorithm to navigate using only 
+local privilege gradients rather than true, end-to-end topological 
+awareness.
+
+\subsection{The "Blind Compass" Effect in Lateral Movement}
+
+As detailed in Chapter 2, a critical engineering adaptation within the 
+pipeline was the design of the policy head. Rather than computing a 
+target-aware concatenation, the model utilises the Hadamard product 
+(element-wise multiplication) between the current node's embedding and the 
+candidate neighbour's embedding. This architectural choice proved highly 
+effective for the primary goal of Active Directory exploitation: privilege 
+escalation. By forcing the model to evaluate the absolute semantic value of a 
+transition, it successfully learned a generalised privilege hierarchy. It acts 
+as a "universal climber" that inherently gravitates toward high-value nodes 
+like Domain Admins, regardless of the specific topology.
+
+However, this adaptation introduces a distinct operational trade-off. Because 
+the target node's embedding is mathematically excluded from the transition 
+scoring, the policy head possesses no "target gravity." The model implicitly 
+knows how to escalate privileges, but it does not inherently know its final 
+destination. 
+
+This limitation becomes acutely apparent during horizontal lateral movement. 
+If an attack simulation requires navigating through a flat network segment---
+such as pivoting between multiple standard workstations within an isolated 
+Organizational Unit (OU)---the model struggles to find an optimal route. When 
+presented with candidate neighbours that share identical, low-privilege 
+weights, the policy head lacks the directional context required to efficiently 
+break the mathematical tie. Without the target vector actively pulling the 
+algorithm toward a specific coordinate, the search can oscillate or wander 
+inefficiently. The model effectively acts as a "blind compass"---perfectly 
+calibrated to point "up" toward domain dominance, but unable to navigate 
+laterally toward a specific, non-administrative target.
+
+\section{Operational and Data Boundaries}
+
+A fundamental axiom of machine learning is that a model's operational 
+capacity is strictly bounded by the fidelity of its underlying data. While 
+the algorithmic limitations define how the model navigates the graph, the 
+operational boundaries dictate whether the necessary topological pathways 
+exist in the underlying dataset to begin with.
+
+\subsection{Edge Directionality and the Computer Node Sinkhole}
+
+During the empirical evaluation, the model occasionally exhibited suboptimal 
+routing by bypassing topologically logical hops through specific Computer 
+nodes. This behaviour is not an algorithmic failure, but rather a direct 
+consequence of how \texttt{PyTorch Geometric} enforces strict edge 
+directionality, combined with the inherent nature of Active Directory 
+Access Control Lists (ACLs).
+
+In a standard BloodHound-compatible graph, privileges are mapped as directed 
+edges from a principal (the controller) to a target (the controlled). 
+Consequently, Computer nodes predominantly accumulate incoming edges (e.g., 
+Users or Groups holding \texttt{GenericAll} or \texttt{AdminTo} rights over 
+the machine) but possess virtually zero outgoing rights over other objects in 
+the domain. Without the ability to dynamically resolve and traverse active 
+user sessions (e.g., using a \texttt{HasSession} edge to pivot from the 
+compromised machine to a highly privileged Domain Admin logged into it), the 
+Computer node becomes a topological sinkhole. 
+
+The inference engine mathematically learns to avoid these nodes because 
+traversing into them almost always results in a dead end. While a human 
+operator would compromise the computer, dump memory credentials (e.g., via 
+Mimikatz), and pivot, the current graph schema does not explicitly represent 
+that post-exploitation capability as a traversable outgoing edge.
+
+\subsection{Collector Incompleteness and Schema Evolution}
+
+The current data pipeline relies heavily on the Linux-compatible Python 
+ingestor (\texttt{bloodhound-ce-python}). While this ensures the toolset 
+remains accessible from standard UNIX-based attack hosts, it introduces 
+severe structural blind spots. Most notably, the Python collector exhibits 
+incompleteness regarding  the enumeration of explicit Trust accounts. Furthermore, 
+it lacks native support for Active Directory Certificate Services (ADCS), 
+necessitating reliance on legacy versions of \texttt{Certipy} and complex logic
+to stitch the graph together.
+
+This fragility was 
+further exacerbated by environmental volatility during graph enumeration 
+phases. For example, hypervisor kernel incompatibilities and virtual network 
+bridging failures during the provisioning of the \texttt{ESSOS.local} test 
+domain demonstrated that relying on fragmented, multi-tool data collection 
+is difficult to scale consistently.
+
+Ultimately, this is an ingestion constraint, not a model limitation. For a 
+production-grade deployment, future iterations must deprecate the Python 
+ingestor in favour of the official C\# SharpHound collector. Executing 
+SharpHound natively within the target environment would inherently surface 
+coercion-derived edges, complete trust mappings, and richer ACL enumeration, 
+directly expanding the model's discoverable attack surface without requiring 
+any architectural modifications to the neural network.
+
+\section{Future Work: Algorithmic Upgrades}
+
+The mathematical constraints identified in Section 5.1 cannot be resolved 
+simply by increasing the volume of training data or arbitrarily tuning 
+hyperparameters. Addressing the horizon problem and the adverse effects of 
+multiplicative probability decay requires fundamental architectural 
+enhancements to the inference engine. The following algorithmic upgrades 
+outline a clear engineering roadmap for a second-generation navigation 
+tool, focusing on hybridizing deep learning embeddings with deterministic 
+routing logic.
+
+\subsection{Waypoint Routing and Path Segmentation}
+
+To overcome the bounded receptive field of the Heterogeneous Graph 
+Transformer, future iterations of the pipeline should implement a 
+"divide-and-conquer" routing wrapper. As previously established, the 
+model struggles with deep attack chains because targets beyond a two-hop 
+radius fall completely outside the starting node's latent awareness, 
+creating a blind horizon.
+
+A waypoint routing architecture would solve this by decoupling the global 
+pathfinding strategy from the local transition predictions. Much like 
+modern GPS navigation systems, a static pre-processor could analyse the 
+global graph topology to identify major structural hubs or "choke points"---
+such as highly connected \gls{ou}, Tier-0 infrastructure, or centralized 
+identity providers. 
+
+Instead of querying the neural network to calculate a continuous, 10-hop 
+path from a low-privileged user directly to a Domain Controller, the 
+wrapper would segment the objective. The model would first be tasked with 
+navigating to the nearest waypoint; upon success, the search state would 
+reset and generate a new trajectory to the subsequent waypoint. 
+
+This segmentation directly neutralises both the horizon problem and the 
+multiplicative probability decay. By ensuring that each individual path 
+segment remains short, the intermediate targets stay within the model's 
+receptive field. Furthermore, resetting the probability calculation at 
+each waypoint prevents the accumulated mathematical penalties from 
+overwhelming the learned \gls{OPSEC} step costs, allowing the model to freely 
+select stealthy, non-linear routes.
+
+\subsection{Guided Search Heuristics ($A^*$ Algorithm)}
+
+While waypoint routing mitigates the horizon problem, the fundamental 
+inference mechanism must also evolve to protect OPSEC-driven routing. The 
+current implementation relies on a heuristic beam search, which, as 
+established, falls victim to multiplicative probability decay. To preserve 
+long, stealthy attack chains, future architectures should replace the pure 
+beam search with an additive, cost-based heuristic algorithm such as $A^*$ 
+(A-Star).
+
+Unlike beam search, which evaluates routes by multiplying fractional Softmax 
+probabilities, $A^*$ evaluates candidate paths using an additive cost 
+function: $f(n) = g(n) + h(n)$. In this paradigm, $g(n)$ represents the 
+exact, accumulated OPSEC cost of the path taken so far, while $h(n)$ serves 
+as the heuristic estimating the remaining distance or effort to the target. 
+By summing step costs rather than multiplying probabilities, the mathematical 
+penalty for path length grows linearly rather than exponentially. 
+
+This algorithmic shift would elegantly repurpose the existing deep learning 
+architecture. Instead of acting as a standalone, greedy pathfinder, the 
+\gls{hgt} policy head would be deployed 
+exclusively as the heuristic function, $h(n)$. The \gls{gnn} would evaluate 
+candidate neighbours and assign dynamic, context-aware proximity scores based 
+on learned privilege hierarchies, while the deterministic $A^*$ framework 
+strictly tracks the accumulated stealth metrics ($g(n)$). 
+
+This hybrid approach ensures that operationally superior, low-privilege 
+\gls{lotl} chains are evaluated on their true tactical 
+merit. It mathematically protects longer paths from being prematurely pruned, 
+completely eradicating the current system's bias toward short, highly 
+detectable exploit paths.
+
+\subsection{Terminal State Learning and Global Reachability}
+
+The current inference engine relies on a hardcoded symbolic predicate to 
+identify terminal states: if the search algorithm lands on a node possessing 
+\gls{dcsync} rights (e.g., \texttt{GetChanges} and \texttt{GetChangesAll} on the 
+target domain), the search halts, assuming total domain compromise. While 
+theoretically rudimentary, the empirical results from Chapter 4 demonstrate 
+that this static cutoff condition is operationally sufficient and highly 
+effective for current red teaming engagements.
+
+A theoretically purer approach would involve replacing this hardcoded 
+heuristic with Offline \gls{rl}. By training a dedicated 
+value head over the existing traces using algorithms like Conservative 
+Q-Learning (CQL), the model could intrinsically learn to assign massive 
+reward values to DCSync-capable nodes. However, deploying an Offline RL 
+architecture is exceptionally complex, computationally expensive, and prone 
+to severe training instability. Given the high performance of the current 
+static condition, introducing a brittle RL pipeline represents significant 
+engineering overhead for diminishing returns.
+
+A more pragmatic, data-driven alternative exists to teach the policy head 
+the concept of global reachability without altering the underlying 
+architecture. The training corpus could be augmented with synthetic traces 
+where reaching a DCSync-capable node is immediately followed by a direct 
+transition to the final target, regardless of whether a literal topological 
+edge exists. By exposing the model to these synthetic "teleportation" 
+transitions, the \gls{hgt} would mathematically 
+learn that owning a \gls{dcsync} node equates to owning the entire graph. This 
+allows the existing architecture to organically learn the semantic weight 
+of domain dominance entirely through data representation, bypassing the need 
+for a resource-heavy Reinforcement Learning overhaul.
+
+\subsection{LLM Integration for Out-Of-Vocabulary (OOV) Edges}
+
+As offensive enumeration tools like SharpHound evolve, their output schemas 
+and edge vocabularies frequently change (e.g., introducing new attack 
+primitives or altering nomenclature such as \texttt{WriteDACL} to 
+\texttt{WriteDacl}). The current pipeline relies on a static alias mapping 
+dictionary to normalise these relationships before tensor vectorisation. 
+From an engineering perspective, this static approach is highly efficient, 
+computationally lightweight, and operationally sufficient for the current 
+Active Directory landscape.
+
+However, maintaining a hardcoded vocabulary introduces long-term technical 
+debt and fragility when encountering undocumented, \gls{oov} 
+edges during a live engagement. A promising future direction is the 
+integration of a localized, lightweight Large Language Model (LLM) to act 
+as a semantic parser at the ingestion layer. Instead of dropping or ignoring 
+unknown relationships, the LLM could semantically evaluate the new edge type 
+and automatically map it to the closest known privilege vector in the 
+model's latent space. While static mappings are entirely sufficient for 
+today's red teaming operations, LLM-assisted parsing would provide a highly 
+resilient, future-proof ingestion pipeline capable of organically adapting 
+to evolving Active Directory schemas.
 
 
-\section{Data Collection Incompleteness}
-\label{sec:limit-data}
+\section{Conclusion}
 
-% Open with the concrete case: the administrator@inlanefreight →
-% admins@freightlogistics query fails not because the model lacks capability
-% but because the edge is absent from the collected graph.
-%
-% bloodhound-python limitations to discuss:
-%   - Foreign user-level MemberOf across forest boundaries not captured
-%   - Trusts array requires explicit parsing (was initially ignored by merger)
-%   - No CoerceToTGT-style derived edges
-%
-% What SharpHound C# provides:
-%   - Full cross-forest object collection including foreign group membership
-%   - Richer ACL enumeration
-%   - More complete GPLink and delegation data
-%
-% Implication for future iterations: C# collection is not optional for
-% cross-forest attack path completeness.
+The limitations and proposed upgrades outlined in this chapter do not 
+diminish the empirical success of the current \texttt{GNN-AD-Navigator}; 
+rather, they define the precise engineering trajectory required to transition 
+from a constrained proof-of-concept to an enterprise-grade autonomous 
+agent. 
 
-A major limitation encountered early into the project yet remained unsolved was the the scaning tool.
-The python ingestor \texttt{bloodhound-ce-python} gets the general structure of the graph, 
-the necessary ACL edges, allowing a pentester limited to linux attack host to access a less powerfull
-version of the tool, and still have a good scan and indentification of the Active Directory environment.
-The python ingestor compared to the recommended C\# bloodhound ingestor, misses mainly the ADCS scans
-where we had to fall back to and older version of certipy that once supported a bloodhound formated
-output. Trust accounts, are also missing in the python ingestor scan, not having them didnt impact the
-overall cross domain relationships, however having the trust account could allow the model to understand
-better the transition between two domains, telling the user explicitly to target the trust account.
-Having had the C\# ingestor scans, the tool could have benefited from a 
-lighter, less complex and more complete data processing pipeline. With no stitching script for the ADCS 
-support and less processing required to extract the trust relationships and node-based ACL edges such as 
-\texttt{GPLink - CoerceToTGT}.
-A lab dependant technical difficulty where the VMnet module couldn't allow for communication with the machines.
-After the initial scans where done and by the time i realised the incompleteness of the scans, vmware 
-needed an update to its kernel modules that broke the communication. I managed to spin up and provision
-the ESSOS.local domain allowing me to get the ADCS templates.
+An application that successfully surpasses these boundaries---coupling 
+the deep semantic embeddings of a Heterogeneous Graph Transformer with the 
+deterministic routing of an $A^*$ heuristic and localised waypoint 
+segmentation---would represent a paradigm shift in automated offensive 
+security. Such a system would prove that AI-driven pathfinding can scale to 
+massive, asymmetrical Active Directory environments without sacrificing the 
+OPSEC requirements crucial for advanced \gls{lotl} attack 
+chains. It would effectively transition automated red teaming from rigid, 
+shortest-path vulnerability scanners into dynamic, stealth-conditioned 
+navigators.
 
-\todo{Write data collection limitations section}
-
-% ─────────────────────────────────────────────────────────────
-\section{Expanding the Training Knowledge Base}
-\label{sec:limit-training}
-
-% Current training set: 33 traces from GOAD.
-% What those traces teach: ACL chains, group inheritance, DCSync terminal.
-% What they do NOT teach: RBCD (AllowedToAct), shadow credentials,
-%   Kerberoasting, GPLink-based chains, certificate abuse chains (ESC1/ESC8).
-%
-% Two expansion strategies:
-%
-% 1. Synthetic trace injection:
-%    Generate labelled attack traces for new primitives (RBCD, shadow credentials)
-%    in a controlled lab (GOAD extension or custom Vagrant environment).
-%    Even 5--10 new traces per primitive would give the model a training signal.
-%
-% 2. Corpus augmentation from public sources:
-%    HTB writeups, CRTE/CRTO course materials (if licensable), RedTeam notes.
-%    Requires careful anonymisation and edge-type normalisation.
-%
-% Note: retraining on current data with the new edge types (gplink=8,
-% allowedtodelegate=4) was evaluated and skipped — volume too low for a
-% meaningful training signal. This decision is documented here as a
-% deliberate choice, not an oversight.
-\todo{Write training knowledge base expansion section}
-
-% ─────────────────────────────────────────────────────────────
-\section{Terminal State Learning via Offline Reinforcement Learning}
-\label{sec:limit-rl}
-
-% Current design: DCSync terminal is a hardcoded symbolic predicate
-%   (GetChanges + GetChangesAll on the target domain).
-% Problem: the beam search does not internalise the goal — it navigates
-%   greedily then trims at the first terminal hit. This produces the
-%   noise-tail issue observed in Result 3.
-%
-% Proposed future direction: offline RL over labelled rollouts.
-%   - Label DCSync nodes as terminal states in the training traces.
-%   - Train a value head (critic) that assigns high value to nodes with
-%     DCSync rights on the target domain.
-%   - The policy head learns to steer toward high-value nodes intrinsically,
-%     without a hardcoded predicate.
-%   - Algorithms: conservative Q-learning (CQL) or implicit Q-learning (IQL)
-%     are well-suited to offline (batch) settings where online interaction
-%     with a live AD environment is not feasible.
-%
-% Short-term interim: absorbing terminal state inside the beam loop
-%   (freeze hypothesis at first DCSync hit, stop expanding) —
-%   implementable without retraining, addresses the noise-tail immediately.
-\todo{Write offline RL future direction section}
-
-% ─────────────────────────────────────────────────────────────
-\section{Additional Future Directions}
-
-\subsection{Calibrated Confidence Scoring}
-% Current audit is a three-level heuristic (ok/warn/fail).
-% Future: calibrate the softmax output scores against empirical path success
-%   rates so that a score of 0.X corresponds to a meaningful probability
-%   of reaching the target in a real environment.
-\todo{Write calibrated confidence section}
-
-\subsection{SharpHound Edge Vocabulary Versioning}
-% SharpHound edge type names evolve across versions (TrustedBy vs.
-% SameForestTrust, WriteDACL vs. WriteDacl).
-% A versioned alias map in the pipeline would make normalisation explicit
-% and maintainable as BloodHound/SharpHound evolve.
-\todo{Write edge vocabulary versioning section}
-
-\subsection{Derived Attack Primitives}
-% CoerceToTGT-style edges (PetitPotam, PrinterBug) are not captured by
-%   any collector — they require protocol-level interaction.
-% Future pipeline could infer coercibility from machine exposure
-%   (e.g., spooler service running + no SMB signing) as a synthetic edge.
-\todo{Write derived primitives section}
-
+More broadly, this research roadmap redefines the role of Graph Neural 
+Networks in the cybersecurity domain. Historically relegated to defensive 
+classification tasks, such as anomaly detection or alert clustering, this 
+work establishes \glspl{gnn} as foundational reasoning engines for offensive 
+operations. By proving that neural networks can mathematically abstract 
+and internalise the semantic hierarchy of privilege escalation, it lays 
+the theoretical groundwork for a new generation of agentic AI---tools 
+capable of navigating complex digital topologies with the intuitive, 
+contextual awareness of a human Red Teamer.
 
 %% ============================================================
 %%  GENERAL CONCLUSION
