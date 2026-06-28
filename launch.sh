@@ -85,10 +85,11 @@ INPUT_DIR="${1:-}"
 OUTPUT_DIR="${2:-}"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [[ -z "$INPUT_DIR" || -z "$OUTPUT_DIR" ]]; then
-    echo "Usage: $0 <input_dir> <output_dir> [--start NODE --target NODE ...]"
-    exit 1
+if [[ ! -d "$INPUT_DIR" && $SKIP_PREP -eq 0 ]]; then
+    echo "ERROR: input dir not found: $INPUT_DIR"; exit 1
 fi
+
+SCRIPT_DIR="$PROJECT_DIR/scripts"
 
 shift 2
 
@@ -138,26 +139,21 @@ mkdir -p "$OUTPUT_DIR"
 LOG="$OUTPUT_DIR/pipeline.log"
 # --- OPEN THE GLOBAL LOGGING VALVE ---
 # Redirects both stdout (1) and stderr (2) through tee to append (-a) to the log
-exec > >(tee -a "$LOG_FILE") 2>&1
-echo "=== Pipeline Run Started at $(date) ==="
+
+
+exec > >(tee -a "$LOG") 2>&1
+echo "[+] Pipeline initialized at $(date +'%H:%M:%S')"
 
 if [[ $SKIP_PREP -eq 0 ]]; then
     mkdir -p "$OUTPUT_DIR/cleaned"
     > "$LOG"
 
-    echo "============================================================"
-    echo "GNN-AD-Navigator pipeline"
-    echo "============================================================"
-    echo "Input  : $INPUT_DIR"
-    echo "Output : $OUTPUT_DIR"
-    echo "Mode   : prep $([ $DO_INFERENCE -eq 1 ] && echo "+ inference")"
-    echo "Logs   : $LOG"
-    echo ""
-
-    
+    echo "[*] Mode: Data Preparation"
+    echo "    Input: $INPUT_DIR | Output: $OUTPUT_DIR"
 
     # ── stage 0: classify files by content ─────────────────────────────────
-    echo "[0/5] Classifying files by content..."
+    echo ""
+    echo "    [0/5] Classifying files..."
 
     python - "$INPUT_DIR" "$OUTPUT_DIR" <<'PY'
 import json, sys, shutil
@@ -204,7 +200,7 @@ PY
 
     # ── stage 1: filter ─────────────────────────────────────────────────────
     echo ""
-    echo "[1/5] Filtering raw scans..."
+    echo "    [1/5] Filtering raw scans..."
     python "$SCRIPT_DIR/clean_bloodhound.py" \
         --input  "$OUTPUT_DIR/raw_bloodhound" \
         --output "$OUTPUT_DIR/cleaned" \
@@ -212,7 +208,7 @@ PY
 
     # ── stage 2: merge ──────────────────────────────────────────────────────
     echo ""
-    echo "[2/5] Merging bloodhound data..."
+    echo "    [2/5] Merging bloodhound data..."
     python "$SCRIPT_DIR/merger.py" \
         --input  "$OUTPUT_DIR/cleaned" \
         --output "$OUTPUT_DIR/forest_graph.json" \
@@ -291,7 +287,7 @@ PY
     fi
     # ── stage 4: build tensors ─────────────────────────────────────────────
     echo ""
-    echo "[4/5] Building tensors..."
+    echo "    [4/5] Building tensors..."
     python "$SCRIPT_DIR/build_dataset.py" \
         --graph "$OUTPUT_DIR/forest_graph.json" \
         --out   "$OUTPUT_DIR" \
@@ -299,13 +295,11 @@ PY
 
     # ── stage 5: validate ──────────────────────────────────────────────────
     echo ""
-    echo "[5/5] Validating..."
+    echo "    [5/5] Validating..."
     python "$SCRIPT_DIR/validate_dataset.py" \
         --hetero "$OUTPUT_DIR/heterodata.pt" \
         --graph  "$OUTPUT_DIR/forest_graph.json" \
-        >> "$LOG" 2>&1 || echo "  (validation warnings — see $LOG)"
-
-    rm -rf "$OUTPUT_DIR/raw_bloodhound" "$OUTPUT_DIR/_certipy_list.txt"
+        >> "$LOG" 2>&1 || echo "          (validation warnings — see log)"
 
     echo ""
     echo "============================================================"
@@ -318,30 +312,24 @@ fi
 
 # ── stage 6: inference (optional) ──────────────────────────────────────────
 if [[ $DO_INFERENCE -eq 1 ]]; then
-    # ensure prerequisites are in place
     if [[ ! -f "$OUTPUT_DIR/heterodata.pt" ]]; then
-        echo "ERROR: $OUTPUT_DIR/heterodata.pt not found — run prep first"
-        exit 1
+        echo "[-] ERROR: heterodata.pt not found — run prep first"; exit 1
     fi
     if [[ ! -f "$MODEL" ]]; then
-        echo "ERROR: model checkpoint not found: $MODEL"
-        echo "       supply --model <path> or place at models/$(basename "$MODEL")"
-        exit 1
+        echo "[-] ERROR: model checkpoint not found: $MODEL"; exit 1
     fi
 
+    ## Ensure logs directory exists even in skip-prep mode
+    mkdir -p "$OUTPUT_DIR/logs"
+    
+    # Route inference logs securely
     TS=$(date +%Y%m%d_%H%M%S)
-    INF_LOG="$OUTPUT_DIR/inference_${TS}.log"
+    INF_LOG="$OUTPUT_DIR/logs/inference_${TS}.log"
 
-    echo "============================================================"
-    echo "Inference query"
-    echo "============================================================"
-    echo "  Model     : $MODEL  ($MODEL_TYPE)"
-    echo "  Start     : $START"
-    echo "  Target    : $TARGET"
-    echo "  Beam/Depth: $BEAM_WIDTH / $MAX_DEPTH"
-    echo "  Log       : $INF_LOG"
-    echo ""
-
+    echo "[*] Launching Inference Engine"
+    echo "    Route: $START -> $TARGET"
+    echo "    Model: $(basename "$MODEL") (Beam: $BEAM_WIDTH, Depth: $MAX_DEPTH)"
+    
     # run inference, tee to both stdout and the inference log
     python "$SCRIPT_DIR/inference.py" \
         --hetero     "$OUTPUT_DIR/heterodata.pt" \
@@ -353,4 +341,6 @@ if [[ $DO_INFERENCE -eq 1 ]]; then
         --beam-width "$BEAM_WIDTH" \
         --max-depth  "$MAX_DEPTH" \
         2>&1 | tee "$INF_LOG"
+        
+    echo "[✓] Log saved to: $INF_LOG"
 fi

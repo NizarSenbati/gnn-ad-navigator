@@ -363,6 +363,12 @@ def build_synthetic_edges(forest: dict) -> list:
                     continue
                 
                 tgt_props = tgt_node.get("Properties", {})
+                src_domain = src_props.get("domain", "").lower()
+                tgt_domain = tgt_props.get("domain", "").lower()
+
+                # Enforce strict domain boundary for coercion
+                if src_domain != tgt_domain:
+                    continue
                 distinguished_name = tgt_props.get("distinguishedname", "").lower()
                 
                 # Condition 2: Target is a Domain Controller

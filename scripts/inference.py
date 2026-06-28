@@ -501,9 +501,9 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    print("=" * 60)
-    print("GNN-AD-Navigator Inference (Hetero Upgrade)")
-    print("=" * 60)
+    # print("=" * 60)
+    # print("GNN-AD-Navigator Inference")
+    # print("=" * 60)
 
     # ─ Graph Loading & Global Index Translation ─
     data = torch.load(args.hetero, map_location=device, weights_only=False)
@@ -583,7 +583,7 @@ def main():
         args.max_depth
     )
 
-    print(f"\n{'=' * 60}\nRESULTS — top {len(paths)} path(s)\n{'=' * 60}")
+    print(f"\n{'=' * 60}\nRESULTS — best scored {len(paths)} path(s)\n{'=' * 60}")
     if not paths:
         print("\nNo paths found.")
         sys.exit(0)

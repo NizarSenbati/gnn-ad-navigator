@@ -16,6 +16,7 @@ import math
 import json
 from pathlib import Path
 from datetime import datetime
+from collections import defaultdict
 
 # make scripts/ importable
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -36,6 +37,7 @@ from inference import (
 )
 
 from visualisation import render_path_graph, render_path_table
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -174,20 +176,52 @@ def run_pipeline_prep(input_dir: Path, output_dir: Path,
 # cached resource loading
 # ─────────────────────────────────────────────────────────────────────────────
 
+# ─────────────────────────────────────────────────────────────────────────────
+# cached resource loading
+# ─────────────────────────────────────────────────────────────────────────────
+
+NODE_ORDER = ["users","computers","groups","domains",
+              "gpos","ous","containers","cas","certtemplates"]
+
 @st.cache_resource(show_spinner="Loading graph and lookups...")
 def load_graph_resources(graph_path: str, hetero_path: str):
-    name_to_idx, idx_to_name, idx_to_type = build_name_lookup(Path(graph_path))
+    # 1. Load the HeteroData tensor first
     data = torch.load(hetero_path, map_location="cpu", weights_only=False)
-    X = data["node"].x
-    all_edges = torch.cat(
-        [data[et].edge_index.cpu() for et in data.edge_types], dim=1
-    )
-    edge_index_flat = torch.unique(all_edges, dim=1)
-    edge_tensors = {et[1]: data[et].edge_index for et in data.edge_types}
+    
+    # 2. Pass data to build_name_lookup and unpack all 4 values
+    name_to_idx, idx_to_name, idx_to_type, offsets = build_name_lookup(Path(graph_path), data)
+    
+    # 3. Flatten the heterogeneous edges and build the edge_name_map
+    edge_tensors_flat = defaultdict(list)
+    edge_name_map = {}
+    
+    if hasattr(data, 'edge_index_dict'):
+        for (src_t, rel, dst_t), ei in data.edge_index_dict.items():
+            if src_t not in offsets or dst_t not in offsets: 
+                continue
+            ei_shifted = ei.clone() # Keep on CPU for GUI
+            ei_shifted[0] += offsets[src_t]
+            ei_shifted[1] += offsets[dst_t]
+            edge_tensors_flat[rel].append(ei_shifted)
+            
+            # Build edge_name_map for beam search OOV fallback
+            src_indices = ei[0] + offsets[src_t]
+            dst_indices = ei[1] + offsets[dst_t]
+            for s, d in zip(src_indices.tolist(), dst_indices.tolist()):
+                if (s, d) not in edge_name_map:
+                    edge_name_map[(s, d)] = rel
+
+    for rel in edge_tensors_flat:
+        edge_tensors_flat[rel] = torch.cat(edge_tensors_flat[rel], dim=1)
+
+    # 4. Flatten features if GCN fallback is requested
+    X_flat = torch.cat([data[nt].x for nt in NODE_ORDER if nt in data.node_types], dim=0) if "users" in data.node_types else None
+
     return {
-        "data": data, "X": X,
-        "edge_index_flat": edge_index_flat,
-        "edge_tensors": edge_tensors,
+        "data": data, 
+        "X_flat": X_flat,
+        "edge_tensors_flat": edge_tensors_flat,
+        "edge_name_map": edge_name_map,
         "name_to_idx": name_to_idx,
         "idx_to_name": idx_to_name,
         "idx_to_type": idx_to_type,
@@ -199,11 +233,13 @@ def load_model_resources(model_path: str, model_type: str,
                           graph_path: str, hetero_path: str):
     g = load_graph_resources(graph_path, hetero_path)
     device = torch.device("cpu")
+    
     if model_type == "gcn":
-        model, emb = load_gcn(Path(model_path), g["X"],
-                               g["edge_index_flat"], device)
+        edge_index_flat = torch.unique(torch.cat(list(g["edge_tensors_flat"].values()), dim=1), dim=1)
+        model, emb = load_gcn(Path(model_path), g["X_flat"], edge_index_flat, device)
     else:
-        model, emb = load_hgt(Path(model_path), g["X"], g["data"], device)
+        model, emb = load_hgt(Path(model_path), g["data"], device)
+        
     return model, emb
 
 
@@ -400,22 +436,37 @@ else:
         st.stop()
 
     # ── status row ─────────────────────────────────────────────────────────
+    
+    # Dynamically sum all nodes across the heterogeneous types
+    total_nodes = sum(g["data"][nt].num_nodes for nt in g["data"].node_types)
+
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Start",  g["idx_to_name"][s_idx][:30] +
                ("…" if len(g["idx_to_name"][s_idx]) > 30 else ""))
     c2.metric("Target", g["idx_to_name"][t_idx][:30] +
                ("…" if len(g["idx_to_name"][t_idx]) > 30 else ""))
     c3.metric("Model",  model_type.upper())
-    c4.metric("Nodes",  f"{g['data']['node'].num_nodes:,}")
+    c4.metric("Nodes",  f"{total_nodes:,}")
 
     st.markdown("---")
 
     # ── run inference ──────────────────────────────────────────────────────
+    
+    # Extract known_edges for OOV bypass if using HGT
+    known_edges = model.known_edges if model_type == "hgt" else []
+
     with st.spinner("Searching attack paths..."):
         paths = beam_search(
-            model, emb, g["edge_tensors"], s_idx, t_idx,
-            g["idx_to_name"],
-            beam_width=int(beam_width), max_depth=int(max_depth),
+            model, 
+            emb, 
+            g["edge_tensors_flat"], 
+            s_idx, 
+            t_idx,
+            g["idx_to_name"], 
+            g["edge_name_map"], 
+            known_edges,
+            beam_width=int(beam_width), 
+            max_depth=int(max_depth),
         )
 
     if not paths:
@@ -461,7 +512,7 @@ else:
             # larger graph, table below in expander
             render_path_graph(
                 path,
-                g["edge_tensors"],
+                g["edge_tensors_flat"],
                 g["idx_to_name"],
                 g["idx_to_type"],
                 height_px=520,
@@ -470,13 +521,13 @@ else:
             with st.expander("Step-by-step details"):
                 render_path_table(
                     path,
-                    g["edge_tensors"],
+                    g["edge_tensors_flat"],
                     g["idx_to_name"],
                     EDGE_TO_TECHNIQUE,
                 )
 
             # audit
-            audit = audit_path(path, t_idx, g["edge_tensors"], g["idx_to_name"])
+            audit = audit_path(path, t_idx, g["edge_tensors_flat"], g["idx_to_name"])
             if audit:
                 st.markdown("**Audit**")
                 for level, msg in audit:
@@ -493,7 +544,7 @@ else:
 
             # advisory
             advisory = explain_terminal_state(
-                path[-1], t_idx, g["edge_tensors"], g["idx_to_name"]
+                path[-1], t_idx, g["edge_tensors_flat"], g["idx_to_name"]
             )
             if advisory:
                 with st.expander("Terminal state advisory"):
