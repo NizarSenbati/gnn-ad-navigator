@@ -4,7 +4,7 @@
 %%  Author : Nizar Senbati
 %%  Compile : pdflatex → bibtex → pdflatex × 2
 %% ============================================================
-
+\pdfminorversion=7
 \documentclass[12pt, a4paper, oneside]{report}
 
 %% ── Encoding & Language ──────────────────────────────────────
@@ -220,6 +220,7 @@
 %% ── Acronyms ─────────────────────────────────────────────────
 \usepackage[acronym, toc, nomain]{glossaries}
 \makeglossaries
+\glsaddall
 \newacronym{ad}{AD}{Active Directory}
 \newacronym{gnn}{GNN}{Graph Neural Network}
 \newacronym{hgt}{HGT}{Heterogeneous Graph Transformer}
@@ -241,7 +242,7 @@
 \newacronym{dcsync}{DCSync}{Directory Replication Service synchronisation attack}
 \newacronym{ca}{CA}{Certificate Authority}
 \newacronym{apt}{APT}{Advanced Persistent Threat}
-\newacronym{OPSEC}{OPSEC}{Operational Security}
+\newacronym{opsec}{OPSEC}{Operational Security}
 \newacronym{siem}{SIEM}{Security Information and Event Management}
 \newacronym{oov}{OOV}{Out Of Vocabulary}
 \newacronym{lotl}{LotL}{Living of the Land}
@@ -253,6 +254,9 @@
 \newacronym{rpc}{RPC}{Remote Procedure Call}
 \newacronym{smb}{smb}{Server Message Bloc}
 \newacronym{ldap}{LDAP}{Lightweight Directory Access Protocol}
+\newacronym{ace}{ACE}{Access Control Entry}
+\newacronym{edr}{EDR}{Endpoint Detection and Response}
+\newacronym{mdi}{MDI}{Microsoft Defender for Identity}
 
 %% ── Custom Commands ──────────────────────────────────────────
 \newcommand{\tool}[1]{\texttt{#1}}
@@ -465,6 +469,24 @@ over heterogeneous Active Directory graphs.
   through systematic evaluation, establishing future work and improvements.
 \end{itemize}
 
+\section*{Industrial Context: NearSecure}
+
+This research was conducted in collaboration with \textbf{NearSecure}, a 
+specialized cybersecurity firm providing advanced offensive security assessments 
+and Red Team operations. During enterprise engagements, security consultants 
+frequently encounter massive, highly complex Active Directory environments. 
+While tools like BloodHound are standard for mapping these networks, NearSecure 
+identified a critical operational bottleneck: the manual analysis of large-scale 
+graph data is incredibly time-consuming and heavily reliant on the subjective 
+expertise of the individual pentester. Furthermore, traditional shortest-path 
+queries fail to account for Operational Security (OPSEC), often highlighting 
+``loud'' attack vectors that immediately trigger Blue Team telemetry.
+
+To address this industry challenge, this thesis project was initiated to bridge 
+the gap between deep learning and offensive security. The objective was to 
+engineer the \texttt{GNN-AD-Navigator}---an automated, AI-driven pipeline 
+capable of augmenting NearSecure's Red Team capabilities by surfacing not just 
+the shortest, but the most operationally viable and stealthy attack paths.
 
 \section*{Main Contributions}
 \begin{itemize}
@@ -892,63 +914,68 @@ an organization's true security perimeter.
 % ─────────────────────────────────────────────────────────────
 \section{Privilege Escalation in AD Environments}
 
-\subsection{Offensive ACL Abuse}
+\subsubsection{Offensive ACL Abuse and Structural Vulnerabilities}
 \label{sec:acl_abuse}
 
-Access Control Lists (ACLs) serve as the granular security foundation of 
-Active Directory, defining exactly which principals have specific permissions 
-over directory objects. Historically, defenders focused primarily on network 
-vulnerabilities or missing software patches. However, modern offensive 
-tradecraft has demonstrated that abusing misconfigured ACLs is often the 
-most common, reliable, and critical path for privilege escalation within an 
-enterprise environment \cite{specterops_ace}. 
+\glspl{acl} constitute the granular security foundation of Microsoft Active 
+Directory. They define the precise permissions---formally known as 
+\glspl{ace}---that security principals (such as users, groups, or computers) 
+hold over other directory objects. Historically, offensive security methodologies 
+and defensive postures were heavily skewed toward network-level vulnerabilities, 
+missing software patches, and memory corruption exploits. However, as 
+\gls{edr} solutions and patch management lifecycles have matured, modern 
+offensive tradecraft has fundamentally pivoted. Adversaries now recognize that 
+abusing misconfigured \glspl{acl} is often the most reliable, deterministic, 
+and critical path for privilege escalation within an enterprise environment.
+\cite{specterops_ace}
 
-Because ACL misconfigurations allow attackers to subvert the intended 
-security architecture seamlessly without triggering traditional malware 
-alerts, mapping these specific permissions is the primary function of 
-data collection tools like BloodHound. Consequently, these structural 
-ACL relationships form the foundational dataset that the GNN-AD-Navigator 
-pipeline extracts. Our model heavily bases its recommended paths on these 
-extracted rights, learning to weigh the operational cost of exploiting 
-each specific permission.
+Unlike traditional malware or binary exploitation, \gls{acl} abuse ``lives off 
+the land'' by leveraging the intended, built-in features of the Active Directory 
+architecture. Because these misconfigurations allow attackers to subvert the 
+security model seamlessly---often without triggering traditional signature-based 
+alerts---mapping these specific permissions has become the primary objective of 
+post-compromise reconnaissance. Tools such as BloodHound have operationalized 
+this mapping by modeling the directory as a graph, where nodes represent 
+identity principals and edges represent the privileges they hold over one 
+another. Consequently, these structural \gls{acl} relationships form the 
+foundational dataset that the \texttt{GNN-AD-Navigator} pipeline extracts. 
+By ingesting this topological data, the model learns to navigate the directory's 
+complex trust architecture, fundamentally relying on these extracted rights to 
+surface viable, end-to-end attack paths.
 
-When an adversary compromises a basic account, they enumerate the 
-directory to identify objects where their controlled principal holds 
-abusive rights. The most critical offensive ACL primitives include:
+\subsubsection{Operational Security OPSEC and Defensive Telemetry}
 
-\begin{itemize}
-  \item \textbf{GenericAll:} This right grants complete, unrestricted 
-  control over the target object. An attacker holding \texttt{GenericAll} 
-  can execute any action, such as adding a user to a highly privileged 
-  group, resetting an account's password, or modifying critical attributes 
-  to establish persistence.
-  
-  \item \textbf{WriteDACL:} This permission allows a principal to modify 
-  the target object's access control list itself. From an offensive 
-  perspective, an attacker can abuse \texttt{WriteDACL} to simply grant 
-  themselves \texttt{GenericAll} privileges, effectively taking full 
-  control of the target in a two-step process.
-  
-  \item \textbf{GenericWrite:} While not providing full control, this right 
-  allows an attacker to update specific properties of an object. It is 
-  frequently weaponized to modify the \texttt{servicePrincipalName} (SPN) 
-  attribute to enable targeted Kerberoasting, or to alter the 
-  \texttt{msDS-AllowedToActOnBehalfOfOtherIdentity} attribute to execute 
-  Resource-Based Constrained Delegation (RBCD) attacks.
-  
-  \item \textbf{ForceChangePassword:} This specific permission allows an 
-  attacker to reset the password of a target user without knowing the 
-  current password. While highly effective for immediately compromising an 
-  account and hijacking its session, it is operationally ``loud.'' It 
-  disrupts the legitimate user's access, making it highly detectable by 
-  defenders.
-  
-  \item \textbf{AddMember:} If held over a security group, this right 
-  allows an attacker to directly append their own controlled account 
-  (or another compromised user) into the target group. This immediately 
-  grants the attacker all the privileges inherited by that group across 
-  the entire domain.
-\end{itemize}
+In modern enterprise environments, offensive actions do not occur in a vacuum. 
+The concept of \gls{opsec} is paramount when evaluating the practical viability 
+of any simulated attack path. Blue Teams actively monitor directory environments 
+using sophisticated detection mechanisms, including \gls{siem} architectures 
+(such as Splunk or Elastic Security) and specialized identity threat detectors 
+like \gls{mdi}. These defensive platforms continuously ingest telemetry from 
+Domain Controllers, hunting for specific Windows Event IDs, anomalous API 
+calls, and deviations from baseline administrative behavior.
+
+Consequently, modern attack paths can no longer be evaluated based solely on 
+their topological distance (i.e., the shortest path). They must be rigorously 
+evaluated on their ``loudness'' or detection footprint. A highly disruptive 
+attack, such as forcing a password reset on a targeted administrator, might 
+represent the shortest topological path to Domain Admin. However, this action 
+generates immediate, high-fidelity alerts (such as Event IDs 4723 or 4724) 
+and actively disrupts the legitimate user's access. This disruption frequently 
+triggers helpdesk tickets and rapid incident response procedures, thereby 
+immediately burning the attacker's foothold.
+
+Conversely, a ``stealthy'' attack---such as modifying a delegation attribute 
+or quietly adding a cryptographic Shadow Credential---might require a longer, 
+multi-hop sequence but blends seamlessly into routine administrative traffic, 
+bypassing legacy monitoring rules entirely. When an adversary or an automated 
+red-team framework enumerates the directory to identify abusive rights, it must 
+carefully weigh the defensive telemetry generated by the specific command-line 
+tools and network protocols required to execute the exploit. This fundamental 
+\gls{opsec} reality underscores the core hypothesis of the \texttt{GNN-AD-Navigator} 
+architecture: by utilizing a \gls{gnn} with heterogeneous attention mechanisms, 
+the model is explicitly designed to recognize the operational cost of different 
+edge types, inherently penalizing ``loud,'' heavily monitored transitions when 
+stealthier alternatives exist.
 
 \subsection{DCSync Attack}
 \label{sec:dcsync}
@@ -1604,7 +1631,7 @@ The attack paths goad provides are to be presented in a learnable and readable t
 and the \texttt{step\_cost}.
 
 
-\subsection{Feature engineering}
+\subsection{Feature Engineering}
 
 To a GNN model learning from a bloodhound scan, attack paths are of different importance, 
 some are totaly invisible while others are a gold mine for what the model needs to replicate.
@@ -1772,8 +1799,6 @@ stealth over topological proximity forms the core justification for deploying
 deep learning in automated offensive navigation.
 
 % ─────────────────────────────────────────────────────────────
-\section{Beam Search Navigation}
-
 \subsection{Beam Search Navigation}
 
 \subsubsection{Algorithm}
@@ -2720,7 +2745,7 @@ these specific, newly-discovered attack techniques based on the red team's
 operational context.
 
 % ─────────────────────────────────────────────────────────────
-\section{Result 4: Documented Limitations}
+\section{Result 4: Observed Experimental Constraints}
 \label{sec:result4}
 
 While the zero-shot evaluation on INLANEFREIGHT demonstrated significant 
@@ -3142,7 +3167,7 @@ mathematical transitions.
 From an offensive security perspective, this mathematical decay directly 
 contradicts the foundational objective of the navigation policy. The primary 
 motivation for engineering transition-specific confidence scores---effectively 
-acting as an \gls{OPSEC} step cost---was to explicitly train 
+acting as an \gls{opsec} step cost---was to explicitly train 
 the model to prioritise stealth over path efficiency. In professional red 
 teaming engagements, operators heavily rely on \gls{lotl}
 techniques, deliberately chaining multiple low-privilege, native Active 
@@ -3348,7 +3373,7 @@ multiplicative probability decay. By ensuring that each individual path
 segment remains short, the intermediate targets stay within the model's 
 receptive field. Furthermore, resetting the probability calculation at 
 each waypoint prevents the accumulated mathematical penalties from 
-overwhelming the learned \gls{OPSEC} step costs, allowing the model to freely 
+overwhelming the learned \gls{opsec} step costs, allowing the model to freely 
 select stealthy, non-linear routes.
 
 \subsection{Guided Search Heuristics ($A^*$ Algorithm)}
