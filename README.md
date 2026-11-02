@@ -134,7 +134,7 @@ Note: Stages are individually runnable; `pipeline.sh` orchestrates them.
 
 ## 9. Output & Audit
 
-The AUDIT block beneath each suggested path is an attempt at reliability flaggin, catching obvious failures (not reaching the destination, target domain mismatch ...). it is to be treated a signal that the paths are to be checked.
+The AUDIT block beneath each suggested path is an attempt at reliability flagging, catching obvious failures (not reaching the destination, target domain mismatch ...). it is to be treated as a signal that the paths are to be checked.
     
 exepected output when runing on sample data
 
@@ -187,6 +187,8 @@ Path 1:
 - **vision :** retraining using new forests sharphound scanned might result in a model capable of operating on the C# injested data, but for now the model is limited to bloodhound.py scans as well as needing certipy scans < 5.0 . A larger training dataset could allow for more comprehensif functions, a larger policy head, a creadential aware navigation, a user inventory of pawned accounts and more. with enough time and budgeting significant improvements can be made.
 - **Testing:** due to lack of time, and the project being self funded, i struggled with resources, and the model still needs actual testing on dedicated environements.
 
+## Notice
+The academic report (the master's thesis) for the gnn-ad-navigator is also present in this github repo gnn-ad-navigator/tree/main/thesis/rapport_SENBATI.pdf
 
 ## 12. Citation & Acknowledgements
 
