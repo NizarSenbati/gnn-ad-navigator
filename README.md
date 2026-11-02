@@ -188,7 +188,7 @@ Path 1:
 - **Testing:** due to lack of time, and the project being self funded, i struggled with resources, and the model still needs actual testing on dedicated environements.
 
 ## Notice
-The academic report (the master's thesis) for the gnn-ad-navigator is also present in this github repo gnn-ad-navigator/tree/main/thesis/rapport_SENBATI.pdf
+The academic report (the master's thesis) for the gnn-ad-navigator is also present in this github repo thesis/rapport_SENBATI.pdf
 
 ## 12. Citation & Acknowledgements
 
